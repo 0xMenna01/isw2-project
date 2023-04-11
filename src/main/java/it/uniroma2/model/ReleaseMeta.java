@@ -1,12 +1,14 @@
 package it.uniroma2.model;
 
+import java.util.Date;
+
 public class ReleaseMeta {
 
     private int id;
     private String name;
-    private String date;
+    private Date date;
 
-    public ReleaseMeta(int id, String name, String date) {
+    public ReleaseMeta(int id, String name, Date date) {
         this.id = id;
         this.name = name;
         this.date = date;
@@ -28,11 +30,11 @@ public class ReleaseMeta {
         this.name = name;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 }

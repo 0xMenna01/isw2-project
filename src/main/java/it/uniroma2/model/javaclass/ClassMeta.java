@@ -1,7 +1,5 @@
 package it.uniroma2.model.javaclass;
 
-import it.uniroma2.model.javaclass.ClassMetrics;
-
 public class ClassMeta {
 
     private String pathName;

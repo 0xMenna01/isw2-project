@@ -1,8 +1,10 @@
 package it.uniroma2;
 
-public class Main {
-    public static void main(String[] args){
+import it.uniroma2.controller.ExecuteDataCollection;
 
+public class Main {
+    public static void main(String[] args) {
+        ExecuteDataCollection.collectData("bookkeeper");
     }
 
 }

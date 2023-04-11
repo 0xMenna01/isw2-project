@@ -13,7 +13,6 @@ public class ClassMetrics {
     private int fanOut;
     private int indPaths;
 
-
     public ClassMetrics() {
         this.size = 0;
         this.nFix = 0;
@@ -26,7 +25,6 @@ public class ClassMetrics {
         this.fanOut = 0;
         this.indPaths = 0;
     }
-
 
     public int getSize() {
         return size;
