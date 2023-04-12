@@ -2,14 +2,14 @@ package it.uniroma2.model;
 
 import java.util.List;
 
-public class JiraTicket {
+public class TicketIssue {
     private String key;
     private ReleaseMeta iv;
     private ReleaseMeta ov;
     private List<ReleaseMeta> av;
     private ReleaseMeta fv;
 
-    public JiraTicket(String key, ReleaseMeta ov, List<ReleaseMeta> av, ReleaseMeta fv) {
+    public TicketIssue(String key, ReleaseMeta ov, List<ReleaseMeta> av, ReleaseMeta fv) {
         this.key = key;
         this.iv = null;
         this.ov = ov;

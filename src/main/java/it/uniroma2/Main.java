@@ -4,7 +4,7 @@ import it.uniroma2.controller.ExecuteDataCollection;
 
 public class Main {
     public static void main(String[] args) {
-        ExecuteDataCollection.collectData("bookkeeper");
+        new ExecuteDataCollection("bookkeeper").collectData();
     }
 
 }
