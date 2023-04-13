@@ -2,58 +2,15 @@ package it.uniroma2.model;
 
 import java.util.List;
 
-public class TicketIssue {
-    private String key;
+public class TicketIssue extends BaseTicket {
+
     private ReleaseMeta iv;
-    private ReleaseMeta ov;
-    private List<ReleaseMeta> av;
-    private ReleaseMeta fv;
 
-    public TicketIssue(String key, ReleaseMeta ov, List<ReleaseMeta> av, ReleaseMeta fv) {
-        this.key = key;
-        this.iv = null;
-        this.ov = ov;
-        this.av = av;
-        this.fv = fv;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public ReleaseMeta getIv() {
-        return iv;
-    }
-
-    public void setIv(ReleaseMeta iv) {
+    public TicketIssue(String key, ReleaseMeta ov, ReleaseMeta fv, List<ReleaseMeta> av, ReleaseMeta iv) {
+        super(key, ov, fv, av);
         this.iv = iv;
     }
 
-    public ReleaseMeta getOv() {
-        return ov;
-    }
+    
 
-    public void setOv(ReleaseMeta ov) {
-        this.ov = ov;
-    }
-
-    public List<ReleaseMeta> getAv() {
-        return av;
-    }
-
-    public void setAv(List<ReleaseMeta> av) {
-        this.av = av;
-    }
-
-    public ReleaseMeta getFv() {
-        return fv;
-    }
-
-    public void setFv(ReleaseMeta fv) {
-        this.fv = fv;
-    }
 }

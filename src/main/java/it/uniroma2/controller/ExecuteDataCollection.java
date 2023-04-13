@@ -22,7 +22,6 @@ public class ExecuteDataCollection {
             throw new RuntimeException(e);
         }
         List<ReleaseMeta> releasesList = releasesControl.getReleasesList();
-
         //Collecting issues
         CollectIssues issuesControl = new CollectIssues();
         try {

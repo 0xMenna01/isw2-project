@@ -1,4 +1,4 @@
-package it.uniroma2.patterns;
+package it.uniroma2.factory;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,15 +9,16 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import it.uniroma2.model.JSONTicket;
+import it.uniroma2.model.BaseTicket;
 import it.uniroma2.model.ReleaseMeta;
-import it.uniroma2.utils.ReleasesUtil;
+import it.uniroma2.utils.ReleasesUtils;
 
 public class IssuesFactory {
 
     private static IssuesFactory instance = null;
 
-    private IssuesFactory() {}
+    private IssuesFactory() {
+    }
 
     public static IssuesFactory getInstance() {
         if (instance == null) {
@@ -26,8 +27,7 @@ public class IssuesFactory {
         return instance;
     }
 
-    public JSONTicket createIssue(int i, JSONArray issues, List<ReleaseMeta> releasesList) throws ParseException {
-        JSONTicket ticket = null;
+    public BaseTicket createIssue(int i, JSONArray issues, List<ReleaseMeta> releasesList) throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -44,20 +44,16 @@ public class IssuesFactory {
         List<ReleaseMeta> av = new ArrayList<>();
         for (int j = 0; j < listAV.length(); j++) {
             String name = listAV.getJSONObject(j).getString("name");
-            ReleaseMeta release = ReleasesUtil.getReleaseByName(name, releasesList);
+            ReleaseMeta release = ReleasesUtils.getReleaseByName(name, releasesList);
             if (release != null) {
                 av.add(release);
             }
         }
 
-        ReleaseMeta openVersion = ReleasesUtil.getReleaseByDate(creationDate, releasesList);
-        ReleaseMeta fixVersion = ReleasesUtil.getReleaseByDate(resolutionDate, releasesList);
+        ReleaseMeta openVersion = ReleasesUtils.getReleaseByDate(creationDate, releasesList);
+        ReleaseMeta fixVersion = ReleasesUtils.getReleaseByDate(resolutionDate, releasesList);
 
-        if (openVersion != null && fixVersion != null) {
-            ticket = new JSONTicket(key, creationDate, resolutionDate, av);
-        }
-
-        return ticket;
+        return new BaseTicket(key, openVersion, fixVersion, av);
 
     }
 }

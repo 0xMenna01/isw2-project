@@ -5,9 +5,9 @@ import java.util.List;
 
 import it.uniroma2.model.ReleaseMeta;
 
-public class ReleasesUtil {
-    
-    private ReleasesUtil() {
+public class ReleasesUtils {
+
+    private ReleasesUtils() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -29,4 +29,10 @@ public class ReleasesUtil {
         }
         return null;
     }
+
+    public static List<ReleaseMeta> getAVs(ReleaseMeta iv, ReleaseMeta fv, List<ReleaseMeta> releases) {  
+        // returns the list of releases between iv and fv (excluded)
+        return releases.subList(releases.indexOf(iv), releases.indexOf(fv)); 
+    }
+
 }

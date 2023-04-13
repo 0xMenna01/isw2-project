@@ -37,4 +37,12 @@ public class ReleaseMeta {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public boolean isAfter(ReleaseMeta rel){
+        return this.date.after(rel.getDate());
+    }
+
+    public boolean isBefore(ReleaseMeta rel){
+        return this.date.before(rel.getDate());
+    }
 }
