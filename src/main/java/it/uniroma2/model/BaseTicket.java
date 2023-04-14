@@ -26,9 +26,9 @@ public class BaseTicket {
         return av;
     }
 
-    public boolean isValid() {
+    public boolean isValid(ReleaseMeta firstRelease) { //Assuming the releases are ordered by date
         if (ov != null && fv != null) {
-            return !ov.isAfter(this.fv);
+            return !ov.isAfter(this.fv) && ov.isAfter(firstRelease); // Be sure that ov is not after fv and that ov is after the first release
         }
         return false;
     }

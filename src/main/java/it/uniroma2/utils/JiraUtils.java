@@ -15,10 +15,10 @@ public class JiraUtils {
     }
 
     // Returns a pair of the json array and the total number of releases
-    public static GenericPair<JSONArray, Integer> queryReleases(String projKey) throws JSONException, IOException{
-        
+    public static GenericPair<JSONArray, Integer> queryReleases(String projKey) throws JSONException, IOException {
+
         String url = "https://issues.apache.org/jira/rest/api/latest/project/" + projKey + "/version";
-        JSONObject json = JSONUtil.readJsonFromUrl(url);
+        JSONObject json = JSONUtils.readJsonFromUrl(url);
         JSONArray releases = json.getJSONArray("values");
         Integer total = json.getInt("total");
 
@@ -40,10 +40,18 @@ public class JiraUtils {
                 + "%22status%22=%22resolved%22)AND%22resolution%22=%22fixed%22&fields=key,resolutiondate,versions,created&startAt="
                 + computedTickets.toString() + "&maxResults=" + tempMaxTickets.toString();
 
-        JSONObject json = JSONUtil.readJsonFromUrl(url);
-        JSONArray jsonIssues = JSONUtil.readJsonFromUrl(url).getJSONArray("issues");
+        JSONObject json = JSONUtils.readJsonFromUrl(url);
         Integer totalTickets = json.getInt("total");
+        // The issues are in the inverted order
+        JSONArray jsonIssues = JSONUtils.readJsonFromUrl(url).getJSONArray("issues");
 
-        return new GenericPair<>(jsonIssues, totalTickets);
+        // Invert the order
+        JSONArray orderedIssues = new JSONArray();
+        for (int i = jsonIssues.length() - 1; i >= 0; i--) {
+            Object elem = jsonIssues.get(i);
+            orderedIssues.put(elem);
+        }
+
+        return new GenericPair<>(orderedIssues, totalTickets);
     }
 }

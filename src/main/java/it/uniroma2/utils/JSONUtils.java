@@ -11,10 +11,10 @@ import java.nio.charset.StandardCharsets;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JSONUtil {
+public class JSONUtils {
 
     // private constructor to avoid instantiation
-    private JSONUtil() {
+    private JSONUtils() {
         throw new IllegalStateException("This class does not have to be instantiated.");
     }
 

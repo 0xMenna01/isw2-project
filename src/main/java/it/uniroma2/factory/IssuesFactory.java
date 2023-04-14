@@ -33,7 +33,6 @@ public class IssuesFactory {
 
         String key = issues.getJSONObject(i).getString("key");
         JSONObject fields = issues.getJSONObject(i).getJSONObject("fields");
-
         String resolutionDateStr = fields.getString("resolutiondate");
         String creationDateStr = fields.getString("created");
         JSONArray listAV = fields.getJSONArray("versions");
