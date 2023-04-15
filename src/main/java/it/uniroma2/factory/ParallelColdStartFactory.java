@@ -34,11 +34,16 @@ public class ParallelColdStartFactory {
 
     }
 
-    public static ParallelColdStartFactory getInstance() {
+    public static ParallelColdStartFactory getInstance() throws ParallelColdStartException {
         if (instance == null) {
             synchronized (ParallelColdStartFactory.class) {
                 if (instance == null) {
                     instance = new ParallelColdStartFactory();
+                    for (ProjectKey key : instance.keys) {
+
+                        if (key.equals(ProjectKey.BOOKEEPER) || key.equals(ProjectKey.SYNCOPE))
+                            throw new ParallelColdStartException("Error: Coldstart must be made cross-project");
+                    }
                 }
             }
         }
