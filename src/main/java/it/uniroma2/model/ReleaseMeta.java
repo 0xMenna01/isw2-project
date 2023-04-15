@@ -14,6 +14,10 @@ public class ReleaseMeta {
         this.date = date;
     }
 
+    public ReleaseMeta(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
@@ -38,11 +42,11 @@ public class ReleaseMeta {
         this.date = date;
     }
 
-    public boolean isAfter(ReleaseMeta rel){
+    public boolean isAfter(ReleaseMeta rel) {
         return this.date.after(rel.getDate());
     }
 
-    public boolean isBefore(ReleaseMeta rel){
+    public boolean isBefore(ReleaseMeta rel) {
         return this.date.before(rel.getDate());
     }
 }

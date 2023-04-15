@@ -19,7 +19,8 @@ import it.uniroma2.utils.JiraUtils;
 
 public class CollectReleasesData {
 
-    LinkedHashMap<ReleaseMeta, Boolean> affectedReleasesMap; // Ordered map by date of the releases
+    private LinkedHashMap<ReleaseMeta, Boolean> affectedReleasesMap; // Ordered map by date of the releases
+    private List<ReleaseMeta> releases = null;
 
     public CollectReleasesData(ProjectKey key) throws ParseException, JSONException, IOException {
 
@@ -39,7 +40,10 @@ public class CollectReleasesData {
     }
 
     public List<ReleaseMeta> getReleasesList() {
-        return new ArrayList<>(affectedReleasesMap.keySet());
+        if(releases == null) this.releases = new ArrayList<>(affectedReleasesMap.keySet());
+        return releases;
     }
+
+    
 
 }

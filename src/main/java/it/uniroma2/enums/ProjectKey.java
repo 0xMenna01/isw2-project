@@ -6,11 +6,10 @@ public enum ProjectKey {
 
     BOOKEEPER("BOOKKEEPER"),
     SYNCOPE("SYNCOPE"),
-    FALCON("FALCON"),
-    IVY("IVY"),
+    AVRO("AVRO"),
     OPENJPA("OPENJPA"),
     STORM("STORM"),
-    TAJO("TAJO");
+    ZOOKEEPER("ZOOKEEPER");
 
     private final String projKey;
 
@@ -31,11 +30,11 @@ public enum ProjectKey {
         return projKey;
     }
 
-    public void setColdStartState(ColdStartState state) {
-        if (this == BOOKEEPER || this == SYNCOPE) {
-            state = ColdStartState.INACTIVE;
-        } else {
+    public ColdStartState getColdStartState() {
+        ColdStartState state = ColdStartState.INACTIVE;
+        if (this != BOOKEEPER && this != SYNCOPE)
             state = ColdStartState.EXECUTING;
-        }
+
+        return state;
     }
 }

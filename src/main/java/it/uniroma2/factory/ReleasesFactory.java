@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ReleasesFactory {
@@ -23,7 +24,7 @@ public class ReleasesFactory {
         return instance;
     }
 
-    //Returns an ordered by date map of releases' dates to names
+    // Returns an ordered by date map of releases' dates to names
     public Map<Date, String> orderedReleasesByDate(JSONArray jsonReleases, int total)
             throws ParseException {
 
@@ -34,12 +35,16 @@ public class ReleasesFactory {
         for (int i = 0; i < total; i++) {
             releaseJson = jsonReleases.getJSONObject(i);
             if (releaseJson.get("released").toString().equals("true")) {
+                try {
+                    String releaseDateString = releaseJson.get("releaseDate").toString();
+                    Date releaseDate = formatter.parse(releaseDateString);
+                    String releaseName = releaseJson.get("name").toString();
 
-                String releaseDateString = releaseJson.getString("releaseDate");
-                Date releaseDate = formatter.parse(releaseDateString);
-                String releaseName = releaseJson.getString("name");
+                    orderedReleasesMap.put(releaseDate, releaseName);
 
-                orderedReleasesMap.put(releaseDate, releaseName);
+                } catch (JSONException e) {
+                    // There is no release date: skip this release and go on
+                }
             }
         }
 

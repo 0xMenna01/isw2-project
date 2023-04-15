@@ -12,11 +12,11 @@ public class ProportionUtils {
     }
 
     // compute the average of [ (fv - iv) / (fv - ov) ] based on issues
-    public static float computeProportion(List<TicketIssue> prevIssues) throws TicketException {
-        float prop = 0;
+    public static double computeProportion(List<TicketIssue> prevIssues) throws TicketException {
+        double prop = 0;
 
-        int num;
-        int den;
+        double num;
+        double den;
         int i = 0;
         for (; i < prevIssues.size(); i++) {
             num = prevIssues.get(i).getFv().getId() - prevIssues.get(i).getIV().getId();
@@ -25,6 +25,7 @@ public class ProportionUtils {
             prop += num / den;
         }
 
-        return prop / i;
+        return prop / (double) i;
     }
+
 }

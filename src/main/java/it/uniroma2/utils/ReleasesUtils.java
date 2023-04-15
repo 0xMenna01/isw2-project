@@ -3,6 +3,7 @@ package it.uniroma2.utils;
 import java.util.Date;
 import java.util.List;
 
+import it.uniroma2.exception.ReleaseException;
 import it.uniroma2.model.ReleaseMeta;
 
 public class ReleasesUtils {
@@ -30,9 +31,18 @@ public class ReleasesUtils {
         return null;
     }
 
-    public static List<ReleaseMeta> getAVs(ReleaseMeta iv, ReleaseMeta fv, List<ReleaseMeta> releases) {  
+    public static List<ReleaseMeta> getAVs(ReleaseMeta iv, ReleaseMeta fv, List<ReleaseMeta> releases) {
         // returns the list of releases between iv and fv (excluded)
-        return releases.subList(releases.indexOf(iv), releases.indexOf(fv)); 
+        return releases.subList(releases.indexOf(iv), releases.indexOf(fv));
+    }
+
+    public static ReleaseMeta getReleaseById(Integer id, List<ReleaseMeta> releases) throws ReleaseException {
+        for (ReleaseMeta release : releases) {
+            if (id.equals(release.getId())) {
+                return release;
+            }
+        }
+        throw new ReleaseException("Error: No release for IV");
     }
 
 }

@@ -10,6 +10,8 @@ import it.uniroma2.model.GenericPair;
 
 public class JiraUtils {
 
+    private static Integer MAX_RES = 100;
+
     private JiraUtils() {
         throw new IllegalStateException("Utility class");
     }
@@ -17,7 +19,8 @@ public class JiraUtils {
     // Returns a pair of the json array and the total number of releases
     public static GenericPair<JSONArray, Integer> queryReleases(String projKey) throws JSONException, IOException {
 
-        String url = "https://issues.apache.org/jira/rest/api/latest/project/" + projKey + "/version";
+        String url = "https://issues.apache.org/jira/rest/api/latest/project/" + projKey + "/version?maxResults="
+                + MAX_RES.toString();
         JSONObject json = JSONUtils.readJsonFromUrl(url);
         JSONArray releases = json.getJSONArray("values");
         Integer total = json.getInt("total");

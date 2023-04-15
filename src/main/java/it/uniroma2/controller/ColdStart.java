@@ -1,35 +1,28 @@
 package it.uniroma2.controller;
 
-import java.io.IOException;
-import java.text.ParseException;
-
-import org.json.JSONException;
-
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.exception.ProjectNameException;
-import it.uniroma2.exception.TicketException;
 import it.uniroma2.utils.ProportionUtils;
 
 public class ColdStart {
 
     private final ProjectKey key;
-    private Float proportion;
+    private Double proportion;
 
-    public ColdStart(String key) throws ProjectNameException {
-        this.key = ProjectKey.fromString(key);
+    public ColdStart(ProjectKey key) {
+        this.key = key;
         this.proportion = null;
     }
 
-    public void start() throws JSONException, ParseException, IOException, TicketException {
+    public void start() throws Exception {
         CollectReleasesData controlData = new CollectReleasesData(this.key);
         CollectIssues issuesControl = new CollectIssues();
-
+        
         issuesControl.retrieveIssues(this.key, controlData.getReleasesList());
         this.proportion = ProportionUtils.computeProportion(issuesControl.getIssues());
 
     }
 
-    public Float getProportion() {
+    public double getProportion() {
         return proportion;
     }
 

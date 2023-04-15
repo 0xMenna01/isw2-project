@@ -1,16 +1,12 @@
 package it.uniroma2.controller;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import it.uniroma2.enums.ColdStartState;
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.exception.TicketException;
 import it.uniroma2.factory.IssuesFactory;
 import it.uniroma2.model.BaseTicket;
 import it.uniroma2.model.GenericPair;
@@ -30,9 +26,9 @@ public class CollectIssues {
     }
 
     public void retrieveIssues(ProjectKey key, List<ReleaseMeta> releasesList)
-            throws JSONException, IOException, ParseException, TicketException {
+            throws Exception {
 
-        key.setColdStartState(state);
+        this.state = key.getColdStartState();
 
         Integer computedTickets = 0;
         Integer tempMaxTickets = 0;
@@ -49,18 +45,24 @@ public class CollectIssues {
             while (computedTickets < totalTickets && computedTickets < tempMaxTickets) {
                 int i = computedTickets % 500; // index of the issue in the json array
                 BaseTicket ticket = IssuesFactory.getInstance().createIssue(i, res.getFirst(), releasesList);
-
                 if (ticket.isValid(releasesList.get(0))) {
+                    ReleaseMeta iv = null;
 
-                    if (ticket.hasValidIV()) {
-                        ReleaseMeta iv = ticket.getIV();
+                    if (ticket.hasValidIV())
+                        iv = ticket.getIV();
+
+                    else if (this.state != ColdStartState.EXECUTING) {
+                        // Enters Proportion
+                        Proportion.getInstance(ticket.getOv(), ticket.getFv()).compute(issues);
+                        // Retrieving the id of the iv
+                        iv = ReleasesUtils.getReleaseById(Proportion.getInstance().getIdIV(),
+                                releasesList);
+                    }
+
+                    if (iv != null)
                         this.issues.add(new TicketIssue(
                                 ticket.getKey(), ticket.getOv(), ticket.getFv(),
                                 ReleasesUtils.getAVs(iv, ticket.getFv(), releasesList), iv));
-                    } else if (state != ColdStartState.EXECUTING) {
-                        // Enters Proportion
-                        // float prop = Proportion.getInstance()
-                    }
                 }
 
                 computedTickets++;
@@ -73,7 +75,5 @@ public class CollectIssues {
     public List<TicketIssue> getIssues() {
         return issues;
     }
-
-    
 
 }

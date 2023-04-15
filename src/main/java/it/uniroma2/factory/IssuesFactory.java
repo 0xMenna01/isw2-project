@@ -31,10 +31,10 @@ public class IssuesFactory {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-        String key = issues.getJSONObject(i).getString("key");
+        String key = issues.getJSONObject(i).get("key").toString();
         JSONObject fields = issues.getJSONObject(i).getJSONObject("fields");
-        String resolutionDateStr = fields.getString("resolutiondate");
-        String creationDateStr = fields.getString("created");
+        String resolutionDateStr = fields.get("resolutiondate").toString();
+        String creationDateStr = fields.get("created").toString();
         JSONArray listAV = fields.getJSONArray("versions");
 
         Date creationDate = format.parse(creationDateStr);
@@ -42,7 +42,7 @@ public class IssuesFactory {
 
         List<ReleaseMeta> av = new ArrayList<>();
         for (int j = 0; j < listAV.length(); j++) {
-            String name = listAV.getJSONObject(j).getString("name");
+            String name = listAV.getJSONObject(j).get("name").toString();
             ReleaseMeta release = ReleasesUtils.getReleaseByName(name, releasesList);
             if (release != null) {
                 av.add(release);
