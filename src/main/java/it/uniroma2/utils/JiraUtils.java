@@ -1,6 +1,13 @@
 package it.uniroma2.utils;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,5 +63,31 @@ public class JiraUtils {
         }
 
         return new GenericPair<>(orderedIssues, totalTickets);
+    }
+
+    public static void orderTicketsByFixDate(JSONArray jsonIssues){
+        List<JSONObject> list = new ArrayList<>();
+        for (int i = 0; i < jsonIssues.length(); i++) {
+            list.add(jsonIssues.getJSONObject(i));
+        }
+        Collections.sort(list, new Comparator<JSONObject>() {
+            @Override
+            public int compare(JSONObject o1, JSONObject o2) {
+                try {
+                    String date1String = o1.getJSONObject("fields").getString("resolutiondate");
+                    String date2String = o2.getJSONObject("fields").getString("resolutiondate");
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                    Date date1 = format.parse(date1String);
+                    Date date2 = format.parse(date2String);
+                    return date1.compareTo(date2);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        for (int i = 0; i < jsonIssues.length(); i++) {
+            jsonIssues.put(i, list.get(i));
+        }
+        
     }
 }

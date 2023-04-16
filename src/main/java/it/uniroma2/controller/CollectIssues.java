@@ -40,7 +40,9 @@ public class CollectIssues {
 
             GenericPair<JSONArray, Integer> res = JiraUtils.queryTickets(key.toString(), computedTickets,
                     tempMaxTickets);
+
             totalTickets = res.getSecond();
+            JiraUtils.orderTicketsByFixDate(res.getFirst());
 
             while (computedTickets < totalTickets && computedTickets < tempMaxTickets) {
                 int i = computedTickets % 500; // index of the issue in the json array

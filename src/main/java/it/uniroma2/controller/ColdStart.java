@@ -1,18 +1,16 @@
 package it.uniroma2.controller;
 
-import java.util.List;
-
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.model.TicketIssue;
+import it.uniroma2.utils.ProportionUtils;
 
 public class ColdStart {
 
     private final ProjectKey key;
-    private List<TicketIssue> issues;
+    private Double prop;
 
     public ColdStart(ProjectKey key) {
         this.key = key;
-        this.issues = null;
+        this.prop = null;
     }
 
     public void start() throws Exception {
@@ -20,13 +18,13 @@ public class ColdStart {
         CollectIssues issuesControl = new CollectIssues();
         
         issuesControl.retrieveIssues(this.key, controlData.getReleasesList());
-        this.issues = issuesControl.getIssues();
+        this.prop = ProportionUtils.computeProportion(issuesControl.getIssues());
 
     }
 
-    public List<TicketIssue> getIssues() throws Exception {
-        if(issues == null) throw new Exception("Must start the cold start first");
-        return issues;
+    public double getProportion() throws Exception {
+        if(prop == null) throw new Exception("Must start the cold start first");
+        return prop;
     }
 
 }
