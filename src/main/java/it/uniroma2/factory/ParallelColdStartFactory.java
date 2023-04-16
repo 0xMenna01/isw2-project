@@ -12,6 +12,9 @@ import it.uniroma2.controller.ColdStart;
 import it.uniroma2.enums.ExecutorState;
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.exception.ParallelColdStartException;
+import it.uniroma2.exception.TicketException;
+import it.uniroma2.model.TicketIssue;
+import it.uniroma2.utils.ProportionUtils;
 
 public class ParallelColdStartFactory {
 
@@ -21,14 +24,15 @@ public class ParallelColdStartFactory {
     private ExecutorService parallelExec = null;
     // These are the tasks that will be executed in parallel and will return the
     // proportion
-    private List<Callable<Double>> tasks = null;
+    private List<Callable<List<TicketIssue>>> tasks = null;
     private ExecutorState state;
 
     private Double prop;
 
     private ParallelColdStartFactory() {
+
         this.keys = new ProjectKey[] { ProjectKey.AVRO, ProjectKey.OPENJPA,
-                ProjectKey.STORM, ProjectKey.ZOOKEEPER };
+                ProjectKey.STORM, ProjectKey.ZOOKEEPER, ProjectKey.FALCON };
         this.state = ExecutorState.NOT_READY;
         this.prop = null;
 
@@ -69,7 +73,7 @@ public class ParallelColdStartFactory {
                 tasks.add(() -> {
                     ColdStart coldStart = new ColdStart(key);
                     coldStart.start();
-                    return coldStart.getProportion();
+                    return coldStart.getIssues();
                 });
             }
         } else {
@@ -78,23 +82,24 @@ public class ParallelColdStartFactory {
         }
     }
 
-    public double getProportion() throws InterruptedException, ExecutionException, ParallelColdStartException {
+    public double getProportion()
+            throws InterruptedException, ExecutionException, ParallelColdStartException, TicketException {
         switch (state) {
             case DONE:
                 return prop;
             case READY: {
-                List<Future<Double>> results = parallelExec.invokeAll(tasks);
-                // Compute the average proportion
-                double totalProportion = 0;
-                for (Future<Double> res : results) {
-                    totalProportion += res.get();
+                List<Future<List<TicketIssue>>> results = parallelExec.invokeAll(tasks);
+                // Compute the average proportion based on valid tickets of other projects
+                List<TicketIssue> totalTickets = new ArrayList<>();
+                for (Future<List<TicketIssue>> res : results) {
+                    totalTickets.addAll(res.get());
                 }
                 // Shutdown the pool and reset the tasks
                 parallelExec.shutdown();
                 tasks = null;
-                this.prop = totalProportion / (double) keys.length;
+                this.prop = ProportionUtils.computeProportion(totalTickets);
                 this.state = ExecutorState.DONE;
-                return this.prop;
+                return prop;
             }
             default: {
                 this.state = ExecutorState.ERROR;
