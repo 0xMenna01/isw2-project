@@ -95,7 +95,7 @@ public class ParallelColdStartFactory {
 
                 for (Future<Double> res : results) {
                     double prop = res.get();
-                    if (prop == -1) { // not enogh tickets
+                    if (prop == -1) { // not enough tickets
                         prop = 0;
                         validProj--;
                     }
