@@ -16,14 +16,15 @@ public class ColdStart {
     public void start() throws Exception {
         CollectReleasesData controlData = new CollectReleasesData(this.key);
         CollectIssues issuesControl = new CollectIssues();
-        
+
         issuesControl.retrieveIssues(this.key, controlData.getReleasesList());
         this.prop = ProportionUtils.computeProportion(issuesControl.getIssues());
 
     }
 
     public double getProportion() throws Exception {
-        if(prop == null) throw new Exception("Must start the cold start first");
+        if (prop == null)
+            throw new Exception("Must start the cold start first");
         return prop;
     }
 

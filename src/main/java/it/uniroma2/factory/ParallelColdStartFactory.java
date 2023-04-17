@@ -13,6 +13,7 @@ import it.uniroma2.enums.ExecutorState;
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.exception.ParallelColdStartException;
 import it.uniroma2.exception.TicketException;
+import it.uniroma2.utils.ProportionUtils;
 
 public class ParallelColdStartFactory {
 
@@ -29,8 +30,8 @@ public class ParallelColdStartFactory {
 
     private ParallelColdStartFactory() {
 
-        this.keys = new ProjectKey[] { ProjectKey.AVRO, ProjectKey.OPENJPA,
-                ProjectKey.STORM, ProjectKey.ZOOKEEPER, ProjectKey.FALCON };
+        this.keys = new ProjectKey[] { ProjectKey.SYNCOPE, ProjectKey.AVRO,
+                ProjectKey.TAJO, ProjectKey.STORM, ProjectKey.ZOOKEEPER };
 
         this.state = ExecutorState.NOT_READY;
         this.prop = null;
@@ -44,7 +45,7 @@ public class ParallelColdStartFactory {
                     instance = new ParallelColdStartFactory();
                     for (ProjectKey key : instance.keys) {
 
-                        if (key.equals(ProjectKey.BOOKEEPER) || key.equals(ProjectKey.SYNCOPE))
+                        if (key.equals(ProjectKey.BOOKEEPER)) // ADD SYNCOPE
                             throw new ParallelColdStartException("Error: Coldstart must be made cross-project");
                     }
                 }
@@ -88,25 +89,25 @@ public class ParallelColdStartFactory {
                 return prop;
             case READY: {
                 List<Future<Double>> results = parallelExec.invokeAll(tasks);
-                // Compute the average proportion
-                double totalProp = 0;
+                // Computes the median of proportions
                 int validProj = keys.length; // number of projects with enough tickets
                                              // to compute proportion
 
+                List<Double> props = new ArrayList<>();
                 for (Future<Double> res : results) {
                     double prop = res.get();
                     if (prop == -1) { // not enough tickets
-                        prop = 0;
                         validProj--;
+                        continue;
                     }
-                    totalProp += prop;
+                    props.add(prop);
                 }
                 // Shutdown the pool and reset the tasks
                 parallelExec.shutdown();
                 tasks = null;
                 if (validProj == 0)
                     throw new ParallelColdStartException("None of the projects is valid to compute proportion");
-                this.prop = totalProp / validProj;
+                this.prop = ProportionUtils.computeMedian(props);
                 this.state = ExecutorState.DONE;
                 return prop;
             }

@@ -48,7 +48,17 @@ public class Proportion {
             ParallelColdStartFactory.getInstance().initConcurrecy();
             this.prop = ParallelColdStartFactory.getInstance().getProportion();
         }
-        System.out.println(prop);
+
+        //Delete this later on
+        if(ProportionUtils.computeProportion(prevIssues) == -1){
+            System.out.println("COLD START PROPORTION: " + this.prop);
+            for(TicketIssue issue: prevIssues){
+                System.out.println("TICKETS -- OV: "+issue.getOv().getId() + " -- FV: "+issue.getFv().getId());
+            }
+        } else{
+            System.out.println("INCREMENTAL PROPORTION: " + this.prop);
+            System.out.println("NUM OF TICKETS: "+ prevIssues.size());
+        }
     }
 
     public int getIdIV() throws Exception {

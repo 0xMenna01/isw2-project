@@ -7,10 +7,9 @@ public enum ProjectKey {
     BOOKEEPER("BOOKKEEPER"),
     SYNCOPE("SYNCOPE"),
     AVRO("AVRO"),
-    OPENJPA("OPENJPA"),
+    TAJO("TAJO"),
     STORM("STORM"),
-    ZOOKEEPER("ZOOKEEPER"),
-    FALCON("FALCON");
+    ZOOKEEPER("ZOOKEEPER");
 
     private final String projKey;
 
@@ -33,7 +32,7 @@ public enum ProjectKey {
 
     public ColdStartState getColdStartState() {
         ColdStartState state = ColdStartState.INACTIVE;
-        if (this != BOOKEEPER && this != SYNCOPE)
+        if (this != BOOKEEPER) // ADD SYNCOPE
             state = ColdStartState.EXECUTING;
 
         return state;
