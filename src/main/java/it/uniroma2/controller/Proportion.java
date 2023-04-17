@@ -43,11 +43,12 @@ public class Proportion {
     public void compute(List<TicketIssue> prevIssues)
             throws InterruptedException, ExecutionException, ParallelColdStartException, TicketException {
         if ((this.prop = ProportionUtils.computeProportion(prevIssues)) == -1) {
-            // if method returns -1 it means there are not enogh tickets,
+            // if method returns -1 it means there are not enough tickets,
             // so apply cold start
             ParallelColdStartFactory.getInstance().initConcurrecy();
             this.prop = ParallelColdStartFactory.getInstance().getProportion();
         }
+        System.out.println(prop);
     }
 
     public int getIdIV() throws Exception {

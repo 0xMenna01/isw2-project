@@ -39,7 +39,7 @@ public class CollectIssues {
 
             GenericPair<JSONArray, Integer> res = JiraUtils.queryTickets(key.toString(), computedTickets,
                     tempMaxTickets);
-
+            
             totalTickets = res.getSecond();
             JiraUtils.orderTicketsByFixDate(res.getFirst());
 
