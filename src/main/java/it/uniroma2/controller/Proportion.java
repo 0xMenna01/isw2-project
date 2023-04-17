@@ -48,7 +48,6 @@ public class Proportion {
             ParallelColdStartFactory.getInstance().initConcurrecy();
             this.prop = ParallelColdStartFactory.getInstance().getProportion();
         }
-        System.out.println(this.prop);
     }
 
     public int getIdIV() throws Exception {

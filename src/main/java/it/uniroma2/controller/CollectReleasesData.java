@@ -15,12 +15,12 @@ import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.factory.ReleasesFactory;
 import it.uniroma2.model.GenericPair;
 import it.uniroma2.model.ReleaseMeta;
+import it.uniroma2.model.TicketIssue;
 import it.uniroma2.utils.JiraUtils;
 
 public class CollectReleasesData {
 
     private LinkedHashMap<ReleaseMeta, Boolean> affectedReleasesMap; // Ordered map by date of the releases
-    private List<ReleaseMeta> releases = null;
 
     public CollectReleasesData(ProjectKey key) throws ParseException, JSONException, IOException {
 
@@ -40,10 +40,19 @@ public class CollectReleasesData {
     }
 
     public List<ReleaseMeta> getReleasesList() {
-        if(releases == null) this.releases = new ArrayList<>(affectedReleasesMap.keySet());
-        return releases;
+        return new ArrayList<>(affectedReleasesMap.keySet());
+
     }
 
-    
+    public void setAffectedReleases(List<TicketIssue> issues) {
+        for (TicketIssue issue : issues) {
+            List<ReleaseMeta> affectedVersions = issue.getAv();
+            for (ReleaseMeta affectedVersion : affectedVersions) {
+                if (affectedReleasesMap.containsKey(affectedVersion)) {
+                    affectedReleasesMap.put(affectedVersion, true);
+                }
+            }
+        }
+    }
 
 }

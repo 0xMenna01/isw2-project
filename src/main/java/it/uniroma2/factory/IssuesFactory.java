@@ -9,8 +9,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import it.uniroma2.model.BaseTicket;
 import it.uniroma2.model.ReleaseMeta;
+import it.uniroma2.model.TicketIssue;
 import it.uniroma2.utils.ReleasesUtils;
 
 public class IssuesFactory {
@@ -27,7 +27,7 @@ public class IssuesFactory {
         return instance;
     }
 
-    public BaseTicket createIssue(int i, JSONArray issues, List<ReleaseMeta> releasesList) throws ParseException {
+    public TicketIssue createIssue(int i, JSONArray issues, List<ReleaseMeta> releasesList) throws ParseException {
 
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
@@ -52,7 +52,7 @@ public class IssuesFactory {
         ReleaseMeta openVersion = ReleasesUtils.getReleaseByDate(creationDate, releasesList);
         ReleaseMeta fixVersion = ReleasesUtils.getReleaseByDate(resolutionDate, releasesList);
 
-        return new BaseTicket(key, openVersion, fixVersion, av);
+        return new TicketIssue(key, openVersion, fixVersion, av);
 
     }
 }

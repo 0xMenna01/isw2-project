@@ -30,6 +30,8 @@ public class ExecuteDataCollection {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        //Setting the affected releases
+        releasesControl.setAffectedReleases(issuesControl.getIssues());
 
     }
 

@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import it.uniroma2.enums.ColdStartState;
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.factory.IssuesFactory;
-import it.uniroma2.model.BaseTicket;
 import it.uniroma2.model.GenericPair;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
@@ -46,16 +45,16 @@ public class CollectIssues {
 
             while (computedTickets < totalTickets && computedTickets < tempMaxTickets) {
                 int i = computedTickets % 500; // index of the issue in the json array
-                BaseTicket ticket = IssuesFactory.getInstance().createIssue(i, res.getFirst(), releasesList);
-                if (ticket.isValid(releasesList.get(0))) {
+                TicketIssue tmpTicket = IssuesFactory.getInstance().createIssue(i, res.getFirst(), releasesList);
+                if (tmpTicket.isValid(releasesList.get(0))) {
                     ReleaseMeta iv = null;
 
-                    if (ticket.hasValidIV())
-                        iv = ticket.getIV();
+                    if (tmpTicket.hasValidIV())
+                        iv = tmpTicket.getIV();
 
                     else if (this.state != ColdStartState.EXECUTING) {
                         // Enters Proportion
-                        Proportion.getInstance(ticket.getOv(), ticket.getFv()).compute(issues);
+                        Proportion.getInstance(tmpTicket.getOv(), tmpTicket.getFv()).compute(issues);
                         // Retrieving the id of the iv
                         iv = ReleasesUtils.getReleaseById(Proportion.getInstance().getIdIV(),
                                 releasesList);
@@ -63,8 +62,8 @@ public class CollectIssues {
 
                     if (iv != null)
                         this.issues.add(new TicketIssue(
-                                ticket.getKey(), ticket.getOv(), ticket.getFv(),
-                                ReleasesUtils.getAVs(iv, ticket.getFv(), releasesList), iv));
+                                tmpTicket.getKey(), tmpTicket.getOv(), tmpTicket.getFv(),
+                                ReleasesUtils.getAVs(iv, tmpTicket.getFv(), releasesList)));
                 }
 
                 computedTickets++;
