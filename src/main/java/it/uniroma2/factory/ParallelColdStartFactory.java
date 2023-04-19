@@ -30,8 +30,8 @@ public class ParallelColdStartFactory {
 
     private ParallelColdStartFactory() {
 
-        this.keys = new ProjectKey[] { ProjectKey.SYNCOPE, ProjectKey.AVRO,
-                ProjectKey.TAJO, ProjectKey.STORM, ProjectKey.ZOOKEEPER };
+        this.keys = new ProjectKey[] { ProjectKey.AVRO, ProjectKey.FALCON,
+                ProjectKey.OPENJPA, ProjectKey.ZOOKEEPER };
 
         this.state = ExecutorState.NOT_READY;
         this.prop = null;
@@ -45,7 +45,7 @@ public class ParallelColdStartFactory {
                     instance = new ParallelColdStartFactory();
                     for (ProjectKey key : instance.keys) {
 
-                        if (key.equals(ProjectKey.BOOKEEPER)) // ADD SYNCOPE
+                        if (key.equals(ProjectKey.BOOKEEPER) || key.equals(ProjectKey.SYNCOPE))
                             throw new ParallelColdStartException("Error: Coldstart must be made cross-project");
                     }
                 }

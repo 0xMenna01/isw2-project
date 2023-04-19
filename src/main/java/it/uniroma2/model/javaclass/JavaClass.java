@@ -7,7 +7,6 @@ public class JavaClass extends ClassMeta {
     public JavaClass(String pathName, ClassMetrics metrics, String content) {
         super(pathName, metrics);
         this.content = content;
-
     }
 
     public String getContent() {
@@ -16,5 +15,10 @@ public class JavaClass extends ClassMeta {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @Override
+    public String toString(){
+        return pathName;
     }
 }

@@ -2,9 +2,9 @@ package it.uniroma2.model.javaclass;
 
 public class ClassMeta {
 
-    private String pathName;
-    private ClassMetrics metrics;
-    private boolean isBuggy;
+    protected String pathName;
+    protected ClassMetrics metrics;
+    protected boolean isBuggy;
 
     public ClassMeta(String pathName, ClassMetrics metrics) {
         this.pathName = pathName;

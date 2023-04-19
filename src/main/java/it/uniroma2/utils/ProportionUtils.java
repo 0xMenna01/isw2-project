@@ -19,20 +19,19 @@ public class ProportionUtils {
         // Cheks if number of issues for the proportion computation are at least a given
         // threshold
         // The method returns -1 if there are not enough tickets
-        if (prevIssues.size() < THRESHOLD)
+        int numTickets = prevIssues.size();
+        if (numTickets < THRESHOLD)
             return -1;
 
         double proportion = 0.0;
-        int i = 0;
-        for (; i < prevIssues.size(); i++) {
-            double num = prevIssues.get(i).getFv().getId() - prevIssues.get(i).getIV().getId();
-            double den = prevIssues.get(i).getFv().getId() - prevIssues.get(i).getOv().getId();
+        for (TicketIssue issue : prevIssues) {
+            double num = issue.getFv().getId() - issue.getIV().getId();
+            double den = issue.getFv().getId() - issue.getOv().getId();
             den = den == 0 ? 1 : den;
-
             proportion += num / den;
         }
 
-        return proportion / i;
+        return proportion / numTickets;
     }
 
     public static double computeMedian(List<Double> values) {

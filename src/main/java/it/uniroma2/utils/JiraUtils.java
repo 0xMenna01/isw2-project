@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import it.uniroma2.model.GenericPair;
 
 public class JiraUtils {
-
+    
     private static Integer MAX_RES = 100;
 
     private JiraUtils() {
