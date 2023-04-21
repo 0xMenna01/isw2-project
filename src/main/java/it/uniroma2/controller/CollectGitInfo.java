@@ -32,13 +32,13 @@ public class CollectGitInfo {
     private List<TicketIssue> issues;
 
     // Associations (Release, Class) containing all measurament information
-    private Releases rel;
+    private Releases rels;
 
     public CollectGitInfo(String repoUrl, List<ReleaseMeta> relMeta, List<TicketIssue> issues)
             throws GitException, InvalidRemoteException, TransportException, GitAPIException, IOException {
         this.relMeta = relMeta;
         this.issues = issues;
-        this.rel = new Releases();
+        this.rels = new Releases();
 
         File directory = new File("temp"); // Directory for cloning the repo
 
@@ -46,7 +46,6 @@ public class CollectGitInfo {
             this.repo = new FileRepository("temp/.git");
             this.git = new Git(this.repo);
         } else {
-            System.out.println("---- CLONING THE PROJECT REPO.. ----");
             this.git = Git.cloneRepository()
                     .setURI(repoUrl)
                     .setDirectory(
@@ -54,36 +53,34 @@ public class CollectGitInfo {
                     .call();
             this.repo = git.getRepository();
         }
-
-        System.out.println("---- PROJECT REPO CLONED SUCCESSFULLY ----");
     }
 
     public void computeRelClassesCommits() throws IOException, GitAPIException, GitException {
-        System.out.println("---- RETRIEVING ALL COMMITS.. ----");
+        // Getting all commits
         List<RevCommit> allCommits = retrieveCommits();
-        System.out.println("---- OK ----");
 
+        // Delete this later on
+        int num = 0;
         List<RevCommit> tempMatchCommits = null;
         for (ReleaseMeta rel : relMeta) {
             tempMatchCommits = GitUtils.getRelCommitsOrderedByDate(allCommits, rel);
+            // Delete this later on
+            num += tempMatchCommits.size();
             // Creating all classes associated to the last release commit
-            System.out.println("---- BUILDING CLASSES OF RELEASE " + rel.getName() + " ----");
-            List<JavaClass> relClasses = ReleaseClassesFactory.getInstance()
-                    .buildClasses(tempMatchCommits.get(tempMatchCommits.size() - 1), repo);
-            System.out.println("---- OK ----");
-            // Updating the releases state by creating a Release instace that maps a release
-            // to its classes, specifying all commits that changed a class
-            System.out.println("---- ASSOCIATING COMMITS TO CLASSES ----");
-            this.rel.add(
-                    ReleaseClassesFactory.getInstance().buildReleaseCommits(repo, rel,
-                            tempMatchCommits, relClasses));
-            System.out.println("---- OK ----");
+            if (!tempMatchCommits.isEmpty()) {
+                List<JavaClass> relClasses = ReleaseClassesFactory.getInstance()
+                        .buildClasses(tempMatchCommits.get(tempMatchCommits.size() - 1), repo);
+
+                // Updating the releases state by creating a Release instace that maps a release
+                // to its classes, specifying all commits that changed a class
+                this.rels.add(
+                        ReleaseClassesFactory.getInstance().buildReleaseCommits(repo, rel,
+                                tempMatchCommits, relClasses));
+            }
         }
 
         this.git.close();
         // GitUtils.deleteDirectory("temp");
-        // System.out.println("---- OK: REPO CLEANED ----");
-        System.out.println("---- DONE ----");
     }
 
     private List<RevCommit> retrieveCommits() throws GitAPIException, RevisionSyntaxException, IOException {
@@ -101,11 +98,10 @@ public class CollectGitInfo {
         }
 
         return commits;
-
     }
 
     public Releases getRel() {
-        return rel;
+        return rels;
     }
 
 }

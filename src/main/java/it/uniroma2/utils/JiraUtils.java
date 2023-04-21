@@ -16,8 +16,6 @@ import org.json.JSONObject;
 import it.uniroma2.model.GenericPair;
 
 public class JiraUtils {
-    
-    private static Integer MAX_RES = 100;
 
     private JiraUtils() {
         throw new IllegalStateException("Utility class");
@@ -26,13 +24,12 @@ public class JiraUtils {
     // Returns a pair of the json array and the total number of releases
     public static GenericPair<JSONArray, Integer> queryReleases(String projKey) throws JSONException, IOException {
 
-        String url = "https://issues.apache.org/jira/rest/api/latest/project/" + projKey + "/version?maxResults="
-                + MAX_RES.toString();
-        JSONObject json = JSONUtils.readJsonFromUrl(url);
-        JSONArray releases = json.getJSONArray("values");
-        Integer total = json.getInt("total");
+        String url = "https://issues.apache.org/jira/rest/api/latest/project/" + projKey;
 
-        return new GenericPair<>(releases, total);
+        JSONObject json = JSONUtils.readJsonFromUrl(url);
+        JSONArray releases = json.getJSONArray("versions");
+
+        return new GenericPair<>(releases, releases.length());
     }
 
     /*
@@ -65,7 +62,7 @@ public class JiraUtils {
         return new GenericPair<>(orderedIssues, totalTickets);
     }
 
-    public static void orderTicketsByFixDate(JSONArray jsonIssues){
+    public static void orderTicketsByFixDate(JSONArray jsonIssues) {
         List<JSONObject> list = new ArrayList<>();
         for (int i = 0; i < jsonIssues.length(); i++) {
             list.add(jsonIssues.getJSONObject(i));
@@ -88,6 +85,6 @@ public class JiraUtils {
         for (int i = 0; i < jsonIssues.length(); i++) {
             jsonIssues.put(i, list.get(i));
         }
-        
+
     }
 }

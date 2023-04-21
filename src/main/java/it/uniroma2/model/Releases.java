@@ -8,23 +8,27 @@ import it.uniroma2.model.javaclass.JavaClass;
 public class Releases {
     List<Release> releases;
 
-    public Releases(){
+    public Releases() {
         this.releases = new ArrayList<>();
     }
 
-    public List<JavaClass> getClasses(ReleaseMeta rel){
-        for (Release release: releases){
+    public List<JavaClass> getClasses(ReleaseMeta rel) {
+        for (Release release : releases) {
             if (release.getId() == rel.getId())
                 return release.getClasses();
         }
         return null;
     }
 
-    public void add(Release rel){
+    public List<Release> getReleases(){
+        return releases;
+    }
+
+    public void add(Release rel) {
         releases.add(rel);
     }
 
-    public Release get(int i){
+    public Release get(int i) {
         return releases.get(i);
     }
 }

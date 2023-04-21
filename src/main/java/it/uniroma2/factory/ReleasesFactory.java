@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ReleasesFactory {
@@ -34,17 +33,14 @@ public class ReleasesFactory {
 
         for (int i = 0; i < total; i++) {
             releaseJson = jsonReleases.getJSONObject(i);
-            if (releaseJson.get("released").toString().equals("true")) {
-                try {
-                    String releaseDateString = releaseJson.get("releaseDate").toString();
-                    Date releaseDate = formatter.parse(releaseDateString);
-                    String releaseName = releaseJson.get("name").toString();
+            if (releaseJson.has("releaseDate") && releaseJson.has("name")) {
 
-                    orderedReleasesMap.put(releaseDate, releaseName);
+                String releaseDateString = releaseJson.get("releaseDate").toString();
+                Date releaseDate = formatter.parse(releaseDateString);
+                String releaseName = releaseJson.get("name").toString();
 
-                } catch (JSONException e) {
-                    // There is no release date: skip this release and go on
-                }
+                orderedReleasesMap.put(releaseDate, releaseName);
+
             }
         }
 

@@ -25,7 +25,7 @@ import it.uniroma2.model.ReleaseMeta;
 
 public class GitUtils {
 
-    private static final Date FIRST_DATE = new Date(0); // set to 1970-01-01
+    private static Date firstDate = new Date(0); // set to 1970-01-01
 
     private GitUtils() {
         throw new IllegalStateException("Utility class");
@@ -53,11 +53,11 @@ public class GitUtils {
         for (RevCommit commit : commitsList) {
             Date commitDate = commit.getCommitterIdent().getWhen();
 
-            if (commitDate.after(FIRST_DATE) && (commitDate.before(lastDate) || commitDate.equals(lastDate))) {
+            if (commitDate.after(firstDate) && !commitDate.after(lastDate)) {
                 orderedCommits.put(commitDate, commit);
             }
-
         }
+        firstDate = lastDate; // preparing for next release
 
         for (Map.Entry<Date, RevCommit> commit : orderedCommits.entrySet()) {
             matchingCommits.add(commit.getValue());

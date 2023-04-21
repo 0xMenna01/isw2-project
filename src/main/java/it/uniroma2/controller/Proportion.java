@@ -9,6 +9,7 @@ import it.uniroma2.factory.ParallelColdStartFactory;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.utils.ProportionUtils;
+import it.uniroma2.view.MainView;
 
 public class Proportion {
 
@@ -48,6 +49,8 @@ public class Proportion {
             ParallelColdStartFactory.getInstance().initConcurrecy();
             this.prop = ParallelColdStartFactory.getInstance().getProportion();
         }
+        // Print the proportion (Remove later on)
+        MainView.printProportion(prop, prevIssues);
     }
 
     public int getIdIV() throws Exception {

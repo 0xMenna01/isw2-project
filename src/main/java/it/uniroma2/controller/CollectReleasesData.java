@@ -23,7 +23,7 @@ public class CollectReleasesData {
     private LinkedHashMap<ReleaseMeta, Boolean> affectedReleasesMap; // Ordered map by date of the releases
 
     public CollectReleasesData(ProjectKey key) throws ParseException, JSONException, IOException {
-
+        
         LinkedHashMap<ReleaseMeta, Boolean> releasesAffectedMap = new LinkedHashMap<>();
         GenericPair<JSONArray, Integer> res = JiraUtils.queryReleases(key.toString());
         Map<Date, String> releasesMap = ReleasesFactory.getInstance().orderedReleasesByDate(res.getFirst(),
