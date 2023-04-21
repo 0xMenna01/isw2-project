@@ -2,6 +2,8 @@ package it.uniroma2.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +27,16 @@ import it.uniroma2.model.ReleaseMeta;
 
 public class GitUtils {
 
-    private static Date firstDate = new Date(0); // set to 1970-01-01
+    // Date that will be used to retrieve commits from the first release
+    private static Date firstDate; // set to 1970-01-01
+    static {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            firstDate = formatter.parse("1970-01-01");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
 
     private GitUtils() {
         throw new IllegalStateException("Utility class");
@@ -48,19 +59,17 @@ public class GitUtils {
         Map<Date, RevCommit> orderedCommits = new TreeMap<>();
         List<RevCommit> matchingCommits = new ArrayList<>();
 
-        Date lastDate = release.getDate();
-
         for (RevCommit commit : commitsList) {
             Date commitDate = commit.getCommitterIdent().getWhen();
 
-            if (commitDate.after(firstDate) && !commitDate.after(lastDate)) {
+            if (commitDate.after(firstDate) && !commitDate.after(release.getDate())) {
                 orderedCommits.put(commitDate, commit);
             }
         }
-        firstDate = lastDate; // preparing for next release
+        firstDate = release.getDate(); // preparing for next release
 
-        for (Map.Entry<Date, RevCommit> commit : orderedCommits.entrySet()) {
-            matchingCommits.add(commit.getValue());
+        for (Map.Entry<Date, RevCommit> com : orderedCommits.entrySet()) {
+            matchingCommits.add(com.getValue());
         }
         return matchingCommits;
     }

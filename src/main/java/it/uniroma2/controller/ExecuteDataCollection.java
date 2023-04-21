@@ -4,8 +4,6 @@ import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.exception.ProjectNameException;
 import it.uniroma2.view.MainView;
 
-//Remember to remove all print statements before submitting
-
 public class ExecuteDataCollection {
 
     private final ProjectKey projKey;
@@ -50,6 +48,7 @@ public class ExecuteDataCollection {
         // Setting the affected releases
         releasesControl.setAffectedReleases(issuesControl.getIssues());
 
+        System.out.println("RETRIEVING GIT DATA...");
         // Collecting git data
         try {
             CollectGitInfo gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(),

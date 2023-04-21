@@ -23,6 +23,7 @@ import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.model.javaclass.JavaClass;
 import it.uniroma2.utils.GitUtils;
+import it.uniroma2.view.MainView;
 
 public class CollectGitInfo {
 
@@ -46,11 +47,16 @@ public class CollectGitInfo {
             this.repo = new FileRepository("temp/.git");
             this.git = new Git(this.repo);
         } else {
+            System.out.println("CLONING REPO...");
+
             this.git = Git.cloneRepository()
                     .setURI(repoUrl)
                     .setDirectory(
                             directory)
                     .call();
+
+            System.out.println("REPO CLONED SUCCESSFULLY!");
+
             this.repo = git.getRepository();
         }
     }
@@ -58,14 +64,19 @@ public class CollectGitInfo {
     public void computeRelClassesCommits() throws IOException, GitAPIException, GitException {
         // Getting all commits
         List<RevCommit> allCommits = retrieveCommits();
+        // Print number of commits
+        MainView.printNumberCommits(allCommits.size());
 
         // Delete this later on
         int num = 0;
         List<RevCommit> tempMatchCommits = null;
         for (ReleaseMeta rel : relMeta) {
             tempMatchCommits = GitUtils.getRelCommitsOrderedByDate(allCommits, rel);
+
             // Delete this later on
             num += tempMatchCommits.size();
+            MainView.printNumOfCommitsFoRelease(tempMatchCommits.size(), rel.getName());
+
             // Creating all classes associated to the last release commit
             if (!tempMatchCommits.isEmpty()) {
                 List<JavaClass> relClasses = ReleaseClassesFactory.getInstance()
@@ -78,6 +89,9 @@ public class CollectGitInfo {
                                 tempMatchCommits, relClasses));
             }
         }
+
+        // Printing number of commits for all releases
+        MainView.printTotalNumOfCommitsForReleases(num);
 
         this.git.close();
         // GitUtils.deleteDirectory("temp");

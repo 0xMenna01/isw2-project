@@ -14,15 +14,18 @@ public class MainView {
     private static final String RELEASE_FILE = "outputs/releases.txt";
     private static final String ISSUE_FILE = "outputs/issues.txt";
     private static final String PROPORTION_FILE = "outputs/proportion.txt";
+    private static final String GIT_FILE = "outputs/git.txt";
     private static FileWriter relFile;
     private static FileWriter issuesFile;
     private static FileWriter proportionFile;
+    private static FileWriter gitFile;
 
     static {
         try {
             relFile = new FileWriter(RELEASE_FILE, true);
             issuesFile = new FileWriter(ISSUE_FILE, true);
             proportionFile = new FileWriter(PROPORTION_FILE, true);
+            gitFile = new FileWriter(GIT_FILE, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,13 +130,29 @@ public class MainView {
         print("TOTAL NUMBER OF AFFECTED VERSIONS: " + totalAvs.size() + "\n", issuesFile);
     }
 
+    // GIT VIEW
+    public static void printNumberCommits(int numberCommits) {
+        printTitle("GIT", gitFile);
+        print("Number of total commits: " + numberCommits, gitFile);
+    }
+
+    public static void printNumOfCommitsFoRelease(int numOfCommits, String releaseName) {
+        printMargins(gitFile);
+        print("Number of commits for release " + releaseName + ": " + numOfCommits, gitFile);
+    }
+
+    public static void printTotalNumOfCommitsForReleases(int totalNumOfCommits) {
+        printMargins(gitFile);
+        print("Total number of commits for all releases: " + totalNumOfCommits, gitFile);
+    }
+
     public static void closeFiles() {
         try {
             relFile.close();
             proportionFile.close();
             issuesFile.close();
+            gitFile.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
