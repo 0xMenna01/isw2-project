@@ -2,6 +2,7 @@ package it.uniroma2.controller;
 
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.exception.ProjectNameException;
+import it.uniroma2.model.AffectedReleases;
 import it.uniroma2.view.MainView;
 
 public class ExecuteDataCollection {
@@ -46,14 +47,13 @@ public class ExecuteDataCollection {
         }
 
         // Setting the affected releases
-        releasesControl.setAffectedReleases(issuesControl.getIssues());
+        AffectedReleases affRel = new AffectedReleases();
+        affRel.set(issuesControl.getIssues());
 
         System.out.println("RETRIEVING GIT DATA...");
         // Collecting git data
         try {
-            CollectGitInfo gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(),
-                    issuesControl.getIssues());
-
+            CollectGitInfo gitControl = new CollectGitInfo(repoUrl, affRel, issuesControl.getIssues());
             gitControl.computeRelClassesCommits();
         } catch (Exception e) {
             throw new RuntimeException(e);

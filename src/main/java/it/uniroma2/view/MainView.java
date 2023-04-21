@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniroma2.exception.TicketException;
+import it.uniroma2.model.Release;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
+import it.uniroma2.model.javaclass.JavaClass;
 
 public class MainView {
 
@@ -145,6 +147,28 @@ public class MainView {
         printMargins(gitFile);
         print("Total number of commits for all releases: " + totalNumOfCommits, gitFile);
     }
+
+    public static void printNumOfClassesForRelease(int numOfClasses, String releaseName) {
+        printMargins(gitFile);
+        print("Number of classes for release " + releaseName + ": " + numOfClasses, gitFile);
+    }
+
+    public static void printReleasesCommitsForClasses(List<Release> releases) {
+        printMargins(gitFile);
+        print("COMMITS THAT CHANGED A CLASS OF EACH RELEASE", gitFile);
+        for (Release release : releases) {
+            printMargins(gitFile);
+            print("Release: " + release.getName(), gitFile);
+            for (JavaClass clazz : release.getClasses()) {
+                printMargins(gitFile);
+                print("Class PATH: " + clazz.toString(), gitFile);
+                print("", gitFile);
+                print("Number of commits: " + release.getClassesCommits().get(clazz).size(), gitFile);
+            }
+        }
+    }
+
+    // CLOSE FILES
 
     public static void closeFiles() {
         try {

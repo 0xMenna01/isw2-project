@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -24,6 +25,7 @@ import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 import it.uniroma2.exception.GitException;
 import it.uniroma2.model.ReleaseMeta;
+import it.uniroma2.model.TicketIssue;
 
 public class GitUtils {
 
@@ -137,6 +139,19 @@ public class GitUtils {
 
         return modifiedClasses;
 
+    }
+
+    public static boolean existsBug(List<RevCommit> commits, List<TicketIssue> issues) {
+        for (RevCommit commit : commits) {
+            for (TicketIssue issue : issues) {
+                Pattern pattern = Pattern.compile(issue.getKey() + "\\b");
+
+                if (pattern.matcher(commit.getFullMessage()).find()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

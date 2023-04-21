@@ -18,6 +18,8 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import it.uniroma2.exception.GitException;
 import it.uniroma2.factory.ReleaseClassesFactory;
+import it.uniroma2.model.AffectedReleases;
+import it.uniroma2.model.Release;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
@@ -29,15 +31,15 @@ public class CollectGitInfo {
 
     private Repository repo;
     private Git git;
-    private List<ReleaseMeta> relMeta;
+    private AffectedReleases affRel;
     private List<TicketIssue> issues;
 
     // Associations (Release, Class) containing all measurament information
     private Releases rels;
 
-    public CollectGitInfo(String repoUrl, List<ReleaseMeta> relMeta, List<TicketIssue> issues)
+    public CollectGitInfo(String repoUrl, AffectedReleases affRel, List<TicketIssue> issues)
             throws GitException, InvalidRemoteException, TransportException, GitAPIException, IOException {
-        this.relMeta = relMeta;
+        this.affRel = affRel;
         this.issues = issues;
         this.rels = new Releases();
 
@@ -70,7 +72,7 @@ public class CollectGitInfo {
         // Delete this later on
         int num = 0;
         List<RevCommit> tempMatchCommits = null;
-        for (ReleaseMeta rel : relMeta) {
+        for (ReleaseMeta rel : affRel.list()) {
             tempMatchCommits = GitUtils.getRelCommitsOrderedByDate(allCommits, rel);
 
             // Delete this later on
@@ -81,6 +83,8 @@ public class CollectGitInfo {
             if (!tempMatchCommits.isEmpty()) {
                 List<JavaClass> relClasses = ReleaseClassesFactory.getInstance()
                         .buildClasses(tempMatchCommits.get(tempMatchCommits.size() - 1), repo);
+                // Prining number of classes for release
+                MainView.printNumOfClassesForRelease(relClasses.size(), rel.getName());
 
                 // Updating the releases state by creating a Release instace that maps a release
                 // to its classes, specifying all commits that changed a class
@@ -92,6 +96,9 @@ public class CollectGitInfo {
 
         // Printing number of commits for all releases
         MainView.printTotalNumOfCommitsForReleases(num);
+
+        // Printing commits of all releases associated to the classes they changed
+        MainView.printReleasesCommitsForClasses(this.rels.getReleases());
 
         this.git.close();
         // GitUtils.deleteDirectory("temp");
@@ -112,6 +119,20 @@ public class CollectGitInfo {
         }
 
         return commits;
+    }
+
+    public void labelClasses() {
+
+        for (Release rel : rels.getReleases()) {
+            for (JavaClass clazz : rel.getClasses()) {
+                if (GitUtils.existsBug(rel.getCommitsForClass(clazz), issues)) {
+                    if (affRel.get(new ReleaseMeta(rel.getId(), rel.getName(), rel.getDate()))) {
+                        rel.setBug(clazz);
+                    }
+                }
+            }
+        }
+
     }
 
     public Releases getRel() {
