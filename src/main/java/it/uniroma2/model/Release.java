@@ -65,7 +65,11 @@ public class Release extends ReleaseMeta {
         return classesCommits.get(javaClass);
     }
 
-    public void setBug(JavaClass clazz){
+    public void setBug(JavaClass clazz) {
         getClasses().get(getClasses().indexOf(clazz)).setBuggy(true);
+    }
+
+    public ReleaseMeta getMeta() {
+        return new ReleaseMeta(this.id, this.name, this.date);
     }
 }

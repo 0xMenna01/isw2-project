@@ -117,26 +117,25 @@ public class CollectGitInfo {
                 }
             }
         }
-
         return commits;
     }
 
-    public void labelClasses() {
+
+    public void labelClasses() throws GitException {
 
         for (Release rel : rels.getReleases()) {
             for (JavaClass clazz : rel.getClasses()) {
-                if (GitUtils.existsBug(rel.getCommitsForClass(clazz), issues)) {
-                    if (affRel.get(new ReleaseMeta(rel.getId(), rel.getName(), rel.getDate()))) {
-                        rel.setBug(clazz);
+                if (GitUtils.existsBug(rel, issues)) {
+                    if (!affRel.get(rel.getMeta())) {
+                        throw new GitException("There is an inconsistency between classes' bugs and affected versions");
                     }
+                    rel.setBug(clazz);
                 }
             }
         }
-
     }
 
-    public Releases getRel() {
-        return rels;
+    public List<Release> getRel() {
+        return rels.getReleases();
     }
-
 }

@@ -24,6 +24,7 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 import it.uniroma2.exception.GitException;
+import it.uniroma2.model.Release;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
 
@@ -141,17 +142,24 @@ public class GitUtils {
 
     }
 
-    public static boolean existsBug(List<RevCommit> commits, List<TicketIssue> issues) {
-        for (RevCommit commit : commits) {
-            for (TicketIssue issue : issues) {
-                Pattern pattern = Pattern.compile(issue.getKey() + "\\b");
+    public static boolean hasMatch(RevCommit commit, TicketIssue issue) {
+        Pattern pattern = Pattern.compile(issue.getKey() + "\\b");
+        return pattern.matcher(commit.getFullMessage()).find();
 
-                if (pattern.matcher(commit.getFullMessage()).find()) {
+    }
+
+    
+    // We are assuming that Jira's fixed version info is true,
+    // if release's commit is equal or after the fixed version,
+    // then it means that the commit message is NOT consistent,
+    // thus we skip it.
+    public static boolean existsBug(Release rel, List<TicketIssue> issues) {
+        for (RevCommit commit : rel.getCommits()) {
+            for (TicketIssue issue : issues) {
+                if (hasMatch(commit, issue) && issue.getFv().isAfter(rel)) 
                     return true;
-                }
             }
         }
         return false;
     }
-
 }

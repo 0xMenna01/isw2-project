@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class ReleaseMeta {
 
-    private int id;
-    private String name;
-    private Date date;
+    protected int id;
+    protected String name;
+    protected Date date;
 
     public ReleaseMeta(int id, String name, Date date) {
         this.id = id;

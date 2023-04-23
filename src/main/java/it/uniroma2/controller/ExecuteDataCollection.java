@@ -52,12 +52,19 @@ public class ExecuteDataCollection {
 
         System.out.println("RETRIEVING GIT DATA...");
         // Collecting git data
+        CollectGitInfo gitControl = null;
         try {
-            CollectGitInfo gitControl = new CollectGitInfo(repoUrl, affRel, issuesControl.getIssues());
+            gitControl = new CollectGitInfo(repoUrl, affRel, issuesControl.getIssues());
             gitControl.computeRelClassesCommits();
+            gitControl.labelClasses();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        // Control wether fixed commits are consistent within fixed versions computed by
+        // resolutionDate
+        // TODO
+        
 
         // Closing created temp files (delete this later on)
         MainView.closeFiles();

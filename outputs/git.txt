@@ -1,0 +1,7 @@
+------ GIT ------
+
+Number of total commits: 3151
+---------------------------------------------------------
+Total number of commits for all releases: 0
+---------------------------------------------------------
+COMMITS THAT CHANGED A CLASS OF EACH RELEASE
