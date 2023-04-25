@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ReleaseMeta {
 
-    protected int id;
+    protected Integer id;
     protected String name;
     protected Date date;
 
@@ -18,7 +18,7 @@ public class ReleaseMeta {
         this.id = id;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

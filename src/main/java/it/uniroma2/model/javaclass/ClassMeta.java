@@ -1,14 +1,12 @@
 package it.uniroma2.model.javaclass;
 
-public class ClassMeta {
+public class ClassMeta extends ClassMetrics {
 
     protected String pathName;
-    protected ClassMetrics metrics;
     protected boolean isBuggy;
 
-    public ClassMeta(String pathName, ClassMetrics metrics) {
+    public ClassMeta(String pathName) {
         this.pathName = pathName;
-        this.metrics = metrics;
         this.isBuggy = false;
     }
 
@@ -20,19 +18,55 @@ public class ClassMeta {
         this.pathName = pathName;
     }
 
-    public ClassMetrics getMetrics() {
-        return metrics;
-    }
-
-    public void setMetrics(ClassMetrics metrics) {
-        this.metrics = metrics;
-    }
-
     public boolean isBuggy() {
         return isBuggy;
     }
 
-    public void setBuggy(boolean buggy) {
-        isBuggy = buggy;
+    public void setBuggy(boolean isBuggy) {
+        this.isBuggy = isBuggy;
     }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setnFix(int nFix) {
+        this.nFix = nFix;
+    }
+
+    public void setnAuthors(int nAuthors) {
+        this.nAuthors = nAuthors;
+    }
+
+    public void setAvgLocAdded(double avgLocAdded) {
+        this.avgLocAdded = avgLocAdded;
+    }
+
+    public void setChurn(int churn) {
+        this.churn = churn;
+    }
+
+    public void setAvgChurn(double avgChurn) {
+        this.avgChurn = avgChurn;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setAvgTimeFix(double avgTimeFix) {
+        this.avgTimeFix = avgTimeFix;
+    }
+
+    public void setFanOut(int fanOut) {
+        this.fanOut = fanOut;
+    }
+
+    public void setChangeSetSize(int changeSetSize) {
+        this.changeSetSize = changeSetSize;
+    }
+
+    
+
+
 }

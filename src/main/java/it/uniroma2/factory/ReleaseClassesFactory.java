@@ -13,7 +13,6 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 
 import it.uniroma2.model.Release;
 import it.uniroma2.model.ReleaseMeta;
-import it.uniroma2.model.javaclass.ClassMetrics;
 import it.uniroma2.model.javaclass.JavaClass;
 import it.uniroma2.utils.GitUtils;
 
@@ -46,7 +45,7 @@ public class ReleaseClassesFactory {
             // We are keeping only Java classes that are not involved in tests
             if (treeWalk.getPathString().contains(".java") && !treeWalk.getPathString().contains("/test/")) {
                 // Adding classes with name and content
-                classes.add(new JavaClass(treeWalk.getPathString(), new ClassMetrics(),
+                classes.add(new JavaClass(treeWalk.getPathString(),
                         new String(repo.open(treeWalk.getObjectId(0)).getBytes(), StandardCharsets.UTF_8)));
 
             }

@@ -1,8 +1,9 @@
 package it.uniroma2.controller;
 
+import it.uniroma2.controller.issues.CollectIssues;
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.exception.ProjectNameException;
-import it.uniroma2.model.AffectedReleases;
+import it.uniroma2.utils.CsvWriter;
 import it.uniroma2.view.MainView;
 
 public class ExecuteDataCollection {
@@ -39,6 +40,7 @@ public class ExecuteDataCollection {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
         // Printing issues
         try {
             MainView.printIssues(issuesControl.getIssues());
@@ -46,26 +48,23 @@ public class ExecuteDataCollection {
             throw new RuntimeException(e);
         }
 
-        // Setting the affected releases
-        AffectedReleases affRel = new AffectedReleases();
-        affRel.set(issuesControl.getIssues());
 
         System.out.println("RETRIEVING GIT DATA...");
         // Collecting git data
         CollectGitInfo gitControl = null;
         try {
-            gitControl = new CollectGitInfo(repoUrl, affRel, issuesControl.getIssues());
+            gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(), issuesControl.getIssues());
             gitControl.computeRelClassesCommits();
             gitControl.labelClasses();
+
+            // Compute Measurment of classes metrics
+            new ComputeMetrics(gitControl.getReleases(), issuesControl.getIssues(), gitControl.getRepo()).compute();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
-        // Control wether fixed commits are consistent within fixed versions computed by
-        // resolutionDate
-        // TODO
-        
-
+        // Writing data to CSV file
+        CsvWriter.writeCsv(projKey.toString(), gitControl.getReleases());
         // Closing created temp files (delete this later on)
         MainView.closeFiles();
     }

@@ -4,8 +4,8 @@ public class JavaClass extends ClassMeta {
 
     private String content;
 
-    public JavaClass(String pathName, ClassMetrics metrics, String content) {
-        super(pathName, metrics);
+    public JavaClass(String pathName, String content) {
+        super(pathName);
         this.content = content;
     }
 
@@ -18,7 +18,7 @@ public class JavaClass extends ClassMeta {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return pathName;
     }
 }

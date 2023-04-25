@@ -1,4 +1,4 @@
-package it.uniroma2.controller;
+package it.uniroma2.controller.issues;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;

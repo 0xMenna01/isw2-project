@@ -2,12 +2,15 @@ package it.uniroma2.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
@@ -19,14 +22,19 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 
 import it.uniroma2.exception.GitException;
+import it.uniroma2.exception.TicketException;
+import it.uniroma2.model.FixCommit;
 import it.uniroma2.model.Release;
 import it.uniroma2.model.ReleaseMeta;
+import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
+import it.uniroma2.model.javaclass.JavaClass;
 
 public class GitUtils {
 
@@ -108,6 +116,7 @@ public class GitUtils {
                                                           // modified by the commit
 
         try (DiffFormatter diffFormatter = new DiffFormatter(DisabledOutputStream.INSTANCE);
+
                 ObjectReader reader = repo.newObjectReader()) {
 
             CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
@@ -130,7 +139,6 @@ public class GitUtils {
                         && !entry.getNewPath().contains("/test/")) {
                     modifiedClasses.add(entry.getNewPath());
                 }
-
             }
 
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -142,24 +150,59 @@ public class GitUtils {
 
     }
 
-    public static boolean hasMatch(RevCommit commit, TicketIssue issue) {
-        Pattern pattern = Pattern.compile(issue.getKey() + "\\b");
-        return pattern.matcher(commit.getFullMessage()).find();
+    public static List<FixCommit> getTicketCommitsReleases(Releases releases, TicketIssue issue) throws TicketException {
+        Set<FixCommit> fixCommits = new HashSet<>();
+        for (Release release : releases.getReleases()) {
+            for (RevCommit commit : release.getCommits()) {
 
+                if (hasValidMatch(commit, release, issue)) {
+                    fixCommits.add(new FixCommit(commit, release, release.getClassesModifiedByCommit(commit)));
+                }
+            }
+        }
+        return new ArrayList<>(fixCommits);
     }
 
-    
+    public static void setBugginess(FixCommit fixCommit, Releases releases, TicketIssue issue) throws TicketException {
+        for (Release rel : releases.getReleases()) {
+            for (JavaClass clazz : rel.getClasses()) {
+                if (fixCommit.getModifiedClasses().contains(clazz.getPathName()) && !rel.isBefore(issue.getIV())
+                        && rel.isBefore(fixCommit.getRelease()))
+                    clazz.setBuggy(true);
+            }
+        }
+    }
+
+    // Returns wether the commit has a valid match with a ticket in jira.
     // We are assuming that Jira's fixed version info is true,
     // if release's commit is equal or after the fixed version,
     // then it means that the commit message is NOT consistent,
-    // thus we skip it.
-    public static boolean existsBug(Release rel, List<TicketIssue> issues) {
-        for (RevCommit commit : rel.getCommits()) {
-            for (TicketIssue issue : issues) {
-                if (hasMatch(commit, issue) && issue.getFv().isAfter(rel)) 
-                    return true;
+    // thus is not valid and the IV must not be after the release.
+    // The rel input refers to the input commit
+    public static boolean hasValidMatch(RevCommit commit, ReleaseMeta rel, TicketIssue issue) throws TicketException {
+        Pattern pattern = Pattern.compile(issue.getKey() + "\\b");
+        return pattern.matcher(commit.getFullMessage()).find() && issue.getFv().isAfter(rel) && !issue.getIV().isAfter(rel);
+    }
+
+    public static String getContentOfClassByCommit(String className, RevCommit commit, Repository repo)
+            throws IOException, GitException {
+
+        RevTree tree = commit.getTree();
+        // Tree walk to iterate over all files in the Tree recursively
+        TreeWalk treeWalk = new TreeWalk(repo);
+        treeWalk.addTree(tree);
+        treeWalk.setRecursive(true);
+
+        while (treeWalk.next()) {
+            // We are keeping only Java classes that are not involved in tests
+            if (treeWalk.getPathString().equals(className)) {
+                String content = new String(repo.open(treeWalk.getObjectId(0)).getBytes(), StandardCharsets.UTF_8);
+                treeWalk.close();
+                return content;
             }
         }
-        return false;
+        treeWalk.close();
+        // If here it mean no class with name className is present
+        return null;
     }
 }

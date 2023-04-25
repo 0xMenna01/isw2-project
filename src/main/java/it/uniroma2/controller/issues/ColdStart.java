@@ -1,5 +1,6 @@
-package it.uniroma2.controller;
+package it.uniroma2.controller.issues;
 
+import it.uniroma2.controller.CollectReleasesData;
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.utils.ProportionUtils;
 

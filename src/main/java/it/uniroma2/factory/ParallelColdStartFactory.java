@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import it.uniroma2.controller.ColdStart;
+import it.uniroma2.controller.issues.ColdStart;
 import it.uniroma2.enums.ExecutorState;
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.exception.ParallelColdStartException;

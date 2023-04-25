@@ -19,10 +19,14 @@ public class Release extends ReleaseMeta {
      * N.B. All commits of the release stored
      */
     HashMap<JavaClass, List<RevCommit>> classesCommits;
+    List<JavaClass> classes;
+    List<RevCommit> commits;
 
     public Release(int id, String name, Date date, HashMap<JavaClass, List<RevCommit>> classesCommits) {
         super(id, name, date);
         this.classesCommits = classesCommits;
+        this.classes = new ArrayList<>();
+        this.commits = new ArrayList<>();
     }
 
     public HashMap<JavaClass, List<RevCommit>> getClassesCommits() {
@@ -36,33 +40,48 @@ public class Release extends ReleaseMeta {
     // Returns the list of commits that are associated to the release based on the
     // ones that changed the classes.
     public List<RevCommit> getCommits() {
+        if (this.commits.isEmpty()) {
+            List<RevCommit> commits = new ArrayList<>();
+            for (Map.Entry<JavaClass, List<RevCommit>> entry : classesCommits.entrySet()) {
 
-        List<RevCommit> commits = new ArrayList<>();
-        for (Map.Entry<JavaClass, List<RevCommit>> entry : classesCommits.entrySet()) {
+                List<RevCommit> commitsClass = entry.getValue();
+                for (RevCommit commit : commitsClass) {
 
-            List<RevCommit> commitsClass = entry.getValue();
-            for (RevCommit commit : commitsClass) {
-
-                if (!commits.contains(commit)) {
-                    commits.add(commit);
+                    if (!commits.contains(commit)) {
+                        commits.add(commit);
+                    }
                 }
             }
+            this.commits.addAll(commits);
         }
-        return commits;
+
+        return this.commits;
     }
 
     public List<JavaClass> getClasses() {
 
-        List<JavaClass> classes = new ArrayList<>();
-
-        for (Map.Entry<JavaClass, List<RevCommit>> entry : classesCommits.entrySet()) {
-            classes.add(entry.getKey());
+        if (this.classes.isEmpty()) {
+            List<JavaClass> classes = new ArrayList<>();
+            for (Map.Entry<JavaClass, List<RevCommit>> entry : classesCommits.entrySet()) {
+                classes.add(entry.getKey());
+            }
+            this.classes.addAll(classes);
         }
-        return classes;
+        return this.classes;
     }
 
     public List<RevCommit> getCommitsForClass(JavaClass javaClass) {
         return classesCommits.get(javaClass);
+    }
+
+    public List<JavaClass> getClassesModifiedByCommit(RevCommit commit) {
+        List<JavaClass> classes = new ArrayList<>();
+        for (Map.Entry<JavaClass, List<RevCommit>> entry : classesCommits.entrySet()) {
+            if (entry.getValue().contains(commit)) {
+                classes.add(entry.getKey());
+            }
+        }
+        return classes;
     }
 
     public void setBug(JavaClass clazz) {

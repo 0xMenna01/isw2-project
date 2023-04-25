@@ -31,7 +31,7 @@ public class ReleasesFactory {
         Map<Date, String> orderedReleasesMap = new TreeMap<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         JSONObject releaseJson = null;
-
+          
         for (int i = 0; i < total; i++) {
             releaseJson = jsonReleases.getJSONObject(i);
             if (releaseJson.get("released").toString().equals("true")) {

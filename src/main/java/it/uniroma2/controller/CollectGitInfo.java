@@ -9,7 +9,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Ref;
@@ -17,9 +16,9 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import it.uniroma2.exception.GitException;
+import it.uniroma2.exception.TicketException;
 import it.uniroma2.factory.ReleaseClassesFactory;
-import it.uniroma2.model.AffectedReleases;
-import it.uniroma2.model.Release;
+import it.uniroma2.model.FixCommit;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
@@ -31,15 +30,15 @@ public class CollectGitInfo {
 
     private Repository repo;
     private Git git;
-    private AffectedReleases affRel;
+    private List<ReleaseMeta> releases;
     private List<TicketIssue> issues;
 
     // Associations (Release, Class) containing all measurament information
     private Releases rels;
 
-    public CollectGitInfo(String repoUrl, AffectedReleases affRel, List<TicketIssue> issues)
-            throws GitException, InvalidRemoteException, TransportException, GitAPIException, IOException {
-        this.affRel = affRel;
+    public CollectGitInfo(String repoUrl, List<ReleaseMeta> releases, List<TicketIssue> issues)
+            throws GitException, InvalidRemoteException, GitAPIException, IOException {
+        this.releases = releases;
         this.issues = issues;
         this.rels = new Releases();
 
@@ -72,7 +71,7 @@ public class CollectGitInfo {
         // Delete this later on
         int num = 0;
         List<RevCommit> tempMatchCommits = null;
-        for (ReleaseMeta rel : affRel.list()) {
+        for (ReleaseMeta rel : releases) {
             tempMatchCommits = GitUtils.getRelCommitsOrderedByDate(allCommits, rel);
 
             // Delete this later on
@@ -120,22 +119,23 @@ public class CollectGitInfo {
         return commits;
     }
 
+    public void labelClasses() throws GitException, TicketException {
 
-    public void labelClasses() throws GitException {
-
-        for (Release rel : rels.getReleases()) {
-            for (JavaClass clazz : rel.getClasses()) {
-                if (GitUtils.existsBug(rel, issues)) {
-                    if (!affRel.get(rel.getMeta())) {
-                        throw new GitException("There is an inconsistency between classes' bugs and affected versions");
-                    }
-                    rel.setBug(clazz);
-                }
+        for (TicketIssue issue : issues) {
+            List<FixCommit> fixCommits = GitUtils.getTicketCommitsReleases(rels, issue);
+            
+            for (FixCommit fixCommit : fixCommits) {
+                GitUtils.setBugginess(fixCommit, rels, issue);
             }
         }
     }
 
-    public List<Release> getRel() {
-        return rels.getReleases();
+    public Releases getReleases() {
+        return rels;
     }
+
+    public Repository getRepo() {
+        return repo;
+    }
+
 }
