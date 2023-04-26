@@ -29,7 +29,7 @@ public class IssuesFactory {
 
     public TicketIssue createIssue(int i, JSONArray issues, List<ReleaseMeta> releasesList) throws ParseException {
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
         String key = issues.getJSONObject(i).get("key").toString();
         JSONObject fields = issues.getJSONObject(i).getJSONObject("fields");

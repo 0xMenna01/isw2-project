@@ -25,8 +25,9 @@ import it.uniroma2.utils.GitUtils;
 
 public class ComputeMetrics {
 
-    private Releases releases;
-    private List<TicketIssue> issues;
+    private final Releases releases;
+    private final List<TicketIssue> issues;
+    private final Repository repo;
 
     private HashMap<Release, HashMap<JavaClass, List<String>>> mapRelClassForContent;
 
@@ -34,6 +35,7 @@ public class ComputeMetrics {
             throws IOException, GitException {
         this.releases = releases;
         this.issues = issues;
+        this.repo = repo;
 
         this.mapRelClassForContent = new HashMap<>();
         for (Release rel : releases.getReleases()) {
@@ -55,47 +57,60 @@ public class ComputeMetrics {
     public void compute() throws IOException, GitException, TicketException {
         for (Release rel : releases.getReleases()) {
             for (JavaClass clazz : rel.getClasses()) {
-                clazz.setSize(computeSize(clazz, rel));
-                clazz.setnFix(computeTimeToFix(clazz, rel).getSecond());
+                clazz.setSize(computeSize(clazz));
+                clazz.setnFix(computeNFixAndFixChurn(clazz, rel).getFirst());
                 clazz.setnAuthors(computeNauthors(clazz, rel));
-                clazz.setAvgLocAdded(computeAvgLocAdded(clazz, rel));
-                clazz.setChurn(computeChurn(clazz, rel).getFirst());
-                clazz.setAvgChurn(computeAvgChurn(clazz, rel));
+
+                clazz.setAvgLocAdded(
+                        (double) computeLocAddedAndDel(clazz, rel).getFirst()
+                                / mapRelClassForContent.get(rel).get(clazz).size());
+
+                clazz.setChurn(computeChurn(clazz, rel));
+
+                clazz.setAvgChurn((double) computeChurn(clazz, rel) / mapRelClassForContent.get(rel).get(clazz).size());
+
                 clazz.setAge(computeReleaseAge(rel));
-                clazz.setAvgTimeFix(computeAvgTimeToFix(clazz, rel));
+                clazz.setAvgFixChurn(computeAvgFixChurn(rel, clazz));
                 clazz.setFanOut(computeFanout(clazz.getContent()));
-                clazz.setChangeSetSize(computeChangeSetSize(rel, clazz));
+                clazz.setNumOfRevisions(rel.getCommitsForClass(clazz).size());
             }
         }
     }
 
-    private int computeSize(JavaClass clazz, Release rel) {
-        int loc = 0;
-        String content = clazz.getContent();
-        String[] lines = content.split("\\n");
-        for (String line : lines) {
-            String trimmedLine = line.trim();
-            if (!trimmedLine.startsWith("//") && !trimmedLine.startsWith("/*") && !trimmedLine.startsWith("*")
-                    && !trimmedLine.isEmpty()) {
-                loc++;
-            }
-        }
-        return loc;
+    private int computeSize(JavaClass clazz) {
+
+        return GitUtils.splitContentToLines(clazz.getContent()).size();
     }
 
-    private GenericPair<Integer, Integer> computeTimeToFix(JavaClass clazz, Release rel) throws TicketException {
-        Integer timeToFix = 0;
-        int nFix = 0;
+    private GenericPair<Integer, Integer> computeNFixAndFixChurn(JavaClass clazz, Release rel)
+            throws TicketException, IOException, GitException {
+
+        List<String> fixCommitsContents = new ArrayList<>();
+
         for (RevCommit commit : rel.getCommitsForClass(clazz)) {
             for (TicketIssue issue : issues) {
+
                 if (GitUtils.hasValidMatch(commit, rel, issue)) {
-                    timeToFix += rel.getId() - issue.getIV().getId(); // Time to Fix => Number of versions that took to
-                                                                      // resolve issue
-                    nFix++;
+                    fixCommitsContents.add(GitUtils.getContentOfClassByCommit(clazz.getPathName(), commit, repo));
                 }
             }
         }
-        return new GenericPair<Integer, Integer>(timeToFix, nFix);
+
+        Integer fixChurn = 0;
+        int i = 0;
+        for (; i < fixCommitsContents.size(); i++) {
+            if (i == 0)
+                fixChurn += computeSize(new JavaClass(clazz.getPathName(), fixCommitsContents.get(i)));
+            else {
+                GenericPair<Integer, Integer> addedAndDel = GitUtils.getAddedAndDeletedLines(
+                        fixCommitsContents.get(i - 1),
+                        fixCommitsContents.get(i));
+
+                fixChurn += addedAndDel.getFirst() + addedAndDel.getFirst();
+            }
+        }
+
+        return new GenericPair<>(i, fixChurn);
     }
 
     private int computeNauthors(JavaClass clazz, Release rel) {
@@ -108,50 +123,38 @@ public class ComputeMetrics {
         return authors.size();
     }
 
-    private double computeAvgLocAdded(JavaClass clazz, Release rel) throws IOException, GitException {
-
-        List<Integer> loc = new ArrayList<>();
+    private GenericPair<Integer, Integer> computeLocAddedAndDel(JavaClass clazz, Release rel)
+            throws IOException, GitException {
+        int i = 0;
+        Integer locAdded = 0;
+        Integer delLoc = 0;
+        String prevContent = null;
         for (String classContent : mapRelClassForContent.get(rel).get(clazz)) {
-            loc.add(computeSize(new JavaClass(clazz.getPathName(), classContent), rel));
+            if (i == 0) {
+                prevContent = classContent;
+                locAdded += computeSize(new JavaClass(clazz.getPathName(), classContent));
+            }
+
+            else {
+                GenericPair<Integer, Integer> addedAndDel = GitUtils.getAddedAndDeletedLines(prevContent,
+                        classContent);
+                locAdded += addedAndDel.getFirst();
+                delLoc += addedAndDel.getFirst();
+                prevContent = classContent;
+            }
+            i++;
         }
 
-        double avgLocAdded = 0;
-        for (int i = 0; i < loc.size(); i++) {
-            if (i == 0)
-                avgLocAdded += loc.get(i);
-            else
-                avgLocAdded += Math.max(0, loc.get(i) - loc.get(i - 1));
-        }
-
-        if (loc.isEmpty())
+        if (i == 0)
             throw new GitException("MUST not be emmpy because commits modifies the class");
 
-        return avgLocAdded / loc.size();
+        return new GenericPair<>(locAdded, delLoc);
     }
 
-    private GenericPair<Integer, Integer> computeChurn(JavaClass clazz, Release rel) throws GitException {
-        List<Integer> loc = new ArrayList<>();
-        for (String classContent : mapRelClassForContent.get(rel).get(clazz)) {
-            loc.add(computeSize(new JavaClass(clazz.getPathName(), classContent), rel));
-        }
+    private Integer computeChurn(JavaClass clazz, Release rel) throws GitException, IOException {
+        GenericPair<Integer, Integer> locAddedAndDel = computeLocAddedAndDel(clazz, rel);
+        return locAddedAndDel.getFirst() + locAddedAndDel.getSecond();
 
-        int churn = 0;
-        for (int i = 0; i < loc.size(); i++) {
-            if (i == 0)
-                churn += loc.get(i);
-            else
-                churn += Math.abs(loc.get(i) - loc.get(i - 1));
-        }
-
-        if (loc.isEmpty())
-            throw new GitException("MUST not be emmpy because commits modifies the class");
-
-        return new GenericPair<>(churn, loc.size());
-    }
-
-    private double computeAvgChurn(JavaClass clazz, Release rel) throws GitException {
-        GenericPair<Integer, Integer> churnValueNum = computeChurn(clazz, rel);
-        return (double) churnValueNum.getFirst() / churnValueNum.getSecond();
     }
 
     private int computeReleaseAge(Release rel) {
@@ -197,15 +200,8 @@ public class ComputeMetrics {
         return dependencies.size();
     }
 
-    private int computeChangeSetSize(Release rel, JavaClass clazz) {
-        return rel.getCommitsForClass(clazz).size();
-    }
-
-    private double computeAvgTimeToFix(JavaClass clazz, Release rel) throws TicketException {
-        GenericPair<Integer, Integer> pairFix = computeTimeToFix(clazz, rel);
-        return pairFix.getSecond().equals(0) ? 0 : (double) pairFix.getFirst() / pairFix.getSecond(); // If there is no
-                                                                                                      // fix, the
-                                                                                                      // average time to
-                                                                                                      // fix is 0
+    public double computeAvgFixChurn(Release rel, JavaClass clazz) throws TicketException, IOException, GitException {
+        GenericPair<Integer, Integer> fixPair = computeNFixAndFixChurn(clazz, rel);
+        return fixPair.getFirst() == 0 ? 0 : (double) fixPair.getSecond() / fixPair.getFirst();
     }
 }

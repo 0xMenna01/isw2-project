@@ -54,16 +54,16 @@ public class ClassMeta extends ClassMetrics {
         this.age = age;
     }
 
-    public void setAvgTimeFix(double avgTimeFix) {
-        this.avgTimeFix = avgTimeFix;
+    public void setAvgFixChurn(double avgFixChurn) {
+        this.avgFixChurn = avgFixChurn;
     }
 
     public void setFanOut(int fanOut) {
         this.fanOut = fanOut;
     }
 
-    public void setChangeSetSize(int changeSetSize) {
-        this.changeSetSize = changeSetSize;
+    public void setNumOfRevisions(int numOfRevisions) {
+        this.numOfRevisions = numOfRevisions;
     }
 
     

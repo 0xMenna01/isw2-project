@@ -24,7 +24,7 @@ public class ReleasesUtils {
     // This method assumes that the releases are ordered by date
     public static ReleaseMeta getReleaseByDate(Date date, List<ReleaseMeta> releasesList) {
         for (ReleaseMeta release : releasesList) {
-            if (release.getDate().after(date)) {
+            if (!release.getDate().before(date)) {
                 return release;
             }
         }

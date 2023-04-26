@@ -9,9 +9,9 @@ public class ClassMetrics {
     protected int churn;
     protected double avgChurn;
     protected int age;
-    protected double avgTimeFix;
+    protected double avgFixChurn;
     protected int fanOut;
-    protected int changeSetSize;
+    protected int numOfRevisions;
 
     public ClassMetrics() {
         this.size = 0;
@@ -21,9 +21,9 @@ public class ClassMetrics {
         this.churn = 0;
         this.avgChurn = 0;
         this.age = 0;
-        this.avgTimeFix = 0;
+        this.avgFixChurn = 0;
         this.fanOut = 0;
-        this.changeSetSize = 0;
+        this.numOfRevisions = 0;
     }
 
     public int getSize() {
@@ -54,16 +54,16 @@ public class ClassMetrics {
         return age;
     }
 
-    public double getAvgTimeFix() {
-        return avgTimeFix;
+    public double getAvgFixChurn() {
+        return avgFixChurn;
     }
 
     public int getFanOut() {
         return fanOut;
     }
 
-    public int getChangeSetSize() {
-        return changeSetSize;
+    public int getNumOfRevisions() {
+        return numOfRevisions;
     }
 
     

@@ -21,7 +21,7 @@ public class CsvWriter {
             // Name of CSV for output
             fileWriter = new FileWriter(outname);
             fileWriter.append(
-                    "Version,File Name,LOC,nFix,nAuthors,avgLocAdded,churn,avgChurn,age,avgTimeFix,fanOut,changeSetSize, isBuggy");
+                    "Version,File Name,LOC,nFix,nAuthors,avgLocAdded,churn,avgChurn,age,avgFixChurn,fanOut,numRevisions, isBuggy");
             fileWriter.append("\n");
 
             for (Release rel : releases.getReleases()) {
@@ -44,11 +44,11 @@ public class CsvWriter {
                     fileWriter.append(",");
                     fileWriter.append(String.valueOf(clazz.getAge()));
                     fileWriter.append(",");
-                    fileWriter.append(String.valueOf(clazz.getAvgTimeFix()));
+                    fileWriter.append(String.valueOf(clazz.getAvgFixChurn()));
                     fileWriter.append(",");
                     fileWriter.append(String.valueOf(clazz.getFanOut()));
                     fileWriter.append(",");
-                    fileWriter.append(String.valueOf(clazz.getChangeSetSize()));
+                    fileWriter.append(String.valueOf(clazz.getNumOfRevisions()));
                     fileWriter.append(",");
                     fileWriter.append(String.valueOf(clazz.isBuggy()));
                     fileWriter.append("\n");

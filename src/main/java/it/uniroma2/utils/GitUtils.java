@@ -14,6 +14,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 
+import org.assertj.core.util.diff.Delta;
+import org.assertj.core.util.diff.DiffUtils;
+import org.assertj.core.util.diff.Patch;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
@@ -30,6 +33,7 @@ import org.eclipse.jgit.util.io.DisabledOutputStream;
 import it.uniroma2.exception.GitException;
 import it.uniroma2.exception.TicketException;
 import it.uniroma2.model.FixCommit;
+import it.uniroma2.model.GenericPair;
 import it.uniroma2.model.Release;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.Releases;
@@ -150,11 +154,11 @@ public class GitUtils {
 
     }
 
-    public static List<FixCommit> getTicketCommitsReleases(Releases releases, TicketIssue issue) throws TicketException {
+    public static List<FixCommit> getTicketCommitsReleases(Releases releases, TicketIssue issue)
+            throws TicketException {
         Set<FixCommit> fixCommits = new HashSet<>();
         for (Release release : releases.getReleases()) {
             for (RevCommit commit : release.getCommits()) {
-
                 if (hasValidMatch(commit, release, issue)) {
                     fixCommits.add(new FixCommit(commit, release, release.getClassesModifiedByCommit(commit)));
                 }
@@ -181,7 +185,8 @@ public class GitUtils {
     // The rel input refers to the input commit
     public static boolean hasValidMatch(RevCommit commit, ReleaseMeta rel, TicketIssue issue) throws TicketException {
         Pattern pattern = Pattern.compile(issue.getKey() + "\\b");
-        return pattern.matcher(commit.getFullMessage()).find() && issue.getFv().isAfter(rel) && !issue.getIV().isAfter(rel);
+        return pattern.matcher(commit.getFullMessage()).find() && !issue.getFv().isBefore(rel)
+                && !issue.getIV().isAfter(rel);
     }
 
     public static String getContentOfClassByCommit(String className, RevCommit commit, Repository repo)
@@ -205,4 +210,48 @@ public class GitUtils {
         // If here it mean no class with name className is present
         return null;
     }
+
+    public static GenericPair<Integer, Integer> getAddedAndDeletedLines(String oldContent,
+            String newContent) {
+
+        List<String> addedLines = new ArrayList<>();
+        List<String> deletedLines = new ArrayList<>();
+
+        List<String> oldLines = splitContentToLines(oldContent);
+        List<String> newLines = splitContentToLines(newContent);
+
+        // Compute the differences between the two lists of lines
+        Patch<String> patch = DiffUtils.diff(oldLines, newLines);
+
+        // Iterate over the differences to identify added and deleted lines
+        for (Delta<String> delta : patch.getDeltas()) {
+            if (delta.getRevised().size() > 0) {
+                // This delta represents an addition or change
+                List<String> added = delta.getRevised().getLines();
+                for (String line : added) {
+                    addedLines.add(line);
+                }
+            }
+            if (delta.getOriginal().size() > 0) {
+                // This delta represents a deletion or change
+                List<String> deleted = delta.getOriginal().getLines();
+                for (String line : deleted) {
+                    deletedLines.add(line);
+                }
+            }
+        }
+
+        return new GenericPair<>(addedLines.size(), deletedLines.size());
+    }
+
+    // Helper method to split the content of a Java class into lines
+    public static List<String> splitContentToLines(String content) {
+        List<String> lines = new ArrayList<>();
+        String[] parts = content.split("\n");
+        for (String part : parts) {
+            lines.add(part.trim());
+        }
+        return lines;
+    }
+
 }
