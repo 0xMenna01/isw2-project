@@ -170,37 +170,12 @@ public class ComputeMetrics {
         String[] lines = classContent.split("\\n");
 
         for (String line : lines) {
-            // Check for import statements
-            if (line.startsWith("import")) {
-                String[] words = line.split("\\s+");
-                dependencies.add(words[1]);
-            }
-
-            // Check for instance variables
-            else if (line.contains("new ")) {
-                String[] words = line.split("\\s+");
-                for (int i = 0; i < words.length - 1; i++) {
-                    if (words[i].equals("new")) {
-                        dependencies.add(words[i + 1]);
-                    }
-                }
-            }
-
-            // Check for method calls
-            else if (line.contains(".")) {
-                String[] words = line.split("\\.");
-                for (int i = 0; i < words.length - 1; i++) {
-                    if (words[i].matches("[a-zA-Z]\\w*")) {
-                        dependencies.add(words[i]);
-                    }
-                }
-            }
+            GitUtils.addDependencies(dependencies, line);
         }
-
         return dependencies.size();
     }
 
-    public double computeAvgFixChurn(Release rel, JavaClass clazz) throws TicketException, IOException, GitException {
+    public double computeAvgFixChurn(Release rel, JavaClass clazz) throws TicketException, IOException {
         GenericPair<Integer, Integer> fixPair = computeNFixAndFixChurn(clazz, rel);
         return fixPair.getFirst() == 0 ? 0 : (double) fixPair.getSecond() / fixPair.getFirst();
     }

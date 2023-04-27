@@ -1,6 +1,5 @@
 package it.uniroma2.utils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
@@ -53,17 +52,6 @@ public class GitUtils {
 
     private GitUtils() {
         throw new IllegalStateException("Utility class");
-    }
-
-    public static void deleteDirectory(String path) {
-        File fileOrDirectory = new File(path);
-        if (fileOrDirectory.isDirectory()) {
-            File[] contents = fileOrDirectory.listFiles();
-            for (File file : contents) {
-                deleteDirectory(file.getAbsolutePath());
-            }
-        }
-        fileOrDirectory.delete();
     }
 
     // Returns an ordered by date list of commits
@@ -250,6 +238,35 @@ public class GitUtils {
             lines.add(part.trim());
         }
         return lines;
+    }
+
+
+    public static void addDependencies(Set<String> dependencies, String line){
+        // Check for import statements
+        if (line.startsWith("import")) {
+            String[] words = line.split("\\s+");
+            dependencies.add(words[1]);
+        }
+
+        // Check for instance variables
+        else if (line.contains("new ")) {
+            String[] words = line.split("\\s+");
+            for (int i = 0; i < words.length - 1; i++) {
+                if (words[i].equals("new")) {
+                    dependencies.add(words[i + 1]);
+                }
+            }
+        }
+
+        // Check for method calls
+        else if (line.contains(".")) {
+            String[] words = line.split("\\.");
+            for (int i = 0; i < words.length - 1; i++) {
+                if (words[i].matches("[a-zA-Z]\\w*")) {
+                    dependencies.add(words[i]);
+                }
+            }
+        }
     }
 
 }

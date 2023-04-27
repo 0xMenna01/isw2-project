@@ -25,8 +25,8 @@ public class ProportionUtils {
 
         double proportion = 0.0;
         for (TicketIssue issue : prevIssues) {
-            double num = issue.getFv().getId() - issue.getIV().getId();
-            double den = issue.getFv().getId() - issue.getOv().getId();
+            double num = (double) issue.getFv().getId() - issue.getIV().getId();
+            double den = (double) issue.getFv().getId() - issue.getOv().getId();
             den = den == 0 ? 1 : den;
             proportion += num / den;
         }

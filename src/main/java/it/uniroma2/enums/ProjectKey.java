@@ -19,7 +19,7 @@ public enum ProjectKey {
 
     public static ProjectKey fromString(String projKey) throws ProjectNameException {
         for (ProjectKey key : values()) {
-            if (key.toString() == projKey) {
+            if (key.toString().equals(projKey)) {
                 return key;
             }
         }
