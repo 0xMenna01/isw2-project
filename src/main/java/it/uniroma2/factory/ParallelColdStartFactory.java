@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
 import it.uniroma2.controller.issues.ColdStart;
 import it.uniroma2.enums.ExecutorState;
@@ -16,7 +17,8 @@ import it.uniroma2.utils.ProportionUtils;
 
 public class ParallelColdStartFactory {
 
-    private static volatile ParallelColdStartFactory instance = null;
+    private static final AtomicReference<ParallelColdStartFactory> instance = new AtomicReference<>(null);
+
     private ProjectKey[] keys;
     // The executor manages the threads that compute the proportion for each project
     private ExecutorService parallelExec = null;
@@ -38,21 +40,23 @@ public class ParallelColdStartFactory {
     }
 
     public static ParallelColdStartFactory getInstance() throws ParallelColdStartException {
-        ParallelColdStartFactory result = instance;
+        ParallelColdStartFactory result = instance.get();
         if (result == null) {
-            synchronized (ParallelColdStartFactory.class) {
-                if (result == null) {
-                    result = new ParallelColdStartFactory();
-                    for (ProjectKey key : instance.keys) {
+            ParallelColdStartFactory newValue = new ParallelColdStartFactory();
+            if (instance.compareAndSet(null, newValue)) {
+                result = newValue;
 
-                        if (key.equals(ProjectKey.BOOKEEPER) || key.equals(ProjectKey.SYNCOPE))
-                            throw new ParallelColdStartException("Error: Coldstart must be made cross-project");
-                    }
-                    instance = result;
+                for (ProjectKey key : instance.get().keys) {
+
+                    if (key.equals(ProjectKey.BOOKEEPER) || key.equals(ProjectKey.SYNCOPE))
+                        throw new ParallelColdStartException("Error: Coldstart must be made cross-project");
                 }
+            } else {
+                result = instance.get();
             }
+
         }
-        return instance;
+        return result;
     }
 
     public void initConcurrecy() throws ParallelColdStartException {

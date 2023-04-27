@@ -1,12 +1,20 @@
 package it.uniroma2.controller.issues;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import it.uniroma2.enums.ColdStartState;
 import it.uniroma2.enums.ProjectKey;
+import it.uniroma2.exception.ParallelColdStartException;
+import it.uniroma2.exception.PropException;
+import it.uniroma2.exception.ReleaseException;
+import it.uniroma2.exception.TicketException;
 import it.uniroma2.factory.IssuesFactory;
 import it.uniroma2.model.GenericPair;
 import it.uniroma2.model.ReleaseMeta;
@@ -24,8 +32,7 @@ public class CollectIssues {
         this.state = ColdStartState.INACTIVE;
     }
 
-    public void retrieveIssues(ProjectKey key, List<ReleaseMeta> releasesList)
-            throws Exception {
+    public void retrieveIssues(ProjectKey key, List<ReleaseMeta> releasesList) throws JSONException, IOException, ParseException, InterruptedException, ExecutionException, ParallelColdStartException, TicketException, ReleaseException, PropException {
 
         this.state = key.getColdStartState();
 

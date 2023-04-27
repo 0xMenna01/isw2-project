@@ -1,7 +1,6 @@
 package it.uniroma2.utils;
 
 import java.io.FileWriter;
-import java.io.IOException;
 
 import it.uniroma2.model.Release;
 import it.uniroma2.model.Releases;
@@ -14,12 +13,9 @@ public class CsvWriter {
     }
 
     public static void writeCsv(String projName, Releases releases) {
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = null;
-            String outname = "outputs/" + projName + "DataSet.csv";
-            // Name of CSV for output
-            fileWriter = new FileWriter(outname);
+
+        try (FileWriter fileWriter = new FileWriter("outputs/" + projName + "DataSet.csv")) {
+
             fileWriter.append(
                     "Version,File Name,LOC,nFix,nAuthors,avgLocAdded,churn,avgChurn,age,avgFixChurn,fanOut,numRevisions, isBuggy");
             fileWriter.append("\n");
@@ -57,13 +53,6 @@ public class CsvWriter {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                fileWriter.flush();
-                fileWriter.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

@@ -5,7 +5,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -67,22 +66,26 @@ public class JiraUtils {
         for (int i = 0; i < jsonIssues.length(); i++) {
             list.add(jsonIssues.getJSONObject(i));
         }
-        Collections.sort(list, new Comparator<JSONObject>() {
-            @Override
-            public int compare(JSONObject o1, JSONObject o2) {
-                Date date1 = null;
-                Date date2 = null;
-                try {
-                    String date1String = o1.getJSONObject("fields").getString("resolutiondate");
-                    String date2String = o2.getJSONObject("fields").getString("resolutiondate");
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-                    date1 = format.parse(date1String);
-                    date2 = format.parse(date2String);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                return date1.compareTo(date2);
+        Collections.sort(list, (o1, o2) -> {
+
+            Date date1 = null;
+            Date date2 = null;
+
+            String date1String = o1.getJSONObject("fields").getString("resolutiondate");
+            String date2String = o2.getJSONObject("fields").getString("resolutiondate");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+
+            try {
+                date1 = format.parse(date1String);
+                date2 = format.parse(date2String);
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
+            if (date1 == null || date2 == null)
+                throw new NullPointerException("Error: date1 or date2 is null");
+
+            return date1.compareTo(date2);
+
         });
         for (int i = 0; i < jsonIssues.length(); i++) {
             jsonIssues.put(i, list.get(i));
