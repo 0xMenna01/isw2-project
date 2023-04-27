@@ -53,7 +53,7 @@ public class ExecuteDataCollection {
         // Collecting git data
         CollectGitInfo gitControl = null;
         try {
-            gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(), issuesControl.getIssues());
+            gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(), issuesControl.getIssues(), this.projKey.toString());
             gitControl.computeRelClassesCommits();
             gitControl.labelClasses();
 

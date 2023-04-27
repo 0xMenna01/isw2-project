@@ -36,16 +36,16 @@ public class CollectGitInfo {
     // Associations (Release, Class) containing all measurament information
     private Releases rels;
 
-    public CollectGitInfo(String repoUrl, List<ReleaseMeta> releases, List<TicketIssue> issues)
+    public CollectGitInfo(String repoUrl, List<ReleaseMeta> releases, List<TicketIssue> issues, String projKey)
             throws GitException, InvalidRemoteException, GitAPIException, IOException {
         this.releases = releases;
         this.issues = issues;
         this.rels = new Releases();
 
-        File directory = new File("temp"); // Directory for cloning the repo
+        File directory = new File("temp/" + projKey + "/"); // Directory for cloning the repo
 
         if (directory.exists()) {
-            this.repo = new FileRepository("temp/.git");
+            this.repo = new FileRepository("temp/" + projKey + "/.git");
             this.git = new Git(this.repo);
         } else {
             System.out.println("CLONING REPO...");
@@ -123,7 +123,7 @@ public class CollectGitInfo {
 
         for (TicketIssue issue : issues) {
             List<FixCommit> fixCommits = GitUtils.getTicketCommitsReleases(rels, issue);
-            
+
             for (FixCommit fixCommit : fixCommits) {
                 GitUtils.setBugginess(fixCommit, rels, issue);
             }
