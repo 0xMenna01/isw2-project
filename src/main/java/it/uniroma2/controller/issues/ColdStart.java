@@ -2,7 +2,7 @@ package it.uniroma2.controller.issues;
 
 import it.uniroma2.controller.CollectReleasesData;
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.exception.ParallelColdStartException;
+import it.uniroma2.exception.PropException;
 import it.uniroma2.utils.ProportionUtils;
 
 public class ColdStart {
@@ -24,9 +24,9 @@ public class ColdStart {
 
     }
 
-    public double getProportion() throws Exception {
+    public double getProportion() throws PropException {
         if (prop == null)
-            throw new ParallelColdStartException("Must start the cold start first");
+            throw new PropException("Must start the cold start first");
         return prop;
     }
 

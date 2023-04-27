@@ -40,7 +40,7 @@ public class CollectGitInfo {
         this.issues = issues;
         this.rels = new Releases();
 
-        File directory = new File("temp/" + projKey + "/"); // Directory for cloning the repo
+        File directory = new File("temp/" + projKey); // Directory for cloning the repo
 
         if (directory.exists()) {
             this.repo = new FileRepository("temp/" + projKey + "/.git");

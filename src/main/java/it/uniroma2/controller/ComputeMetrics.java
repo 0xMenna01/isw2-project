@@ -32,7 +32,7 @@ public class ComputeMetrics {
     private HashMap<Release, HashMap<JavaClass, List<String>>> mapRelClassForContent;
 
     public ComputeMetrics(Releases releases, List<TicketIssue> issues, Repository repo)
-            throws IOException, GitException {
+            throws IOException {
         this.releases = releases;
         this.issues = issues;
         this.repo = repo;
@@ -83,7 +83,7 @@ public class ComputeMetrics {
     }
 
     private GenericPair<Integer, Integer> computeNFixAndFixChurn(JavaClass clazz, Release rel)
-            throws TicketException, IOException, GitException {
+            throws TicketException, IOException {
 
         List<String> fixCommitsContents = new ArrayList<>();
 
@@ -151,7 +151,7 @@ public class ComputeMetrics {
         return new GenericPair<>(locAdded, delLoc);
     }
 
-    private Integer computeChurn(JavaClass clazz, Release rel) throws GitException, IOException {
+    private Integer computeChurn(JavaClass clazz, Release rel) throws GitException {
         GenericPair<Integer, Integer> locAddedAndDel = computeLocAddedAndDel(clazz, rel);
         return locAddedAndDel.getFirst() + locAddedAndDel.getSecond();
 
@@ -177,7 +177,7 @@ public class ComputeMetrics {
             }
 
             // Check for instance variables
-            if (line.contains("new ")) {
+            else if (line.contains("new ")) {
                 String[] words = line.split("\\s+");
                 for (int i = 0; i < words.length - 1; i++) {
                     if (words[i].equals("new")) {
@@ -187,7 +187,7 @@ public class ComputeMetrics {
             }
 
             // Check for method calls
-            if (line.contains(".")) {
+            else if (line.contains(".")) {
                 String[] words = line.split("\\.");
                 for (int i = 0; i < words.length - 1; i++) {
                     if (words[i].matches("[a-zA-Z]\\w*")) {
