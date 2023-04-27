@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import it.uniroma2.exception.ParallelColdStartException;
+import it.uniroma2.exception.PropException;
 import it.uniroma2.exception.TicketException;
 import it.uniroma2.factory.ParallelColdStartFactory;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.utils.ProportionUtils;
-import it.uniroma2.view.MainView;
+import it.uniroma2.utils.ReportWriter;
 
 public class Proportion {
 
@@ -30,9 +31,9 @@ public class Proportion {
         return instance;
     }
 
-    public static Proportion getInstance() throws Exception {
+    public static Proportion getInstance() throws PropException {
         if (instance == null) {
-            throw new Exception("Must firt set ov, and fv when getting the instance");
+            throw new PropException("Must firt set ov, and fv when getting the instance");
         }
         return instance;
     }
@@ -50,12 +51,12 @@ public class Proportion {
             this.prop = ParallelColdStartFactory.getInstance().getProportion();
         }
         // Print the proportion (Remove later on)
-        MainView.printProportion(prop, prevIssues);
+        ReportWriter.writeProportion(prop, prevIssues);
     }
 
-    public int getIdIV() throws Exception {
+    public int getIdIV() throws PropException {
         if (this.prop == null)
-            throw new Exception("Proportion has not been computed");
+            throw new PropException("Proportion has not been computed");
         double diffFvOv = Math.max(1, fv.getId() - ov.getId());
         int id = (int) Math.ceil(fv.getId() - diffFvOv * this.prop);
         if (id <= 0)

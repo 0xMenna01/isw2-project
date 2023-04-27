@@ -8,7 +8,7 @@ import it.uniroma2.model.TicketIssue;
 
 public class ProportionUtils {
 
-    private static int THRESHOLD = 5;
+    private static int threshold = 5;
 
     private ProportionUtils() {
         throw new IllegalStateException("Utility class");
@@ -20,7 +20,7 @@ public class ProportionUtils {
         // threshold
         // The method returns -1 if there are not enough tickets
         int numTickets = prevIssues.size();
-        if (numTickets < THRESHOLD)
+        if (numTickets < threshold)
             return -1;
 
         double proportion = 0.0;

@@ -26,6 +26,7 @@ public enum ProjectKey {
         throw new ProjectNameException("Invalid name for the project");
     }
 
+    @Override
     public String toString() {
         return projKey;
     }

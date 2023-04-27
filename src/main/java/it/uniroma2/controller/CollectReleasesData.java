@@ -22,7 +22,7 @@ public class CollectReleasesData {
 
     public CollectReleasesData(ProjectKey key) throws ParseException, JSONException, IOException {
 
-        List<ReleaseMeta> releases = new ArrayList<>();
+        List<ReleaseMeta> rels = new ArrayList<>();
         GenericPair<JSONArray, Integer> res = JiraUtils.queryReleases(key.toString());
         Map<Date, String> releasesMap = ReleasesFactory.getInstance().orderedReleasesByDate(res.getFirst(),
                 res.getSecond());
@@ -30,11 +30,11 @@ public class CollectReleasesData {
         // Ordered releases by date associated to their bugginess: set false by default
         int i = 1;
         for (Map.Entry<Date, String> entry : releasesMap.entrySet()) {
-            releases.add(new ReleaseMeta(i, entry.getValue(), entry.getKey()));
+            rels.add(new ReleaseMeta(i, entry.getValue(), entry.getKey()));
             i++;
         }
 
-        this.releases = releases;
+        this.releases = rels;
     }
 
     public List<ReleaseMeta> getReleasesList() {

@@ -56,14 +56,12 @@ public class CsvWriter {
             }
 
         } catch (Exception e) {
-            System.out.println("Error in csv writer");
             e.printStackTrace();
         } finally {
             try {
                 fileWriter.flush();
                 fileWriter.close();
             } catch (IOException e) {
-                System.out.println("Error while flushing/closing fileWriter !!!");
                 e.printStackTrace();
             }
         }

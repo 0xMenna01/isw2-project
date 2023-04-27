@@ -2,7 +2,6 @@ package it.uniroma2.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,22 +17,22 @@ public class Release extends ReleaseMeta {
      * If a class hasn't been changed by any commit the list is set tu null.
      * N.B. All commits of the release stored
      */
-    HashMap<JavaClass, List<RevCommit>> classesCommits;
+    Map<JavaClass, List<RevCommit>> classesCommits;
     List<JavaClass> classes;
     List<RevCommit> commits;
 
-    public Release(int id, String name, Date date, HashMap<JavaClass, List<RevCommit>> classesCommits) {
+    public Release(int id, String name, Date date, Map<JavaClass, List<RevCommit>> classesCommits) {
         super(id, name, date);
         this.classesCommits = classesCommits;
         this.classes = new ArrayList<>();
         this.commits = new ArrayList<>();
     }
 
-    public HashMap<JavaClass, List<RevCommit>> getClassesCommits() {
+    public Map<JavaClass, List<RevCommit>> getClassesCommits() {
         return classesCommits;
     }
 
-    public void setClassesCommits(HashMap<JavaClass, List<RevCommit>> classesCommits) {
+    public void setClassesCommits(Map<JavaClass, List<RevCommit>> classesCommits) {
         this.classesCommits = classesCommits;
     }
 
@@ -41,18 +40,18 @@ public class Release extends ReleaseMeta {
     // ones that changed the classes.
     public List<RevCommit> getCommits() {
         if (this.commits.isEmpty()) {
-            List<RevCommit> commits = new ArrayList<>();
+            List<RevCommit> commitList = new ArrayList<>();
             for (Map.Entry<JavaClass, List<RevCommit>> entry : classesCommits.entrySet()) {
 
                 List<RevCommit> commitsClass = entry.getValue();
                 for (RevCommit commit : commitsClass) {
 
                     if (!commits.contains(commit)) {
-                        commits.add(commit);
+                        commitList.add(commit);
                     }
                 }
             }
-            this.commits.addAll(commits);
+            this.commits.addAll(commitList);
         }
 
         return this.commits;
@@ -61,11 +60,11 @@ public class Release extends ReleaseMeta {
     public List<JavaClass> getClasses() {
 
         if (this.classes.isEmpty()) {
-            List<JavaClass> classes = new ArrayList<>();
+            List<JavaClass> classList = new ArrayList<>();
             for (Map.Entry<JavaClass, List<RevCommit>> entry : classesCommits.entrySet()) {
-                classes.add(entry.getKey());
+                classList.add(entry.getKey());
             }
-            this.classes.addAll(classes);
+            this.classes.addAll(classList);
         }
         return this.classes;
     }
@@ -75,13 +74,13 @@ public class Release extends ReleaseMeta {
     }
 
     public List<JavaClass> getClassesModifiedByCommit(RevCommit commit) {
-        List<JavaClass> classes = new ArrayList<>();
+        List<JavaClass> classList = new ArrayList<>();
         for (Map.Entry<JavaClass, List<RevCommit>> entry : classesCommits.entrySet()) {
             if (entry.getValue().contains(commit)) {
-                classes.add(entry.getKey());
+                classList.add(entry.getKey());
             }
         }
-        return classes;
+        return classList;
     }
 
     public void setBug(JavaClass clazz) {

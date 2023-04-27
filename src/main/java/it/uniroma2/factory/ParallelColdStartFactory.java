@@ -12,7 +12,6 @@ import it.uniroma2.controller.issues.ColdStart;
 import it.uniroma2.enums.ExecutorState;
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.exception.ParallelColdStartException;
-import it.uniroma2.exception.TicketException;
 import it.uniroma2.utils.ProportionUtils;
 
 public class ParallelColdStartFactory {
@@ -83,7 +82,7 @@ public class ParallelColdStartFactory {
     }
 
     public double getProportion()
-            throws InterruptedException, ExecutionException, ParallelColdStartException, TicketException {
+            throws InterruptedException, ExecutionException, ParallelColdStartException {
         switch (state) {
             case DONE:
                 return prop;
@@ -95,12 +94,12 @@ public class ParallelColdStartFactory {
 
                 List<Double> props = new ArrayList<>();
                 for (Future<Double> res : results) {
-                    double prop = res.get();
-                    if (prop == -1) { // not enough tickets
+                    double proportion = res.get();
+                    if (proportion == -1) { // not enough tickets
                         validProj--;
                         continue;
                     }
-                    props.add(prop);
+                    props.add(proportion);
                 }
                 // Shutdown the pool and reset the tasks
                 parallelExec.shutdown();

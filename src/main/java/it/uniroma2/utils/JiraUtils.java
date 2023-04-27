@@ -70,16 +70,18 @@ public class JiraUtils {
         Collections.sort(list, new Comparator<JSONObject>() {
             @Override
             public int compare(JSONObject o1, JSONObject o2) {
+                Date date1 = null;
+                Date date2 = null;
                 try {
                     String date1String = o1.getJSONObject("fields").getString("resolutiondate");
                     String date2String = o2.getJSONObject("fields").getString("resolutiondate");
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-                    Date date1 = format.parse(date1String);
-                    Date date2 = format.parse(date2String);
-                    return date1.compareTo(date2);
+                    date1 = format.parse(date1String);
+                    date2 = format.parse(date2String);
                 } catch (ParseException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
+                return date1.compareTo(date2);
             }
         });
         for (int i = 0; i < jsonIssues.length(); i++) {

@@ -8,14 +8,12 @@ import java.util.List;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.errors.RevisionSyntaxException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import it.uniroma2.exception.GitException;
 import it.uniroma2.exception.TicketException;
 import it.uniroma2.factory.ReleaseClassesFactory;
 import it.uniroma2.model.FixCommit;
@@ -24,7 +22,7 @@ import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.model.javaclass.JavaClass;
 import it.uniroma2.utils.GitUtils;
-import it.uniroma2.view.MainView;
+import it.uniroma2.utils.ReportWriter;
 
 public class CollectGitInfo {
 
@@ -37,7 +35,7 @@ public class CollectGitInfo {
     private Releases rels;
 
     public CollectGitInfo(String repoUrl, List<ReleaseMeta> releases, List<TicketIssue> issues, String projKey)
-            throws GitException, InvalidRemoteException, GitAPIException, IOException {
+            throws GitAPIException, IOException {
         this.releases = releases;
         this.issues = issues;
         this.rels = new Releases();
@@ -48,7 +46,6 @@ public class CollectGitInfo {
             this.repo = new FileRepository("temp/" + projKey + "/.git");
             this.git = new Git(this.repo);
         } else {
-            System.out.println("CLONING REPO...");
 
             this.git = Git.cloneRepository()
                     .setURI(repoUrl)
@@ -56,17 +53,15 @@ public class CollectGitInfo {
                             directory)
                     .call();
 
-            System.out.println("REPO CLONED SUCCESSFULLY!");
-
             this.repo = git.getRepository();
         }
     }
 
-    public void computeRelClassesCommits() throws IOException, GitAPIException, GitException {
+    public void computeRelClassesCommits() throws IOException, GitAPIException {
         // Getting all commits
         List<RevCommit> allCommits = retrieveCommits();
         // Print number of commits
-        MainView.printNumberCommits(allCommits.size());
+        ReportWriter.writeNumOfCommits(allCommits.size());
 
         // Delete this later on
         int num = 0;
@@ -76,14 +71,14 @@ public class CollectGitInfo {
 
             // Delete this later on
             num += tempMatchCommits.size();
-            MainView.printNumOfCommitsFoRelease(tempMatchCommits.size(), rel.getName());
+            ReportWriter.writeNumOfCommitsForRelease(tempMatchCommits.size(), rel.getName());
 
             // Creating all classes associated to the last release commit
             if (!tempMatchCommits.isEmpty()) {
                 List<JavaClass> relClasses = ReleaseClassesFactory.getInstance()
                         .buildClasses(tempMatchCommits.get(tempMatchCommits.size() - 1), repo);
                 // Prining number of classes for release
-                MainView.printNumOfClassesForRelease(relClasses.size(), rel.getName());
+                ReportWriter.writeNumOfClassesForRelease(relClasses.size(), rel.getName());
 
                 // Updating the releases state by creating a Release instace that maps a release
                 // to its classes, specifying all commits that changed a class
@@ -94,13 +89,12 @@ public class CollectGitInfo {
         }
 
         // Printing number of commits for all releases
-        MainView.printTotalNumOfCommitsForReleases(num);
+        ReportWriter.writeTotalNumOfCommitsForReleases(num);
 
         // Printing commits of all releases associated to the classes they changed
-        MainView.printReleasesCommitsForClasses(this.rels.getReleases());
+        ReportWriter.writeReleasesCommitsForClasses(this.rels.getReleases());
 
         this.git.close();
-        // GitUtils.deleteDirectory("temp");
     }
 
     private List<RevCommit> retrieveCommits() throws GitAPIException, RevisionSyntaxException, IOException {
@@ -119,7 +113,7 @@ public class CollectGitInfo {
         return commits;
     }
 
-    public void labelClasses() throws GitException, TicketException {
+    public void labelClasses() throws TicketException {
 
         for (TicketIssue issue : issues) {
             List<FixCommit> fixCommits = GitUtils.getTicketCommitsReleases(rels, issue);

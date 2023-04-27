@@ -46,8 +46,9 @@ public class CollectIssues {
             while (computedTickets < totalTickets && computedTickets < tempMaxTickets) {
                 int i = computedTickets % 500; // index of the issue in the json array
                 TicketIssue tmpTicket = IssuesFactory.getInstance().createIssue(i, res.getFirst(), releasesList);
+
+                ReleaseMeta iv = null;
                 if (tmpTicket.isValid(releasesList.get(0))) {
-                    ReleaseMeta iv = null;
 
                     if (tmpTicket.hasValidIV())
                         iv = tmpTicket.getIV();
@@ -59,12 +60,11 @@ public class CollectIssues {
                         iv = ReleasesUtils.getReleaseById(Proportion.getInstance().getIdIV(),
                                 releasesList);
                     }
-
-                    if (iv != null)
-                        this.issues.add(new TicketIssue(
-                                tmpTicket.getKey(), tmpTicket.getOv(), tmpTicket.getFv(),
-                                ReleasesUtils.getAVs(iv, tmpTicket.getFv(), releasesList)));
                 }
+                if (iv != null)
+                    this.issues.add(new TicketIssue(
+                            tmpTicket.getKey(), tmpTicket.getOv(), tmpTicket.getFv(),
+                            ReleasesUtils.getAVs(iv, tmpTicket.getFv(), releasesList)));
 
                 computedTickets++;
             }

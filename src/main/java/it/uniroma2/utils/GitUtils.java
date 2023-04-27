@@ -17,7 +17,6 @@ import java.util.regex.Pattern;
 import org.assertj.core.util.diff.Delta;
 import org.assertj.core.util.diff.DiffUtils;
 import org.assertj.core.util.diff.Patch;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -30,7 +29,6 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 
-import it.uniroma2.exception.GitException;
 import it.uniroma2.exception.TicketException;
 import it.uniroma2.model.FixCommit;
 import it.uniroma2.model.GenericPair;
@@ -91,7 +89,7 @@ public class GitUtils {
 
     public static List<RevCommit> getCommitsForClass(Repository repository, List<RevCommit> commitList,
             String classPath)
-            throws IOException, GitAPIException, GitException {
+            throws IOException {
 
         List<RevCommit> commitsForClass = new ArrayList<>();
 
@@ -190,7 +188,7 @@ public class GitUtils {
     }
 
     public static String getContentOfClassByCommit(String className, RevCommit commit, Repository repo)
-            throws IOException, GitException {
+            throws IOException {
 
         RevTree tree = commit.getTree();
         // Tree walk to iterate over all files in the Tree recursively

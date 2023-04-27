@@ -71,7 +71,7 @@ public class ComputeMetrics {
 
                 clazz.setAge(computeReleaseAge(rel));
                 clazz.setAvgFixChurn(computeAvgFixChurn(rel, clazz));
-                clazz.setFanOut(computeFanout(clazz.getContent()));
+                clazz.setFanOut(computeFanOut(clazz.getContent()));
                 clazz.setNumOfRevisions(rel.getCommitsForClass(clazz).size());
             }
         }
@@ -124,7 +124,7 @@ public class ComputeMetrics {
     }
 
     private GenericPair<Integer, Integer> computeLocAddedAndDel(JavaClass clazz, Release rel)
-            throws IOException, GitException {
+            throws GitException {
         int i = 0;
         Integer locAdded = 0;
         Integer delLoc = 0;
@@ -165,7 +165,7 @@ public class ComputeMetrics {
         return period.getYears();
     }
 
-    public int computeFanout(String classContent) {
+    public int computeFanOut(String classContent) {
         Set<String> dependencies = new HashSet<>();
         String[] lines = classContent.split("\\n");
 
@@ -190,7 +190,7 @@ public class ComputeMetrics {
             if (line.contains(".")) {
                 String[] words = line.split("\\.");
                 for (int i = 0; i < words.length - 1; i++) {
-                    if (words[i].matches("[a-zA-Z][a-zA-Z0-9_]*")) {
+                    if (words[i].matches("[a-zA-Z]\\w*")) {
                         dependencies.add(words[i]);
                     }
                 }
