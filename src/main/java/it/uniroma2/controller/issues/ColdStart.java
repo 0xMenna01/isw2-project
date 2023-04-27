@@ -1,8 +1,17 @@
 package it.uniroma2.controller.issues;
 
+import java.io.IOException;
+import java.text.ParseException;
+import java.util.concurrent.ExecutionException;
+
+import org.json.JSONException;
+
 import it.uniroma2.controller.CollectReleasesData;
 import it.uniroma2.enums.ProjectKey;
+import it.uniroma2.exception.ParallelColdStartException;
 import it.uniroma2.exception.PropException;
+import it.uniroma2.exception.ReleaseException;
+import it.uniroma2.exception.TicketException;
 import it.uniroma2.utils.ProportionUtils;
 
 public class ColdStart {
@@ -15,7 +24,7 @@ public class ColdStart {
         this.prop = null;
     }
 
-    public void start() throws Exception {
+    public void start() throws JSONException, ParseException, IOException, TicketException, InterruptedException, ExecutionException, ParallelColdStartException, ReleaseException, PropException {
         CollectReleasesData controlData = new CollectReleasesData(this.key);
         CollectIssues issuesControl = new CollectIssues();
 
