@@ -65,8 +65,4 @@ public class ClassMeta extends ClassMetrics {
     public void setNumOfRevisions(int numOfRevisions) {
         this.numOfRevisions = numOfRevisions;
     }
-
-    
-
-
 }

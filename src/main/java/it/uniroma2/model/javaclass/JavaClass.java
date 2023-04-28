@@ -21,4 +21,6 @@ public class JavaClass extends ClassMeta {
     public String toString() {
         return pathName;
     }
+
+    
 }

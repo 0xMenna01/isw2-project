@@ -14,9 +14,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import it.uniroma2.exception.TicketException;
 import it.uniroma2.factory.ReleaseClassesFactory;
-import it.uniroma2.model.FixCommit;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
@@ -111,17 +109,6 @@ public class CollectGitInfo {
             }
         }
         return commits;
-    }
-
-    public void labelClasses() throws TicketException {
-
-        for (TicketIssue issue : issues) {
-            List<FixCommit> fixCommits = GitUtils.getTicketCommitsReleases(rels, issue);
-
-            for (FixCommit fixCommit : fixCommits) {
-                GitUtils.setBugginess(fixCommit, rels, issue);
-            }
-        }
     }
 
     public Releases getReleases() {
