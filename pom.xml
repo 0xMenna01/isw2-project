@@ -33,6 +33,21 @@
         <artifactId>assertj-core</artifactId>
         <version>3.13.2</version>
       </dependency>
-    </dependencies>
 
+        	
+      <!-- This contains StaticLoggerBinder class -->
+	    <dependency>
+    	  <groupId>org.slf4j</groupId>
+    	  <artifactId>slf4j-nop</artifactId>
+    	  <version>1.7.25</version>
+      </dependency>
+    
+      <!-- Dependency useful to call Weka APIs -->
+      <dependency>
+    	  <groupId>nz.ac.waikato.cms.weka</groupId>
+    	  <artifactId>weka-stable</artifactId>
+    	  <version>3.8.0</version>
+	    </dependency>
+    </dependencies>
+      	
 </project>

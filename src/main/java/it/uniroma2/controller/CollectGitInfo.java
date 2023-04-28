@@ -17,7 +17,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import it.uniroma2.factory.ReleaseClassesFactory;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.Releases;
-import it.uniroma2.model.TicketIssue;
 import it.uniroma2.model.javaclass.JavaClass;
 import it.uniroma2.utils.GitUtils;
 import it.uniroma2.utils.ReportWriter;
@@ -27,15 +26,13 @@ public class CollectGitInfo {
     private Repository repo;
     private Git git;
     private List<ReleaseMeta> releases;
-    private List<TicketIssue> issues;
 
     // Associations (Release, Class) containing all measurament information
     private Releases rels;
 
-    public CollectGitInfo(String repoUrl, List<ReleaseMeta> releases, List<TicketIssue> issues, String projKey)
+    public CollectGitInfo(String repoUrl, List<ReleaseMeta> releases, String projKey)
             throws GitAPIException, IOException {
         this.releases = releases;
-        this.issues = issues;
         this.rels = new Releases();
 
         File directory = new File("temp/" + projKey); // Directory for cloning the repo

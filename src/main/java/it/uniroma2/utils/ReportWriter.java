@@ -13,10 +13,10 @@ import it.uniroma2.model.javaclass.JavaClass;
 
 public class ReportWriter {
 
-    private static final String RELEASE_FILE = "outputs/releases.txt";
-    private static final String ISSUE_FILE = "outputs/issues.txt";
-    private static final String PROPORTION_FILE = "outputs/proportion.txt";
-    private static final String GIT_FILE = "outputs/git.txt";
+    private static final String RELEASE_FILE = "outputs/report/releases.txt";
+    private static final String ISSUE_FILE = "outputs/report/issues.txt";
+    private static final String PROPORTION_FILE = "outputs/report/proportion.txt";
+    private static final String GIT_FILE = "outputs/report/git.txt";
     private static FileWriter relFile;
     private static FileWriter issuesFile;
     private static FileWriter proportionFile;

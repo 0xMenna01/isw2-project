@@ -52,7 +52,7 @@ public class ExecuteDataCollection {
         // Collecting git data
         CollectGitInfo gitControl = null;
 
-        gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(), issuesControl.getIssues(),
+        gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(),
                 this.projKey.toString());
         gitControl.computeRelClassesCommits();
 
@@ -63,7 +63,7 @@ public class ExecuteDataCollection {
         // set
         // As dataset validation we are using the walkforward approach
         // First we label the training set and then the testing set
-        WalkForward.execute(gitControl.getReleases(), issuesControl.getIssues());
+        WalkForward.execute(gitControl.getReleases(), issuesControl.getIssues(), projKey.toString());
 
         // Closing created outputs files
         ReportWriter.closeFiles();

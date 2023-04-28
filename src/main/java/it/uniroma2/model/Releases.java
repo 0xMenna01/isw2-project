@@ -10,6 +10,10 @@ public class Releases {
         this.rels = new ArrayList<>();
     }
 
+    public Releases(List<Release> rels) {
+        this.rels = rels;
+    }
+
     public List<Release> getReleases() {
         return rels;
     }
