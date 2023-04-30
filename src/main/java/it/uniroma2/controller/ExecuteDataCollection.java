@@ -37,24 +37,24 @@ public class ExecuteDataCollection {
 
         releasesControl = new CollectReleasesData(this.projKey);
 
-        // Printing releases
-        ReportWriter.writeReleases(releasesControl.getReleasesList());
-
-        // Collecting issues
-        CollectIssues issuesControl = new CollectIssues();
-
-        issuesControl.retrieveIssues(this.projKey, releasesControl.getReleasesList());
-
-        // Printing issues
-
-        ReportWriter.writeIssues(issuesControl.getIssues());
-
         // Collecting git data
         CollectGitInfo gitControl = null;
 
         gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(),
                 this.projKey.toString());
         gitControl.computeRelClassesCommits();
+
+        // Printing releases
+        ReportWriter.writeReleases(gitControl.getReleases().getMeta());
+
+        // Collecting issues
+        CollectIssues issuesControl = new CollectIssues();
+
+        issuesControl.retrieveIssues(this.projKey, gitControl.getReleases().getMeta());
+
+        // Printing issues
+
+        ReportWriter.writeIssues(issuesControl.getIssues());
 
         // Compute Measurment of classes metrics
         new ComputeMetrics(gitControl.getReleases(), issuesControl.getIssues(), gitControl.getRepo()).compute();

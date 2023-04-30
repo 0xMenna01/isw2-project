@@ -47,7 +47,6 @@ public class ReleaseClassesFactory {
                 // Adding classes with name and content
                 classes.add(new JavaClass(treeWalk.getPathString(),
                         new String(repo.open(treeWalk.getObjectId(0)).getBytes(), StandardCharsets.UTF_8)));
-
             }
         }
         treeWalk.close();

@@ -58,13 +58,11 @@ public class CollectGitInfo {
         // Print number of commits
         ReportWriter.writeNumOfCommits(allCommits.size());
 
-        // Delete this later on
         int num = 0;
         List<RevCommit> tempMatchCommits = null;
         for (ReleaseMeta rel : releases) {
             tempMatchCommits = GitUtils.getRelCommitsOrderedByDate(allCommits, rel);
 
-            // Delete this later on
             num += tempMatchCommits.size();
             ReportWriter.writeNumOfCommitsForRelease(tempMatchCommits.size(), rel.getName());
 
@@ -82,6 +80,7 @@ public class CollectGitInfo {
                                 tempMatchCommits, relClasses));
             }
         }
+        GitUtils.fixRelIds(rels);
 
         // Printing number of commits for all releases
         ReportWriter.writeTotalNumOfCommitsForReleases(num);

@@ -2,8 +2,6 @@ package it.uniroma2.utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -40,15 +38,7 @@ import it.uniroma2.model.javaclass.JavaClass;
 public class GitUtils {
 
     // Date that will be used to retrieve commits from the first release
-    private static Date firstDate; // set to 1970-01-01
-    static {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            firstDate = formatter.parse("1970-01-01");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
+    private static Date firstDate = new Date(0);
 
     private GitUtils() {
         throw new IllegalStateException("Utility class");
@@ -240,8 +230,7 @@ public class GitUtils {
         return lines;
     }
 
-
-    public static void addDependencies(Set<String> dependencies, String line){
+    public static void addDependencies(Set<String> dependencies, String line) {
         // Check for import statements
         if (line.startsWith("import")) {
             String[] words = line.split("\\s+");
@@ -267,6 +256,17 @@ public class GitUtils {
                 }
             }
         }
+    }
+
+    public static void fixRelIds(Releases releases) {
+        List<Release> rels = releases.getReleases();
+        for (int i = 0; i < rels.size(); i++) {
+            rels.get(i).setId(i + 1);
+        }
+    }
+
+    public static String getAlphaChars(String s) {
+        return s.replaceAll("[^a-zA-Z]", "");
     }
 
 }
