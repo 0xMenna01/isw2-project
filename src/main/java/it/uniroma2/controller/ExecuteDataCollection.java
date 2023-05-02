@@ -9,8 +9,8 @@ import org.json.JSONException;
 
 import it.uniroma2.controller.issues.CollectIssues;
 import it.uniroma2.enums.ProjectKey;
+import it.uniroma2.exception.EnumException;
 import it.uniroma2.exception.GitException;
-import it.uniroma2.exception.ParallelColdStartException;
 import it.uniroma2.exception.ProjectNameException;
 import it.uniroma2.exception.PropException;
 import it.uniroma2.exception.ReleaseException;
@@ -29,7 +29,7 @@ public class ExecuteDataCollection {
     }
 
     public void collectData() throws JSONException, ParseException, IOException, InterruptedException,
-            ExecutionException, ParallelColdStartException, TicketException, ReleaseException, PropException,
+            ExecutionException, EnumException, TicketException, ReleaseException, PropException,
             GitAPIException, GitException {
 
         // Collecting releases ordered by date

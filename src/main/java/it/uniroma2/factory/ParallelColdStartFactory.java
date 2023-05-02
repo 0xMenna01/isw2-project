@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import it.uniroma2.controller.issues.ColdStart;
 import it.uniroma2.enums.ExecutorState;
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.exception.ParallelColdStartException;
+import it.uniroma2.exception.EnumException;
 import it.uniroma2.utils.ProportionUtils;
 
 public class ParallelColdStartFactory {
@@ -39,7 +39,7 @@ public class ParallelColdStartFactory {
 
     }
 
-    public static ParallelColdStartFactory getInstance() throws ParallelColdStartException {
+    public static ParallelColdStartFactory getInstance() throws EnumException {
         ParallelColdStartFactory result = instance.get();
         if (result == null) {
             ParallelColdStartFactory newValue = new ParallelColdStartFactory();
@@ -49,7 +49,7 @@ public class ParallelColdStartFactory {
                 for (ProjectKey key : instance.get().keys) {
 
                     if (key.equals(ProjectKey.BOOKEEPER) || key.equals(ProjectKey.SYNCOPE))
-                        throw new ParallelColdStartException("Error: Coldstart must be made cross-project");
+                        throw new EnumException("Error: Coldstart must be made cross-project");
                 }
             } else {
                 result = instance.get();
@@ -59,7 +59,7 @@ public class ParallelColdStartFactory {
         return result;
     }
 
-    public void initConcurrecy() throws ParallelColdStartException {
+    public void initConcurrecy() throws EnumException {
 
         if (state.equals(ExecutorState.NOT_READY)) {
             // Initialize the executor with a fixed thread pool
@@ -72,7 +72,7 @@ public class ParallelColdStartFactory {
         }
     }
 
-    private void addTasks() throws ParallelColdStartException {
+    private void addTasks() throws EnumException {
         if (state.equals(ExecutorState.INIT)) {
             for (ProjectKey key : keys) {
                 tasks.add(() -> {
@@ -83,12 +83,12 @@ public class ParallelColdStartFactory {
             }
         } else {
             this.state = ExecutorState.ERROR;
-            throw new ParallelColdStartException("Executor not initialized");
+            throw new EnumException("Executor not initialized");
         }
     }
 
     public double getProportion()
-            throws InterruptedException, ExecutionException, ParallelColdStartException {
+            throws InterruptedException, ExecutionException, EnumException {
         switch (state) {
             case DONE:
                 return prop;
@@ -111,14 +111,14 @@ public class ParallelColdStartFactory {
                 parallelExec.shutdown();
                 tasks = null;
                 if (validProj == 0)
-                    throw new ParallelColdStartException("None of the projects is valid to compute proportion");
+                    throw new EnumException("None of the projects is valid to compute proportion");
                 this.prop = ProportionUtils.computeMedian(props);
                 this.state = ExecutorState.DONE;
                 return prop;
             }
             default: {
                 this.state = ExecutorState.ERROR;
-                throw new ParallelColdStartException("Executor not properly managed");
+                throw new EnumException("Executor not properly managed");
             }
         }
     }

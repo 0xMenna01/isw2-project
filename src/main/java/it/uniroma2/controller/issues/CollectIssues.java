@@ -11,7 +11,7 @@ import org.json.JSONException;
 
 import it.uniroma2.enums.ColdStartState;
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.exception.ParallelColdStartException;
+import it.uniroma2.exception.EnumException;
 import it.uniroma2.exception.PropException;
 import it.uniroma2.exception.ReleaseException;
 import it.uniroma2.exception.TicketException;
@@ -32,7 +32,7 @@ public class CollectIssues {
         this.state = ColdStartState.INACTIVE;
     }
 
-    public void retrieveIssues(ProjectKey key, List<ReleaseMeta> releasesList) throws JSONException, IOException, ParseException, InterruptedException, ExecutionException, ParallelColdStartException, TicketException, ReleaseException, PropException {
+    public void retrieveIssues(ProjectKey key, List<ReleaseMeta> releasesList) throws JSONException, IOException, ParseException, InterruptedException, ExecutionException, EnumException, TicketException, ReleaseException, PropException {
 
         this.state = key.getColdStartState();
 

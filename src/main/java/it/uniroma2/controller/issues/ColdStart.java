@@ -8,7 +8,7 @@ import org.json.JSONException;
 
 import it.uniroma2.controller.CollectReleasesData;
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.exception.ParallelColdStartException;
+import it.uniroma2.exception.EnumException;
 import it.uniroma2.exception.PropException;
 import it.uniroma2.exception.ReleaseException;
 import it.uniroma2.exception.TicketException;
@@ -24,7 +24,7 @@ public class ColdStart {
         this.prop = null;
     }
 
-    public void start() throws JSONException, ParseException, IOException, TicketException, InterruptedException, ExecutionException, ParallelColdStartException, ReleaseException, PropException {
+    public void start() throws JSONException, ParseException, IOException, TicketException, InterruptedException, ExecutionException, EnumException, ReleaseException, PropException {
         CollectReleasesData controlData = new CollectReleasesData(this.key);
         CollectIssues issuesControl = new CollectIssues();
 
