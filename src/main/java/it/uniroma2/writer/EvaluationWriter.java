@@ -15,8 +15,8 @@ public class EvaluationWriter {
     private static final String[] HEADER = new String[] {
             "TRAINING_RELEASES", "TRAINING_PERCENT", "CLASSIFIER",
             "PRECISION", "RECALL",
-            "AUC", "KAPPA", "TP", "FP",
-            "TN", "FN" };
+            "AUC", "KAPPA", "TRUE_POSITIVES", "FALSE_POSITIVES",
+            "TRUE_NEGATIVES", "FALSE_NEGATIVES" };
 
     private String projName;
 

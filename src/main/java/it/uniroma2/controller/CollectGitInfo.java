@@ -89,6 +89,7 @@ public class CollectGitInfo {
         reportWriter.writeReleasesCommitsForClasses(this.rels.getReleases());
 
         this.git.close();
+        this.repo.close();
     }
 
     private List<RevCommit> retrieveCommits() throws GitAPIException, RevisionSyntaxException, IOException {

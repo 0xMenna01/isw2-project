@@ -33,7 +33,7 @@ public class ClassifierUtils {
     private static GenericPair<Instances, Instances> getTrainingAndTesting(String proj, int i) throws Exception {
 
         DataSource source1 = new DataSource(
-                PathBuilder.buildWekaTestFile(proj).toString() + i + ".arff");
+                PathBuilder.buildWekaTrainFile(proj).toString() + i + ".arff");
         DataSource source2 = new DataSource(
                 PathBuilder.buildWekaTestFile(proj).toString() + i + ".arff");
 
@@ -48,7 +48,7 @@ public class ClassifierUtils {
 
     public static Instances getTrainSet(String proj, int i) throws Exception {
         return getTrainingAndTesting(proj, i).getFirst();
-
+        
     }
 
     public static Instances getTestSet(String proj, int i) throws Exception {

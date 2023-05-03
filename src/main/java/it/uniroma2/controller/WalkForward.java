@@ -24,12 +24,14 @@ public class WalkForward {
         Releases dataSet = new Releases();
         DatasetWriter writer = new DatasetWriter(projName);
 
+        int lastReleaseIndex = rels.getReleases().size() - 1;
+        int halfIndex = rels.getReleases().size() / 2;
         for (int i = 0; i < rels.getReleases().size(); i++) {
             resetBugginess(dataSet);
 
             dataSet.add(rels.get(i));
 
-            if (i < rels.getReleases().size() / 2 || i == rels.getReleases().size() - 1) {
+            if (i < halfIndex || i == lastReleaseIndex) {
 
                 for (int j = 0; j < issues.size() && !issues.get(j).getFv().isAfter(rels.get(i)); j++) {
                     List<FixCommit> fixCommits = GitUtils.getTicketCommitsReleases(dataSet, issues.get(j));
@@ -38,14 +40,13 @@ public class WalkForward {
                         GitUtils.setBugginess(fixCommit, rels, issues.get(j));
                     }
                 }
-
-                if (i == rels.getReleases().size() - 1) {
-                    int j = i % 2 == 0 ? (i - 1) / 2 : i / 2;
-                    writer.writeSet(i+1, new Releases(dataSet.getReleases().subList(0, j + 1)),
+                
+                if (i == lastReleaseIndex) {
+                    int lastTrainingIndex = (int) Math.ceil((double)lastReleaseIndex / 2);
+                    writer.writeSet(i + 1, new Releases(dataSet.getReleases().subList(1,  lastTrainingIndex + 1)),
                             CsvType.TESTING);
                 } else
-                    writer.writeSet(i+1, dataSet, CsvType.TRAINING);
-
+                    writer.writeSet(i + 1, dataSet, CsvType.TRAINING);
             }
         }
     }

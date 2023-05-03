@@ -5,19 +5,22 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import it.uniroma2.enums.CsvType;
 import it.uniroma2.model.javaclass.JavaClass;
 import it.uniroma2.model.releases.Release;
 import it.uniroma2.model.releases.Releases;
 import it.uniroma2.utils.CsvUtils;
+import weka.core.Attribute;
 import weka.core.Instances;
+import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
 import weka.core.converters.CSVLoader;
 
 public class DatasetWriter {
 
-    private static final String[] HEADER = new String[] { "VERSION", "FILE", "LOC", "N_FIX",
+    private static final String[] HEADER = new String[] { "VERSION", "FILE", "SIZE", "N_FIX",
             "N_AUTHORS", "AVG_LOC_ADD", "CHURN", "AVG_CHURN", "AGE", "AVG_FIX_CHURN", "FANOUT", "NUM_REVISIONS",
             "IS_BUGGY" };
 
@@ -110,15 +113,57 @@ public class DatasetWriter {
         // load CSV file
         CSVLoader loader = new CSVLoader();
         loader.setSource(file);
-        Instances data = loader.getDataSet();
+        Instances dataSet = loader.getDataSet();
 
         // save ARFF file
         String output = isTraining ? PathBuilder.buildWekaTrainFile(projName).toString() + step + ".arff"
                 : PathBuilder.buildWekaTestFile(projName).toString() + step + ".arff";
 
+        File outFile = new File(output);
+        loadArfFile(outFile, dataSet);
+        adjustArfOutput(outFile);
+    }
+
+    private void adjustArfOutput(File arf) throws IOException {
+
+        ArffLoader arfLoader = new ArffLoader();
+        arfLoader.setSource(arf);
+
+        Instances dataSet = arfLoader.getDataSet();
+
+        // Delete attributes and data of version and file for the arff
+        int classFileIndex = dataSet.attribute("FILE").index();
+        int versionIndex = dataSet.attribute("VERSION").index();
+
+        dataSet.deleteAttributeAt(classFileIndex);
+        dataSet.deleteAttributeAt(versionIndex);
+
+        // Load changes
+        loadArfFile(arf, dataSet);
+
+        // Be sure to set the attribute IS_BUGGY to {true, false}
+        Attribute isBuggyAttribute = dataSet.attribute("IS_BUGGY");
+
+        if (isBuggyAttribute.numValues() < 2) {
+            adjustAttributeOfInterest(arf.getPath());
+        }
+
+    }
+
+    private void loadArfFile(File file, Instances data) throws IOException {
         ArffSaver saver = new ArffSaver();
         saver.setInstances(data);
-        saver.setFile(new File(output));
+
+        saver.setFile(file);
         saver.writeBatch();
+    }
+
+    private void adjustAttributeOfInterest(String filePath) throws IOException {
+
+        Path path = Paths.get(filePath);
+        String newContent = Files.lines(path)
+                .map(line -> line.replaceAll("\\{false\\}", "{true,false}"))
+                .reduce("", (acc, line) -> acc + line + System.lineSeparator());
+        Files.write(path, newContent.getBytes());
     }
 }

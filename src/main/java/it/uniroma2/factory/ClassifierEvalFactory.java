@@ -44,26 +44,34 @@ public class ClassifierEvalFactory {
 
     public static WekaClassifier buildClassifier(ClassifierMeta eval) {
 
-        FilteredClassifier innerClassifier = new FilteredClassifier();
-        innerClassifier.setClassifier(getClassifier(eval));
+        Classifier classifier = getClassifier(eval);
 
         Filter sampler = getSampler(eval);
         AttributeSelection featureSel = getFeatureSel(eval);
+
+        FilteredClassifier innerClassifier = null;
         FilteredClassifier externalClassifier = null;
         if (sampler != null) {
+            innerClassifier = new FilteredClassifier();
+            innerClassifier.setClassifier(classifier);
             innerClassifier.setFilter(sampler);
+
+            classifier = innerClassifier;
 
             if (featureSel != null) {
                 externalClassifier = new FilteredClassifier();
                 externalClassifier.setFilter(featureSel);
-                externalClassifier.setClassifier(innerClassifier);
+                externalClassifier.setClassifier(classifier);
+
+                classifier = externalClassifier;
             }
 
         } else if (featureSel != null) {
+            innerClassifier = new FilteredClassifier();
             innerClassifier.setFilter(featureSel);
-        }
 
-        FilteredClassifier classifier = externalClassifier != null ? externalClassifier : innerClassifier;
+            classifier = innerClassifier;
+        }
 
         return new WekaClassifier(classifier, eval.getProj(), eval.getWalkForwardIterationIndex(),
                 eval.getTrainingPercent(), eval.getMethod());
