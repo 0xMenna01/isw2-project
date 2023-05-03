@@ -21,18 +21,29 @@ import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.utils.JiraUtils;
 import it.uniroma2.utils.ReleasesUtils;
+import it.uniroma2.writer.ReportWriter;
 
 public class CollectIssues {
 
-    List<TicketIssue> issues;
-    ColdStartState state; // State that represents if the system is in the cold-start mode
+    private List<TicketIssue> issues;
+    private ColdStartState state; // State that represents if the system is in the cold-start mode
+
+    private ReportWriter reportWriter;
+
+    public CollectIssues(ReportWriter reportWriter) {
+        this.issues = new ArrayList<>();
+        this.state = ColdStartState.INACTIVE;
+        this.reportWriter = reportWriter;
+    }
 
     public CollectIssues() {
         this.issues = new ArrayList<>();
         this.state = ColdStartState.INACTIVE;
     }
 
-    public void retrieveIssues(ProjectKey key, List<ReleaseMeta> releasesList) throws JSONException, IOException, ParseException, InterruptedException, ExecutionException, EnumException, TicketException, ReleaseException, PropException {
+    public void retrieveIssues(ProjectKey key, List<ReleaseMeta> releasesList)
+            throws JSONException, IOException, ParseException, InterruptedException, ExecutionException, EnumException,
+            TicketException, ReleaseException, PropException {
 
         this.state = key.getColdStartState();
 
@@ -62,7 +73,7 @@ public class CollectIssues {
 
                     else if (this.state != ColdStartState.EXECUTING) {
                         // Enters Proportion
-                        Proportion.getInstance(tmpTicket.getOv(), tmpTicket.getFv()).compute(issues);
+                        Proportion.getInstance(tmpTicket.getOv(), tmpTicket.getFv()).compute(reportWriter, issues);
                         // Retrieving the id of the iv
                         iv = ReleasesUtils.getReleaseById(Proportion.getInstance().getIdIV(),
                                 releasesList);

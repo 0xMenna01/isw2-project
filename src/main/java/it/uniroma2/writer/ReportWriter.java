@@ -1,7 +1,10 @@
-package it.uniroma2.utils;
+package it.uniroma2.writer;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,65 +16,65 @@ import it.uniroma2.model.javaclass.JavaClass;
 
 public class ReportWriter {
 
-    private static final String RELEASE_FILE = "outputs/report/releases.txt";
-    private static final String ISSUE_FILE = "outputs/report/issues.txt";
-    private static final String PROPORTION_FILE = "outputs/report/proportion.txt";
-    private static final String GIT_FILE = "outputs/report/git.txt";
-    private static FileWriter relFile;
-    private static FileWriter issuesFile;
-    private static FileWriter proportionFile;
-    private static FileWriter gitFile;
+    private FileWriter relFile;
+    private FileWriter issuesFile;
+    private FileWriter proportionFile;
+    private FileWriter gitFile;
 
-    private ReportWriter() {
-        throw new IllegalStateException("Utility class");
-    }
+    public ReportWriter(String projName) throws IOException {
+        Files.createDirectories(PathBuilder.buildReportPath(projName));
 
-    static {
-        try {
-            relFile = new FileWriter(RELEASE_FILE, true);
-            issuesFile = new FileWriter(ISSUE_FILE, true);
-            proportionFile = new FileWriter(PROPORTION_FILE, true);
-            gitFile = new FileWriter(GIT_FILE, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Path relPath = PathBuilder.buildReportReleasesPath(projName);
+        Path issuesPath = PathBuilder.buildReportIssuesPath(projName);
+        Path proportionPath = PathBuilder.buildReportProportionPath(projName);
+        Path gitPath = PathBuilder.buildReportGitPath(projName);
+
+        File relFile = new File(relPath.toString());
+        File issuesFile = new File(issuesPath.toString());
+        File proportionFile = new File(proportionPath.toString());
+        File gitFile = new File(gitPath.toString());
+
+        this.relFile = new FileWriter(relFile);
+        this.issuesFile = new FileWriter(issuesFile);
+        this.proportionFile = new FileWriter(proportionFile);
+        this.gitFile = new FileWriter(gitFile);
     }
 
     public static void writeln(String message, FileWriter writer) {
         try {
-            writer.write(message + "\n");
+            writer.append(message + "\n");
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void write(String message, FileWriter writer) {
+    public void write(String message, FileWriter writer) {
         try {
-            writer.write(message);
+            writer.append(message);
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static void writeTitle(String title, FileWriter writer) {
+    public void writeTitle(String title, FileWriter writer) {
         writeln("------ " + title + " ------\n", writer);
     }
 
-    public static void writeMargin(FileWriter writer) {
+    public void writeMargin(FileWriter writer) {
         writeln("---------------------------------------------------------", writer);
     }
 
     // RELEASE ReportWriter
-    public static void writeRelease(ReleaseMeta release) {
+    public void writeRelease(ReleaseMeta release) {
         writeMargin(relFile);
         writeln("ID: " + release.getId(), relFile);
         writeln("Name: " + release.getName(), relFile);
         writeln("Date: " + release.getDate(), relFile);
     }
 
-    public static void writeReleases(List<ReleaseMeta> releases) {
+    public void writeReleases(List<ReleaseMeta> releases) {
         writeTitle("RELEASES", relFile);
         for (ReleaseMeta release : releases) {
             writeRelease(release);
@@ -81,7 +84,7 @@ public class ReportWriter {
     }
 
     // PROPORTION ReportWriter
-    public static void writeProportion(double prop, List<TicketIssue> prevIssues) {
+    public void writeProportion(double prop, List<TicketIssue> prevIssues) {
         writeMargin(proportionFile);
         writeTitle("PROPORTION", proportionFile);
         if (prevIssues.size() < 5)
@@ -93,7 +96,7 @@ public class ReportWriter {
     }
 
     // ISSUE ReportWriter
-    public static void writeAv(List<ReleaseMeta> av) {
+    public void writeAv(List<ReleaseMeta> av) {
         writeln("AFFECTED VERSIONS: ", issuesFile);
         int i = 0;
         for (ReleaseMeta release : av) {
@@ -102,7 +105,7 @@ public class ReportWriter {
         }
     }
 
-    public static void writeIssue(TicketIssue issue) throws TicketException {
+    public void writeIssue(TicketIssue issue) throws TicketException {
         writeMargin(issuesFile);
         writeln("Key: " + issue.getKey(), issuesFile);
         writeln("IV: " + issue.getIV().getName(), issuesFile);
@@ -111,7 +114,7 @@ public class ReportWriter {
         writeAv(issue.getAv());
     }
 
-    public static void writeIssues(List<TicketIssue> issues) throws TicketException {
+    public void writeIssues(List<TicketIssue> issues) throws TicketException {
         writeTitle("ISSUES", issuesFile);
 
         List<ReleaseMeta> totalAvs = new ArrayList<>();
@@ -131,27 +134,27 @@ public class ReportWriter {
     }
 
     // GIT ReportWriter
-    public static void writeNumOfCommits(int numberCommits) {
+    public void writeNumOfCommits(int numberCommits) {
         writeTitle("GIT", gitFile);
         writeln("Number of total commits: " + numberCommits, gitFile);
     }
 
-    public static void writeNumOfCommitsForRelease(int numOfCommits, String releaseName) {
+    public void writeNumOfCommitsForRelease(int numOfCommits, String releaseName) {
         writeMargin(gitFile);
         writeln("Number of commits for release " + releaseName + ": " + numOfCommits, gitFile);
     }
 
-    public static void writeTotalNumOfCommitsForReleases(int totalNumOfCommits) {
+    public void writeTotalNumOfCommitsForReleases(int totalNumOfCommits) {
         writeMargin(gitFile);
         writeln("Total number of commits for all releases: " + totalNumOfCommits, gitFile);
     }
 
-    public static void writeNumOfClassesForRelease(int numOfClasses, String releaseName) {
+    public void writeNumOfClassesForRelease(int numOfClasses, String releaseName) {
         writeMargin(gitFile);
         writeln("Number of classes for release " + releaseName + ": " + numOfClasses, gitFile);
     }
 
-    public static void writeReleasesCommitsForClasses(List<Release> releases) {
+    public void writeReleasesCommitsForClasses(List<Release> releases) {
         writeMargin(gitFile);
         writeln("COMMITS THAT CHANGED A CLASS OF EACH RELEASE", gitFile);
         for (Release release : releases) {
@@ -167,15 +170,11 @@ public class ReportWriter {
     }
 
     // CLOSE FILES
-    public static void closeFiles() {
-        try {
-            relFile.close();
-            proportionFile.close();
-            issuesFile.close();
-            gitFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void closeFiles() throws IOException {
+        relFile.close();
+        proportionFile.close();
+        issuesFile.close();
+        gitFile.close();
 
     }
 

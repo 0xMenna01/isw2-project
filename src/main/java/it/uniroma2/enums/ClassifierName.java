@@ -8,7 +8,7 @@ public enum ClassifierName {
     IBK("IBk");
 
     private final String className;
-    
+
     private ClassifierName(String className) {
         this.className = className;
     }

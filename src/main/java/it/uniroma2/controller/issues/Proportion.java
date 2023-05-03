@@ -10,7 +10,7 @@ import it.uniroma2.factory.ParallelColdStartFactory;
 import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.utils.ProportionUtils;
-import it.uniroma2.utils.ReportWriter;
+import it.uniroma2.writer.ReportWriter;
 
 public class Proportion {
 
@@ -42,7 +42,7 @@ public class Proportion {
     // if the number of previous valid issues is at least 5 then applies incremental
     // else cold start (cross-project) in a parallel manner where each thread
     // computes the proportion of one project
-    public void compute(List<TicketIssue> prevIssues)
+    public void compute(ReportWriter reportWriter, List<TicketIssue> prevIssues)
             throws InterruptedException, ExecutionException, EnumException, TicketException {
         if ((this.prop = ProportionUtils.computeProportion(prevIssues)) == -1) {
             // if method returns -1 it means there are not enough tickets,
@@ -51,7 +51,7 @@ public class Proportion {
             this.prop = ParallelColdStartFactory.getInstance().getProportion();
         }
         // Print the proportion (Remove later on)
-        ReportWriter.writeProportion(prop, prevIssues);
+        reportWriter.writeProportion(prop, prevIssues);
     }
 
     public int getIdIV() throws PropException {

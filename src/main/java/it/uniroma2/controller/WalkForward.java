@@ -10,8 +10,8 @@ import it.uniroma2.model.Release;
 import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.model.javaclass.JavaClass;
-import it.uniroma2.utils.DatasetWriter;
 import it.uniroma2.utils.GitUtils;
+import it.uniroma2.writer.DatasetWriter;
 
 public class WalkForward {
 
@@ -19,8 +19,10 @@ public class WalkForward {
         throw new IllegalStateException("Class with static methods only");
     }
 
-    public static void execute(Releases rels, List<TicketIssue> issues, String projName) throws TicketException, IOException {
+    public static void execute(Releases rels, List<TicketIssue> issues, String projName)
+            throws TicketException, IOException {
         Releases dataSet = new Releases();
+        DatasetWriter writer = new DatasetWriter(projName);
 
         for (int i = 0; i < rels.getReleases().size(); i++) {
             resetBugginess(dataSet);
@@ -36,14 +38,14 @@ public class WalkForward {
                         GitUtils.setBugginess(fixCommit, rels, issues.get(j));
                     }
                 }
-                
+
                 if (i == rels.getReleases().size() - 1) {
                     int j = i % 2 == 0 ? (i - 1) / 2 : i / 2;
-                    DatasetWriter.writeSet(projName, new Releases(dataSet.getReleases().subList(0, j + 1)),
+                    writer.writeSet(i+1, new Releases(dataSet.getReleases().subList(0, j + 1)),
                             CsvType.TESTING);
-                } else {
-                    DatasetWriter.writeSet(projName + (i + 1), dataSet, CsvType.TRAINING);
-                }
+                } else
+                    writer.writeSet(i+1, dataSet, CsvType.TRAINING);
+
             }
         }
     }

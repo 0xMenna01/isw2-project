@@ -28,6 +28,11 @@ public class ClassifierMethod {
         return sampling;
     }
 
+    @Override
+    public String toString() {
+        return classifier.toString() + "_" + featureSel.toString() + "_" + sampling.toString();
+    }
+
     
 
 }

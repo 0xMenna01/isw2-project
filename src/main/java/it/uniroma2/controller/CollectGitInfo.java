@@ -19,7 +19,7 @@ import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.Releases;
 import it.uniroma2.model.javaclass.JavaClass;
 import it.uniroma2.utils.GitUtils;
-import it.uniroma2.utils.ReportWriter;
+import it.uniroma2.writer.ReportWriter;
 
 public class CollectGitInfo {
 
@@ -52,11 +52,11 @@ public class CollectGitInfo {
         }
     }
 
-    public void computeRelClassesCommits() throws IOException, GitAPIException {
+    public void computeRelClassesCommits(ReportWriter reportWriter) throws IOException, GitAPIException {
         // Getting all commits
         List<RevCommit> allCommits = retrieveCommits();
         // Print number of commits
-        ReportWriter.writeNumOfCommits(allCommits.size());
+        reportWriter.writeNumOfCommits(allCommits.size());
 
         int num = 0;
         List<RevCommit> tempMatchCommits = null;
@@ -64,14 +64,14 @@ public class CollectGitInfo {
             tempMatchCommits = GitUtils.getRelCommitsOrderedByDate(allCommits, rel);
 
             num += tempMatchCommits.size();
-            ReportWriter.writeNumOfCommitsForRelease(tempMatchCommits.size(), rel.getName());
+            reportWriter.writeNumOfCommitsForRelease(tempMatchCommits.size(), rel.getName());
 
             // Creating all classes associated to the last release commit
             if (!tempMatchCommits.isEmpty()) {
                 List<JavaClass> relClasses = ReleaseClassesFactory.getInstance()
                         .buildClasses(tempMatchCommits.get(tempMatchCommits.size() - 1), repo);
                 // Prining number of classes for release
-                ReportWriter.writeNumOfClassesForRelease(relClasses.size(), rel.getName());
+                reportWriter.writeNumOfClassesForRelease(relClasses.size(), rel.getName());
 
                 // Updating the releases state by creating a Release instace that maps a release
                 // to its classes, specifying all commits that changed a class
@@ -83,10 +83,10 @@ public class CollectGitInfo {
         GitUtils.fixRelIds(rels);
 
         // Printing number of commits for all releases
-        ReportWriter.writeTotalNumOfCommitsForReleases(num);
+        reportWriter.writeTotalNumOfCommitsForReleases(num);
 
         // Printing commits of all releases associated to the classes they changed
-        ReportWriter.writeReleasesCommitsForClasses(this.rels.getReleases());
+        reportWriter.writeReleasesCommitsForClasses(this.rels.getReleases());
 
         this.git.close();
     }
@@ -113,6 +113,10 @@ public class CollectGitInfo {
 
     public Repository getRepo() {
         return repo;
+    }
+
+    public int getNumOfRel(){
+        return rels.getReleases().size();
     }
 
 }

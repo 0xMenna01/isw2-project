@@ -1,21 +1,9 @@
 package it.uniroma2.controller;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.concurrent.ExecutionException;
-
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.json.JSONException;
-
 import it.uniroma2.controller.issues.CollectIssues;
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.exception.EnumException;
-import it.uniroma2.exception.GitException;
 import it.uniroma2.exception.ProjectNameException;
-import it.uniroma2.exception.PropException;
-import it.uniroma2.exception.ReleaseException;
-import it.uniroma2.exception.TicketException;
-import it.uniroma2.utils.ReportWriter;
+import it.uniroma2.writer.ReportWriter;
 
 public class ExecuteDataCollection {
 
@@ -28,9 +16,8 @@ public class ExecuteDataCollection {
         this.repoUrl = repoUrl;
     }
 
-    public void collectData() throws JSONException, ParseException, IOException, InterruptedException,
-            ExecutionException, EnumException, TicketException, ReleaseException, PropException,
-            GitAPIException, GitException {
+    public void collectData() throws Exception {
+        ReportWriter reportWriter = new ReportWriter(this.projKey.toString());
 
         // Collecting releases ordered by date
         CollectReleasesData releasesControl = null;
@@ -42,19 +29,19 @@ public class ExecuteDataCollection {
 
         gitControl = new CollectGitInfo(repoUrl, releasesControl.getReleasesList(),
                 this.projKey.toString());
-        gitControl.computeRelClassesCommits();
+        gitControl.computeRelClassesCommits(reportWriter);
 
         // Printing releases
-        ReportWriter.writeReleases(gitControl.getReleases().getMeta());
+        reportWriter.writeReleases(gitControl.getReleases().getMeta());
 
         // Collecting issues
-        CollectIssues issuesControl = new CollectIssues();
+        CollectIssues issuesControl = new CollectIssues(reportWriter);
 
         issuesControl.retrieveIssues(this.projKey, gitControl.getReleases().getMeta());
 
         // Printing issues
 
-        ReportWriter.writeIssues(issuesControl.getIssues());
+        reportWriter.writeIssues(issuesControl.getIssues());
 
         // Compute Measurment of classes metrics
         new ComputeMetrics(gitControl.getReleases(), issuesControl.getIssues(), gitControl.getRepo()).compute();
@@ -65,8 +52,11 @@ public class ExecuteDataCollection {
         // First we label the training set and then the testing set
         WalkForward.execute(gitControl.getReleases(), issuesControl.getIssues(), projKey.toString());
 
-        // Closing created outputs files
-        ReportWriter.closeFiles();
-    }
+        // Compute evaluation through Weka
+        CollectWeka wekaControl = new CollectWeka(projKey, (gitControl.getNumOfRel() / 2) - 1);
+        wekaControl.execute();
 
+        // Closing created outputs files
+        reportWriter.closeFiles();
+    }
 }
