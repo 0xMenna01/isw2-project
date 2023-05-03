@@ -11,9 +11,9 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
-import it.uniroma2.model.Release;
-import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.javaclass.JavaClass;
+import it.uniroma2.model.releases.Release;
+import it.uniroma2.model.releases.ReleaseMeta;
 import it.uniroma2.utils.GitUtils;
 
 public class ReleaseClassesFactory {

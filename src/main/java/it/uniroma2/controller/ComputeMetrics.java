@@ -17,10 +17,10 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import it.uniroma2.exception.GitException;
 import it.uniroma2.exception.TicketException;
 import it.uniroma2.model.GenericPair;
-import it.uniroma2.model.Release;
-import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.model.javaclass.JavaClass;
+import it.uniroma2.model.releases.Release;
+import it.uniroma2.model.releases.Releases;
 import it.uniroma2.utils.GitUtils;
 
 public class ComputeMetrics {

@@ -27,7 +27,4 @@ public class WekaClassifiers {
     public IBk getiBk() {
         return iBk;
     }
-
-    
-
 }

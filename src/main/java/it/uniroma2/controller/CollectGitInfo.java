@@ -15,9 +15,9 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import it.uniroma2.factory.ReleaseClassesFactory;
-import it.uniroma2.model.ReleaseMeta;
-import it.uniroma2.model.Releases;
 import it.uniroma2.model.javaclass.JavaClass;
+import it.uniroma2.model.releases.ReleaseMeta;
+import it.uniroma2.model.releases.Releases;
 import it.uniroma2.utils.GitUtils;
 import it.uniroma2.writer.ReportWriter;
 

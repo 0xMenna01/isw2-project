@@ -6,6 +6,7 @@ import java.util.List;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import it.uniroma2.model.javaclass.JavaClass;
+import it.uniroma2.model.releases.ReleaseMeta;
 
 public class FixCommit {
     

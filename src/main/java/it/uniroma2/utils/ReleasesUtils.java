@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import it.uniroma2.exception.ReleaseException;
-import it.uniroma2.model.ReleaseMeta;
+import it.uniroma2.model.releases.ReleaseMeta;
 
 public class ReleasesUtils {
 

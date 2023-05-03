@@ -7,8 +7,8 @@ import it.uniroma2.exception.EnumException;
 import it.uniroma2.exception.PropException;
 import it.uniroma2.exception.TicketException;
 import it.uniroma2.factory.ParallelColdStartFactory;
-import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
+import it.uniroma2.model.releases.ReleaseMeta;
 import it.uniroma2.utils.ProportionUtils;
 import it.uniroma2.writer.ReportWriter;
 

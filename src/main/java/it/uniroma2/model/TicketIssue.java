@@ -3,6 +3,7 @@ package it.uniroma2.model;
 import java.util.List;
 
 import it.uniroma2.exception.TicketException;
+import it.uniroma2.model.releases.ReleaseMeta;
 
 public class TicketIssue {
 

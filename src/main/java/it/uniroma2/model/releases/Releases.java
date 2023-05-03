@@ -1,4 +1,4 @@
-package it.uniroma2.model;
+package it.uniroma2.model.releases;
 
 import java.util.ArrayList;
 import java.util.List;

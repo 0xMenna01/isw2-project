@@ -29,7 +29,7 @@ public class CollectWeka {
 
         EvaluationWriter evalWriter = new EvaluationWriter(proj.toString());
         List<ClassifierMethod> methods = ClassifierUtils.generateClassifierComb();
-        
+
         for (int i = 1; i < numOfIter; i++) {
 
             Instances training = ClassifierUtils.getTrainSet(proj.toString(), i);
@@ -40,7 +40,7 @@ public class CollectWeka {
             // We make the evaluation based on different strategies (methods)
             for (ClassifierMethod method : methods) {
                 ClassifierMeta classEval = new ClassifierMeta(proj, i,
-                        100.0 * training.numInstances() / (training.numInstances() + testing.numInstances()), method);
+                        100.0 * ( training.numInstances() / (training.numInstances() + testing.numInstances()) ), method);
 
                 WekaClassifier wekaClassifier = ClassifierEvalFactory.buildClassifier(classEval);
                 wekaClassifier.getClassifier().buildClassifier(training);

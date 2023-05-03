@@ -53,7 +53,7 @@ public class ExecuteDataCollection {
         WalkForward.execute(gitControl.getReleases(), issuesControl.getIssues(), projKey.toString());
 
         // Compute evaluation through Weka
-        CollectWeka wekaControl = new CollectWeka(projKey, (gitControl.getNumOfRel() / 2) - 1);
+        CollectWeka wekaControl = new CollectWeka(projKey, gitControl.getNumOfRel() / 2);
         wekaControl.execute();
 
         // Closing created outputs files

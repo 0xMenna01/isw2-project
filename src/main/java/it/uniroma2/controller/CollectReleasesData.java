@@ -13,7 +13,7 @@ import org.json.JSONException;
 import it.uniroma2.enums.ProjectKey;
 import it.uniroma2.factory.ReleasesFactory;
 import it.uniroma2.model.GenericPair;
-import it.uniroma2.model.ReleaseMeta;
+import it.uniroma2.model.releases.ReleaseMeta;
 import it.uniroma2.utils.JiraUtils;
 
 public class CollectReleasesData {

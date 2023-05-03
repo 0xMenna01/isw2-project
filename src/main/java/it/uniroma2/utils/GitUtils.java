@@ -29,11 +29,11 @@ import org.eclipse.jgit.util.io.DisabledOutputStream;
 import it.uniroma2.exception.TicketException;
 import it.uniroma2.model.FixCommit;
 import it.uniroma2.model.GenericPair;
-import it.uniroma2.model.Release;
-import it.uniroma2.model.ReleaseMeta;
-import it.uniroma2.model.Releases;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.model.javaclass.JavaClass;
+import it.uniroma2.model.releases.Release;
+import it.uniroma2.model.releases.ReleaseMeta;
+import it.uniroma2.model.releases.Releases;
 
 public class GitUtils {
 

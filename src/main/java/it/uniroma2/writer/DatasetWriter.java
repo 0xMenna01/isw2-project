@@ -7,9 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import it.uniroma2.enums.CsvType;
-import it.uniroma2.model.Release;
-import it.uniroma2.model.Releases;
 import it.uniroma2.model.javaclass.JavaClass;
+import it.uniroma2.model.releases.Release;
+import it.uniroma2.model.releases.Releases;
 import it.uniroma2.utils.CsvUtils;
 import weka.core.Instances;
 import weka.core.converters.ArffSaver;

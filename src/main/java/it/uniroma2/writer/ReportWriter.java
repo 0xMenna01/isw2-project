@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniroma2.exception.TicketException;
-import it.uniroma2.model.Release;
-import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.model.javaclass.JavaClass;
+import it.uniroma2.model.releases.Release;
+import it.uniroma2.model.releases.ReleaseMeta;
 
 public class ReportWriter {
 

@@ -9,8 +9,8 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import it.uniroma2.model.ReleaseMeta;
 import it.uniroma2.model.TicketIssue;
+import it.uniroma2.model.releases.ReleaseMeta;
 import it.uniroma2.utils.ReleasesUtils;
 
 public class IssuesFactory {
