@@ -7,6 +7,7 @@ import it.uniroma2.enums.ClassifierName;
 import it.uniroma2.enums.FeatureSel;
 import it.uniroma2.enums.Sampling;
 import it.uniroma2.model.GenericPair;
+import it.uniroma2.model.weka.ClassifierMeta;
 import it.uniroma2.model.weka.ClassifierMethod;
 import it.uniroma2.writer.PathBuilder;
 import weka.core.Instances;
@@ -33,9 +34,9 @@ public class ClassifierUtils {
     private static GenericPair<Instances, Instances> getTrainingAndTesting(String proj, int i) throws Exception {
 
         DataSource source1 = new DataSource(
-                PathBuilder.buildWekaTrainFile(proj).toString() + i + ".arff");
+            PathBuilder.buildWekaTrainFile(proj).toString() + i + ".arff");
         DataSource source2 = new DataSource(
-                PathBuilder.buildWekaTestFile(proj).toString() + i + ".arff");
+            PathBuilder.buildWekaTestFile(proj).toString() + i + ".arff");
 
         Instances training = source1.getDataSet();
         Instances testing = source2.getDataSet();
@@ -48,11 +49,37 @@ public class ClassifierUtils {
 
     public static Instances getTrainSet(String proj, int i) throws Exception {
         return getTrainingAndTesting(proj, i).getFirst();
-        
+
     }
 
     public static Instances getTestSet(String proj, int i) throws Exception {
         return getTrainingAndTesting(proj, i).getSecond();
 
+    }
+
+    private static int getMajorityClassSize(Instances training) {
+
+        return training.numInstances() - getMinorityClassSize(training);
+    }
+
+    private static int getMinorityClassSize(Instances training) {
+
+        int size = 0;
+        for (int i = 0; i < training.numInstances(); i++) {
+
+            boolean isBuggy = training.instance(i).value(training.attribute("IS_BUGGY")) == 0;
+            if (isBuggy) {
+                size++;
+            }
+        }
+        return size;
+    }
+
+    public static void checkAndUpdateSampling(ClassifierMeta classEval, Instances training) {
+        Sampling sampling = classEval.getMethod().getSampling();
+        if (sampling.equals(Sampling.OVER_SAMPLING)) {
+            sampling.setSize(ClassifierUtils.getMajorityClassSize(training),
+                ClassifierUtils.getMinorityClassSize(training));
+        }
     }
 }

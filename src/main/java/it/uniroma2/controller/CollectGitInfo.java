@@ -55,7 +55,7 @@ public class CollectGitInfo {
     public void computeRelClassesCommits(ReportWriter reportWriter) throws IOException, GitAPIException {
         // Getting all commits
         List<RevCommit> allCommits = retrieveCommits();
-        // Print number of commits
+        // Writing number of commits
         reportWriter.writeNumOfCommits(allCommits.size());
 
         int num = 0;
@@ -70,14 +70,14 @@ public class CollectGitInfo {
             if (!tempMatchCommits.isEmpty()) {
                 List<JavaClass> relClasses = ReleaseClassesFactory.getInstance()
                         .buildClasses(tempMatchCommits.get(tempMatchCommits.size() - 1), repo);
-                // Prining number of classes for release
+                // Writing number of classes for release
                 reportWriter.writeNumOfClassesForRelease(relClasses.size(), rel.getName());
-
                 // Updating the releases state by creating a Release instace that maps a release
                 // to its classes, specifying all commits that changed a class
                 this.rels.add(
                         ReleaseClassesFactory.getInstance().buildReleaseCommits(repo, rel,
                                 tempMatchCommits, relClasses));
+
             }
         }
         GitUtils.fixRelIds(rels);

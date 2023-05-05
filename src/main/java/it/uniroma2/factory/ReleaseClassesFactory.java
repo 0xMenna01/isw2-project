@@ -1,15 +1,15 @@
 package it.uniroma2.factory;
 
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.treewalk.TreeWalk;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.treewalk.TreeWalk;
 
 import it.uniroma2.model.javaclass.JavaClass;
 import it.uniroma2.model.releases.Release;
@@ -46,7 +46,7 @@ public class ReleaseClassesFactory {
             if (treeWalk.getPathString().contains(".java") && !treeWalk.getPathString().contains("/test/")) {
                 // Adding classes with name and content
                 classes.add(new JavaClass(treeWalk.getPathString(),
-                        new String(repo.open(treeWalk.getObjectId(0)).getBytes(), StandardCharsets.UTF_8)));
+                    new String(repo.open(treeWalk.getObjectId(0)).getBytes(), StandardCharsets.UTF_8)));
             }
         }
         treeWalk.close();
@@ -58,7 +58,7 @@ public class ReleaseClassesFactory {
     // and maps the commits to the modified classes
     // Note that both commits and classes must be related to the input release
     public Release buildReleaseCommits(Repository repo, ReleaseMeta rel, List<RevCommit> commits,
-            List<JavaClass> classes) throws IOException {
+                                       List<JavaClass> classes) throws IOException {
 
         HashMap<JavaClass, List<RevCommit>> classesCommitsMap = new HashMap<>();
 
@@ -72,16 +72,17 @@ public class ReleaseClassesFactory {
                         List<RevCommit> tempCommits = classesCommitsMap.get(c);
                         tempCommits.add(commit);
                         classesCommitsMap.put(c, tempCommits);
-
                     } else {
                         List<RevCommit> newList = new ArrayList<>();
                         newList.add(commit);
                         classesCommitsMap.put(c, newList);
                     }
-                }
+
+                } else if (!classesCommitsMap.containsKey(c))
+                    classesCommitsMap.put(c, new ArrayList<>());
             }
         }
-
+        
         return new Release(rel.getId(), rel.getName(), rel.getDate(), classesCommitsMap);
     }
 }

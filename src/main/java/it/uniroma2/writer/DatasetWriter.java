@@ -20,9 +20,9 @@ import weka.core.converters.CSVLoader;
 
 public class DatasetWriter {
 
-    private static final String[] HEADER = new String[] { "VERSION", "FILE", "SIZE", "N_FIX",
-            "N_AUTHORS", "AVG_LOC_ADD", "CHURN", "AVG_CHURN", "AGE", "AVG_FIX_CHURN", "FANOUT", "NUM_REVISIONS",
-            "IS_BUGGY" };
+    private static final String[] HEADER = new String[]{"VERSION", "FILE", "SIZE", "N_FIX",
+        "N_AUTHORS", "AVG_LOC_ADD", "CHURN", "AVG_CHURN", "AGE", "AVG_FIX_CHURN", "FANOUT", "NUM_REVISIONS",
+        "IS_BUGGY"};
 
     private String projName;
 
@@ -36,7 +36,7 @@ public class DatasetWriter {
 
     public void writeSet(int wolkForewardStep, Releases releases, CsvType type) throws IOException {
         Path outDir = type == CsvType.TRAINING ? PathBuilder.buildTrainingSetFile(projName)
-                : PathBuilder.buildTestingSetFile(projName);
+            : PathBuilder.buildTestingSetFile(projName);
 
         if (type == CsvType.TRAINING) {
             writeTraining(wolkForewardStep, outDir.toString(), releases);
@@ -78,35 +78,35 @@ public class DatasetWriter {
     }
 
     private static void writeInstance(FileWriter fileWriter, String relId, JavaClass clazz)
-            throws IOException {
+        throws IOException {
 
         fileWriter.append(
-                relId +
-                        CsvUtils.SEPARATOR +
-                        clazz.getPathName() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getSize() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getnFix() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getnAuthors() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getAvgLocAdded() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getChurn() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getAvgChurn() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getAge() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getAvgFixChurn() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getFanOut() +
-                        CsvUtils.SEPARATOR +
-                        clazz.getNumOfRevisions() +
-                        CsvUtils.SEPARATOR +
-                        clazz.isBuggy() +
-                        CsvUtils.NEW_LINE);
+            relId +
+                CsvUtils.SEPARATOR +
+                clazz.getPathName() +
+                CsvUtils.SEPARATOR +
+                clazz.getSize() +
+                CsvUtils.SEPARATOR +
+                clazz.getnFix() +
+                CsvUtils.SEPARATOR +
+                clazz.getnAuthors() +
+                CsvUtils.SEPARATOR +
+                clazz.getAvgLocAdded() +
+                CsvUtils.SEPARATOR +
+                clazz.getChurn() +
+                CsvUtils.SEPARATOR +
+                clazz.getAvgChurn() +
+                CsvUtils.SEPARATOR +
+                clazz.getAge() +
+                CsvUtils.SEPARATOR +
+                clazz.getAvgFixChurn() +
+                CsvUtils.SEPARATOR +
+                clazz.getFanOut() +
+                CsvUtils.SEPARATOR +
+                clazz.getNumOfRevisions() +
+                CsvUtils.SEPARATOR +
+                clazz.isBuggy() +
+                CsvUtils.NEW_LINE);
     }
 
     private void convertCsvToArff(int step, File file, boolean isTraining) throws IOException {
@@ -117,7 +117,7 @@ public class DatasetWriter {
 
         // save ARFF file
         String output = isTraining ? PathBuilder.buildWekaTrainFile(projName).toString() + step + ".arff"
-                : PathBuilder.buildWekaTestFile(projName).toString() + step + ".arff";
+            : PathBuilder.buildWekaTestFile(projName).toString() + step + ".arff";
 
         File outFile = new File(output);
         loadArfFile(outFile, dataSet);
@@ -162,8 +162,8 @@ public class DatasetWriter {
 
         Path path = Paths.get(filePath);
         String newContent = Files.lines(path)
-                .map(line -> line.replaceAll("\\{false\\}", "{true,false}"))
-                .reduce("", (acc, line) -> acc + line + System.lineSeparator());
+            .map(line -> line.replaceAll("\\{false\\}", "{false,true}"))
+            .reduce("", (acc, line) -> acc + line + System.lineSeparator());
         Files.write(path, newContent.getBytes());
     }
 }

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3247880c-9c36-4b1f-8ec6-ddcd232140f6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/weka/WekaBestFirst.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectGitInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectGitInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectWeka.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectWeka.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/ComputeMetrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/ComputeMetrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/enums/FeatureSel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/enums/FeatureSel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/enums/Sampling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/enums/Sampling.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvalFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvalFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ReleaseClassesFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ReleaseClassesFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/ClassifierUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/ClassifierUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/writer/DatasetWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/writer/DatasetWriter.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$MAVEN_REPOSITORY$/nz/ac/waikato/cms/weka/weka-stable/3.8.0/weka-stable-3.8.0-sources.jar!/weka/classifiers/meta/FilteredClassifier.java" root0="SKIP_INSPECTION" />
+    <setting file="jar://$MAVEN_REPOSITORY$/nz/ac/waikato/cms/weka/weka-stable/3.8.0/weka-stable-3.8.0-sources.jar!/weka/classifiers/trees/RandomForest.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="zf8dhgyp" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="useMavenConfig" value="true" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectId" id="2PJ50YexI0zprZdZbrTSUkP9loa" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Notification.DisplayName-DoNotAsk-Download Shared Index Log": "Shared indexes downloaded",
+    "Notification.DoNotAsk-Download Shared Index Log": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/emanuvalza/dev/isw2/isw2-project",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="it.uniroma2.Main" />
+      <module name="isw2-project" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.uniroma2.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3247880c-9c36-4b1f-8ec6-ddcd232140f6" name="Changes" comment="" />
+      <created>1683162125043</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1683162125043</updated>
+      <workItem from="1683162128546" duration="136000" />
+      <workItem from="1683204268175" duration="780000" />
+      <workItem from="1683289799250" duration="7733000" />
+      <workItem from="1683298672364" duration="111000" />
+      <workItem from="1683298879498" duration="121000" />
+      <workItem from="1683299067551" duration="104000" />
+      <workItem from="1683299183050" duration="464000" />
+      <workItem from="1683300220633" duration="7382000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="it.uniroma2.exception.GitException" package="it.uniroma2.exception" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

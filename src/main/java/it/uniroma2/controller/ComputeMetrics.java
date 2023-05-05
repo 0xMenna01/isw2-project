@@ -1,5 +1,9 @@
 package it.uniroma2.controller;
 
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
@@ -9,10 +13,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
 
 import it.uniroma2.exception.GitException;
 import it.uniroma2.exception.TicketException;
@@ -32,7 +32,7 @@ public class ComputeMetrics {
     private HashMap<Release, HashMap<JavaClass, List<String>>> mapRelClassForContent;
 
     public ComputeMetrics(Releases releases, List<TicketIssue> issues, Repository repo)
-            throws IOException {
+        throws IOException {
         this.releases = releases;
         this.issues = issues;
         this.repo = repo;
@@ -62,8 +62,8 @@ public class ComputeMetrics {
                 clazz.setnAuthors(computeNauthors(clazz, rel));
 
                 clazz.setAvgLocAdded(
-                        (double) computeLocAddedAndDel(clazz, rel).getFirst()
-                                / mapRelClassForContent.get(rel).get(clazz).size());
+                    (double) computeLocAddedAndDel(clazz, rel).getFirst()
+                        / mapRelClassForContent.get(rel).get(clazz).size());
 
                 clazz.setChurn(computeChurn(clazz, rel));
 
@@ -83,7 +83,7 @@ public class ComputeMetrics {
     }
 
     private GenericPair<Integer, Integer> computeNFixAndFixChurn(JavaClass clazz, Release rel)
-            throws TicketException, IOException {
+        throws TicketException, IOException {
 
         List<String> fixCommitsContents = new ArrayList<>();
 
@@ -103,8 +103,8 @@ public class ComputeMetrics {
                 fixChurn += computeSize(new JavaClass(clazz.getPathName(), fixCommitsContents.get(i)));
             else {
                 GenericPair<Integer, Integer> addedAndDel = GitUtils.getAddedAndDeletedLines(
-                        fixCommitsContents.get(i - 1),
-                        fixCommitsContents.get(i));
+                    fixCommitsContents.get(i - 1),
+                    fixCommitsContents.get(i));
 
                 fixChurn += addedAndDel.getFirst() + addedAndDel.getFirst();
             }
@@ -124,7 +124,7 @@ public class ComputeMetrics {
     }
 
     private GenericPair<Integer, Integer> computeLocAddedAndDel(JavaClass clazz, Release rel)
-            throws GitException {
+        throws GitException {
         int i = 0;
         Integer locAdded = 0;
         Integer delLoc = 0;
@@ -133,11 +133,9 @@ public class ComputeMetrics {
             if (i == 0) {
                 prevContent = classContent;
                 locAdded += computeSize(new JavaClass(clazz.getPathName(), classContent));
-            }
-
-            else {
+            } else {
                 GenericPair<Integer, Integer> addedAndDel = GitUtils.getAddedAndDeletedLines(prevContent,
-                        classContent);
+                    classContent);
                 locAdded += addedAndDel.getFirst();
                 delLoc += addedAndDel.getFirst();
                 prevContent = classContent;
@@ -145,8 +143,6 @@ public class ComputeMetrics {
             i++;
         }
 
-        if (i == 0)
-            throw new GitException("MUST not be emmpy because commits modifies the class");
 
         return new GenericPair<>(locAdded, delLoc);
     }

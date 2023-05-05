@@ -34,11 +34,10 @@ public class CollectWeka {
         for (int i = 1; i <= numOfIter; i++) {
 
             Instances training = ClassifierUtils.getTrainSet(proj.toString(), i);
-            training.setClassIndex(training.numAttributes() - 1);
             Instances testing = ClassifierUtils.getTestSet(proj.toString(), i);
 
             double tempTrainingPercent = 100.0 * training.numInstances()
-                    / (training.numInstances() + testing.numInstances());
+                / (training.numInstances() + testing.numInstances());
 
             Evaluation eval = new Evaluation(testing);
 
@@ -46,10 +45,13 @@ public class CollectWeka {
             for (ClassifierMethod method : methods) {
                 ClassifierMeta classEval = new ClassifierMeta(proj, i, tempTrainingPercent, method);
 
+                ClassifierUtils.checkAndUpdateSampling(classEval, training);
+
                 WekaClassifier wekaClassifier = ClassifierEvalFactory.buildClassifier(classEval);
                 Classifier classifier = wekaClassifier.getClassifier();
+                System.out.println(method.toString());
                 classifier.buildClassifier(training);
-
+                
                 eval.evaluateModel(wekaClassifier.getClassifier(), testing);
                 wekaClassifier.setEvaluation(eval);
 
@@ -60,6 +62,7 @@ public class CollectWeka {
 
         evalWriter.writeClassifiersEvaluation(evals);
     }
+
 
     public List<WekaClassifier> getEvals() {
         return evals;
