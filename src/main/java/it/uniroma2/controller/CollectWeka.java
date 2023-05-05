@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniroma2.enums.ProjectKey;
-import it.uniroma2.factory.ClassifierEvalFactory;
+import it.uniroma2.factory.ClassifierEvaluationFactory;
 import it.uniroma2.model.weka.ClassifierMeta;
 import it.uniroma2.model.weka.ClassifierMethod;
 import it.uniroma2.model.weka.WekaClassifier;
@@ -39,19 +39,20 @@ public class CollectWeka {
             double tempTrainingPercent = 100.0 * training.numInstances()
                 / (training.numInstances() + testing.numInstances());
 
+            int falseNumber = training.attributeStats(training.numAttributes() - 1).nominalCounts[0];
+            int trueNumber = training.attributeStats(training.numAttributes() - 1).nominalCounts[1];
+
             Evaluation eval = new Evaluation(testing);
 
             // We make the evaluation based on different strategies (methods)
             for (ClassifierMethod method : methods) {
                 ClassifierMeta classEval = new ClassifierMeta(proj, i, tempTrainingPercent, method);
 
-                ClassifierUtils.checkAndUpdateSampling(classEval, training);
-
-                WekaClassifier wekaClassifier = ClassifierEvalFactory.buildClassifier(classEval);
+                WekaClassifier wekaClassifier = ClassifierEvaluationFactory.buildClassifier(classEval, falseNumber, trueNumber);
                 Classifier classifier = wekaClassifier.getClassifier();
                 System.out.println(method.toString());
                 classifier.buildClassifier(training);
-                
+
                 eval.evaluateModel(wekaClassifier.getClassifier(), testing);
                 wekaClassifier.setEvaluation(eval);
 

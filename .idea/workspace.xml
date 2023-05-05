@@ -5,16 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3247880c-9c36-4b1f-8ec6-ddcd232140f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/weka/WekaBestFirst.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectGitInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectGitInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectWeka.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectWeka.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/ComputeMetrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/ComputeMetrics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/enums/FeatureSel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/enums/FeatureSel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/enums/Sampling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/enums/Sampling.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvalFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvalFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ReleaseClassesFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ReleaseClassesFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvalFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvaluationFactory.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/ClassifierUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/ClassifierUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/writer/DatasetWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/writer/DatasetWriter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,23 +54,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Notification.DisplayName-DoNotAsk-Download Shared Index Log": "Shared indexes downloaded",
-    "Notification.DoNotAsk-Download Shared Index Log": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/emanuvalza/dev/isw2/isw2-project",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "actions.on.save",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Notification.DisplayName-DoNotAsk-Download Shared Index Log&quot;: &quot;Shared indexes downloaded&quot;,
+    &quot;Notification.DoNotAsk-Download Shared Index Log&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/emanuvalza/dev/isw2/isw2-project&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="it.uniroma2.Main" />
@@ -111,7 +107,8 @@
       <workItem from="1683298879498" duration="121000" />
       <workItem from="1683299067551" duration="104000" />
       <workItem from="1683299183050" duration="464000" />
-      <workItem from="1683300220633" duration="7382000" />
+      <workItem from="1683300220633" duration="7430000" />
+      <workItem from="1683317456823" duration="1981000" />
     </task>
     <servers />
   </component>

@@ -7,7 +7,6 @@ import it.uniroma2.enums.ClassifierName;
 import it.uniroma2.enums.FeatureSel;
 import it.uniroma2.enums.Sampling;
 import it.uniroma2.model.GenericPair;
-import it.uniroma2.model.weka.ClassifierMeta;
 import it.uniroma2.model.weka.ClassifierMethod;
 import it.uniroma2.writer.PathBuilder;
 import weka.core.Instances;
@@ -75,11 +74,5 @@ public class ClassifierUtils {
         return size;
     }
 
-    public static void checkAndUpdateSampling(ClassifierMeta classEval, Instances training) {
-        Sampling sampling = classEval.getMethod().getSampling();
-        if (sampling.equals(Sampling.OVER_SAMPLING)) {
-            sampling.setSize(ClassifierUtils.getMajorityClassSize(training),
-                ClassifierUtils.getMinorityClassSize(training));
-        }
-    }
+
 }

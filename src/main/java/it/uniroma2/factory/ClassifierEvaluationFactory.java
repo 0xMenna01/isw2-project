@@ -13,7 +13,7 @@ import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.supervised.instance.Resample;
 import weka.filters.supervised.instance.SpreadSubsample;
 
-public class ClassifierEvalFactory {
+public class ClassifierEvaluationFactory {
     // Contains all the classifiers
     private static WekaClassifiers classifiers;
 
@@ -22,8 +22,8 @@ public class ClassifierEvalFactory {
     private static WekaBestFirst bestFirst;
 
     // Contains all the sampling methods
-    private static Resample overSampling;
-    private static SpreadSubsample underSampling;
+    private static Resample resample;
+    private static SpreadSubsample spreadSubsample;
 
     static {
         classifiers = new WekaClassifiers();
@@ -34,15 +34,14 @@ public class ClassifierEvalFactory {
         buildSampling();
     }
 
-    public static WekaClassifier buildClassifier(ClassifierMeta eval) {
+    public static WekaClassifier buildClassifier(ClassifierMeta eval, int falseNumber, int trueNumber) {
 
         Classifier classifier = getClassifier(eval);
 
-        Filter sampler = getSampler(eval);
+        Filter sampler = getSampler(eval, falseNumber, trueNumber);
         AttributeSelection featureSel = getFeatureSelection(eval);
 
         FilteredClassifier innerClassifier = null;
-        FilteredClassifier externalClassifier = null;
         if (sampler != null) {
             innerClassifier = new FilteredClassifier();
             innerClassifier.setClassifier(classifier);
@@ -51,7 +50,7 @@ public class ClassifierEvalFactory {
             classifier = innerClassifier;
 
             if (featureSel != null) {
-                externalClassifier = new FilteredClassifier();
+                FilteredClassifier externalClassifier = new FilteredClassifier();
                 externalClassifier.setFilter(featureSel);
                 externalClassifier.setClassifier(classifier);
 
@@ -94,7 +93,7 @@ public class ClassifierEvalFactory {
         }
     }
 
-    private static Filter getSampler(ClassifierMeta eval) {
+    private static Filter getSampler(ClassifierMeta eval, int falseNumber, int trueNumber) {
         Sampling sampling = eval.getMethod().getSampling();
 
         switch (sampling) {
@@ -102,15 +101,14 @@ public class ClassifierEvalFactory {
                 return null;
             case OVER_SAMPLING:
 
-                double percentStandardOversampling = ((
-                    100.0 * sampling.getMajorityClassSize()) / (sampling.getMajorityClassSize() +
-                    sampling.getMinorityClassSize())) * 2;
+                double percentStandardOversampling =
+                    (100.0 * falseNumber) / (falseNumber + trueNumber);
 
-                overSampling.setSampleSizePercent(percentStandardOversampling);
-                return overSampling;
+                resample.setSampleSizePercent(2 * percentStandardOversampling);
+                return resample;
 
             case UNDER_SAMPLING:
-                return underSampling;
+                return spreadSubsample;
             default:
                 throw new IllegalArgumentException("Sampling not supported");
         }
@@ -118,10 +116,12 @@ public class ClassifierEvalFactory {
 
 
     private static void buildSampling() {
-        underSampling = new SpreadSubsample();
-        underSampling.setDistributionSpread(1.0);
-        overSampling = new Resample();
-        overSampling.setBiasToUniformClass(1.0);
+        spreadSubsample = new SpreadSubsample();
+        spreadSubsample.setDistributionSpread(1.0);
+
+        resample = new Resample();
+        resample.setNoReplacement(false);
+        resample.setBiasToUniformClass(1.0);
     }
 
 }
