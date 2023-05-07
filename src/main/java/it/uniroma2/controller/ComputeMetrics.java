@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import it.uniroma2.exception.GitException;
 import it.uniroma2.exception.TicketException;
 import it.uniroma2.model.GenericPair;
 import it.uniroma2.model.TicketIssue;
@@ -54,7 +53,7 @@ public class ComputeMetrics {
         }
     }
 
-    public void compute() throws IOException, GitException, TicketException {
+    public void compute() throws IOException, TicketException {
         for (Release rel : releases.getReleases()) {
             for (JavaClass clazz : rel.getClasses()) {
                 clazz.setSize(computeSize(clazz));
