@@ -144,9 +144,8 @@ public class DatasetWriter {
         // Be sure to set the attribute IS_BUGGY to {true, false}
         Attribute isBuggyAttribute = dataSet.attribute("IS_BUGGY");
 
-        if (isBuggyAttribute.numValues() < 2) {
-            adjustAttributeOfInterest(arf.getPath());
-        }
+        adjustAttributeOfInterest(arf.getPath());
+
 
     }
 
@@ -162,7 +161,7 @@ public class DatasetWriter {
 
         Path path = Paths.get(filePath);
         String newContent = Files.lines(path)
-            .map(line -> line.replaceAll("\\{false\\}", "{false,true}"))
+            .map(line -> line.replaceAll("\\{(false|false,true)\\}", "{true,false}"))
             .reduce("", (acc, line) -> acc + line + System.lineSeparator());
         Files.write(path, newContent.getBytes());
     }

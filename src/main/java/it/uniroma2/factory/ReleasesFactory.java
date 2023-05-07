@@ -1,13 +1,13 @@
 package it.uniroma2.factory;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class ReleasesFactory {
 
@@ -25,7 +25,7 @@ public class ReleasesFactory {
 
     // Returns an ordered by date map of releases' dates to names
     public Map<Date, String> orderedReleasesByDate(JSONArray jsonReleases, int total)
-            throws ParseException {
+        throws ParseException {
 
         Map<Date, String> orderedReleasesMap = new TreeMap<>();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");

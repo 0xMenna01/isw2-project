@@ -1,6 +1,7 @@
 package it.uniroma2.model.weka;
 
 import it.uniroma2.enums.ClassifierName;
+import it.uniroma2.enums.CostSensitive;
 import it.uniroma2.enums.FeatureSel;
 import it.uniroma2.enums.Sampling;
 
@@ -9,11 +10,13 @@ public class ClassifierMethod {
     private final ClassifierName classifier;
     private final FeatureSel featureSel;
     private final Sampling sampling;
+    private final CostSensitive costSensitive;
 
-    public ClassifierMethod(ClassifierName classifier, FeatureSel featureSel, Sampling sampling) {
+    public ClassifierMethod(ClassifierName classifier, FeatureSel featureSel, Sampling sampling, CostSensitive costSensitive) {
         this.classifier = classifier;
         this.featureSel = featureSel;
         this.sampling = sampling;
+        this.costSensitive = costSensitive;
     }
 
     public ClassifierName getClassifier() {
@@ -28,11 +31,15 @@ public class ClassifierMethod {
         return sampling;
     }
 
-    @Override
-    public String toString() {
-        return classifier.toString() + "_" + featureSel.toString() + "_" + sampling.toString();
+    public CostSensitive getCostSensitive() {
+        return costSensitive;
     }
 
-    
+    @Override
+    public String toString() {
+        return classifier.toString() + "&" + featureSel.toString() + "&" + sampling.toString()
+            + "&" + costSensitive.toString();
+    }
+
 
 }

@@ -59,16 +59,14 @@ public class ComputeMetrics {
             for (JavaClass clazz : rel.getClasses()) {
                 clazz.setSize(computeSize(clazz));
                 clazz.setnFix(computeNFixAndFixChurn(clazz, rel).getFirst());
-                clazz.setnAuthors(computeNauthors(clazz, rel));
+                clazz.setnAuthors(computeNAuthors(clazz, rel));
 
                 clazz.setAvgLocAdded(
                     (double) computeLocAddedAndDel(clazz, rel).getFirst()
                         / mapRelClassForContent.get(rel).get(clazz).size());
 
                 clazz.setChurn(computeChurn(clazz, rel));
-
-                clazz.setAvgChurn((double) computeChurn(clazz, rel) / mapRelClassForContent.get(rel).get(clazz).size());
-
+                clazz.setAvgChurn(computeAvgChurn(clazz, rel));
                 clazz.setAge(computeReleaseAge(rel));
                 clazz.setAvgFixChurn(computeAvgFixChurn(rel, clazz));
                 clazz.setFanOut(computeFanOut(clazz.getContent()));
@@ -113,7 +111,7 @@ public class ComputeMetrics {
         return new GenericPair<>(i, fixChurn);
     }
 
-    private int computeNauthors(JavaClass clazz, Release rel) {
+    private int computeNAuthors(JavaClass clazz, Release rel) {
         Set<String> authors = new HashSet<>();
         for (RevCommit commit : rel.getCommitsForClass(clazz)) {
             PersonIdent author = commit.getAuthorIdent();
@@ -174,5 +172,13 @@ public class ComputeMetrics {
     public double computeAvgFixChurn(Release rel, JavaClass clazz) throws TicketException, IOException {
         GenericPair<Integer, Integer> fixPair = computeNFixAndFixChurn(clazz, rel);
         return fixPair.getFirst() == 0 ? 0 : (double) fixPair.getSecond() / fixPair.getFirst();
+    }
+
+    private double computeAvgChurn(JavaClass clazz, Release rel) throws GitException {
+        if (mapRelClassForContent.get(rel).get(clazz).size() == 0) {
+            return 0;
+        }
+
+        return (double) computeChurn(clazz, rel) / mapRelClassForContent.get(rel).get(clazz).size();
     }
 }

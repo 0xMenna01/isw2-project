@@ -39,8 +39,8 @@ public class CollectWeka {
             double tempTrainingPercent = 100.0 * training.numInstances()
                 / (training.numInstances() + testing.numInstances());
 
-            int falseNumber = training.attributeStats(training.numAttributes() - 1).nominalCounts[0];
-            int trueNumber = training.attributeStats(training.numAttributes() - 1).nominalCounts[1];
+            int trueNumber = training.attributeStats(training.numAttributes() - 1).nominalCounts[0];
+            int falseNumber = training.attributeStats(training.numAttributes() - 1).nominalCounts[1];
 
             Evaluation eval = new Evaluation(testing);
 
@@ -50,7 +50,6 @@ public class CollectWeka {
 
                 WekaClassifier wekaClassifier = ClassifierEvaluationFactory.buildClassifier(classEval, falseNumber, trueNumber);
                 Classifier classifier = wekaClassifier.getClassifier();
-                System.out.println(method.toString());
                 classifier.buildClassifier(training);
 
                 eval.evaluateModel(wekaClassifier.getClassifier(), testing);
@@ -65,7 +64,7 @@ public class CollectWeka {
     }
 
 
-    public List<WekaClassifier> getEvals() {
+    public List<WekaClassifier> getEvaluations() {
         return evals;
     }
 

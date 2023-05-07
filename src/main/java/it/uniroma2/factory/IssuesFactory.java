@@ -1,13 +1,13 @@
 package it.uniroma2.factory;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import it.uniroma2.model.TicketIssue;
 import it.uniroma2.model.releases.ReleaseMeta;

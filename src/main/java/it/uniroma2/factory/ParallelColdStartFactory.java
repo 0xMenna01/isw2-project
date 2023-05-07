@@ -31,8 +31,8 @@ public class ParallelColdStartFactory {
 
     private ParallelColdStartFactory() {
 
-        this.keys = new ProjectKey[] { ProjectKey.AVRO, ProjectKey.FALCON,
-                ProjectKey.OPENJPA, ProjectKey.ZOOKEEPER };
+        this.keys = new ProjectKey[]{ProjectKey.AVRO, ProjectKey.FALCON,
+            ProjectKey.OPENJPA, ProjectKey.ZOOKEEPER};
 
         this.state = ExecutorState.NOT_READY;
         this.prop = null;
@@ -59,7 +59,7 @@ public class ParallelColdStartFactory {
         return result;
     }
 
-    public void initConcurrecy() throws EnumException {
+    public void initConcurrency() throws EnumException {
 
         if (state.equals(ExecutorState.NOT_READY)) {
             // Initialize the executor with a fixed thread pool
@@ -88,7 +88,7 @@ public class ParallelColdStartFactory {
     }
 
     public double getProportion()
-            throws InterruptedException, ExecutionException, EnumException {
+        throws InterruptedException, ExecutionException, EnumException {
         switch (state) {
             case DONE:
                 return prop;
@@ -96,7 +96,7 @@ public class ParallelColdStartFactory {
                 List<Future<Double>> results = parallelExec.invokeAll(tasks);
                 // Computes the median of proportions
                 int validProj = keys.length; // number of projects with enough tickets
-                                             // to compute proportion
+                // to compute proportion
 
                 List<Double> props = new ArrayList<>();
                 for (Future<Double> res : results) {

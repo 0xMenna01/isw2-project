@@ -43,11 +43,11 @@ public class Proportion {
     // else cold start (cross-project) in a parallel manner where each thread
     // computes the proportion of one project
     public void compute(ReportWriter reportWriter, List<TicketIssue> prevIssues)
-            throws InterruptedException, ExecutionException, EnumException, TicketException {
+        throws InterruptedException, ExecutionException, EnumException, TicketException {
         if ((this.prop = ProportionUtils.computeProportion(prevIssues)) == -1) {
             // if method returns -1 it means there are not enough tickets,
             // so apply cold start
-            ParallelColdStartFactory.getInstance().initConcurrecy();
+            ParallelColdStartFactory.getInstance().initConcurrency();
             this.prop = ParallelColdStartFactory.getInstance().getProportion();
         }
         // Print the proportion (Remove later on)

@@ -82,7 +82,7 @@ public class ReleaseClassesFactory {
                     classesCommitsMap.put(c, new ArrayList<>());
             }
         }
-        
+
         return new Release(rel.getId(), rel.getName(), rel.getDate(), classesCommitsMap);
     }
 }

@@ -1,20 +1,21 @@
 package it.uniroma2.factory;
 
+import it.uniroma2.enums.CostSensitive;
 import it.uniroma2.enums.FeatureSel;
 import it.uniroma2.enums.Sampling;
 import it.uniroma2.model.weka.ClassifierMeta;
 import it.uniroma2.model.weka.WekaBestFirst;
 import it.uniroma2.model.weka.WekaClassifier;
 import it.uniroma2.model.weka.WekaClassifiers;
+import it.uniroma2.model.weka.WekaSampling;
 import weka.classifiers.Classifier;
+import weka.classifiers.CostMatrix;
+import weka.classifiers.meta.CostSensitiveClassifier;
 import weka.classifiers.meta.FilteredClassifier;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
-import weka.filters.supervised.instance.Resample;
-import weka.filters.supervised.instance.SpreadSubsample;
 
 public class ClassifierEvaluationFactory {
-    // Contains all the classifiers
     private static WekaClassifiers classifiers;
 
     // Feature selection based on different Best first strategies
@@ -22,16 +23,18 @@ public class ClassifierEvaluationFactory {
     private static WekaBestFirst bestFirst;
 
     // Contains all the sampling methods
-    private static Resample resample;
-    private static SpreadSubsample spreadSubsample;
+    private static WekaSampling sampling;
+    private static CostSensitiveClassifier costSensitiveClassifier;
 
     static {
         classifiers = new WekaClassifiers();
         // Setup feature selection
         featureSelection = new AttributeSelection();
         bestFirst = new WekaBestFirst();
+        // Setup Sampling
+        sampling = new WekaSampling();
 
-        buildSampling();
+        costSensitiveClassifier = buildCostSensitiveClassifier();
     }
 
     public static WekaClassifier buildClassifier(ClassifierMeta eval, int falseNumber, int trueNumber) {
@@ -40,20 +43,29 @@ public class ClassifierEvaluationFactory {
 
         Filter sampler = getSampler(eval, falseNumber, trueNumber);
         AttributeSelection featureSel = getFeatureSelection(eval);
+        CostSensitiveClassifier costSensitive = getCostSensitiveClassifier(eval);
+
+        if (sampler != null && costSensitive != null)
+            throw new IllegalStateException("Cannot enable both sampling and cost sensitive");
+
 
         FilteredClassifier innerClassifier = null;
-        if (sampler != null) {
-            innerClassifier = new FilteredClassifier();
-            innerClassifier.setClassifier(classifier);
-            innerClassifier.setFilter(sampler);
+        if (sampler != null || costSensitive != null) {
 
-            classifier = innerClassifier;
+            if (sampler != null) {
+                innerClassifier = new FilteredClassifier();
+                innerClassifier.setFilter(sampler);
+                innerClassifier.setClassifier(classifier);
+                classifier = innerClassifier;
+            } else {
+                costSensitive.setClassifier(classifier);
+                classifier = costSensitive;
+            }
 
             if (featureSel != null) {
                 FilteredClassifier externalClassifier = new FilteredClassifier();
                 externalClassifier.setFilter(featureSel);
                 externalClassifier.setClassifier(classifier);
-
                 classifier = externalClassifier;
             }
 
@@ -68,6 +80,7 @@ public class ClassifierEvaluationFactory {
             eval.getTrainingPercent(), eval.getMethod());
     }
 
+
     private static Classifier getClassifier(ClassifierMeta eval) {
         switch (eval.getMethod().getClassifier()) {
             case RANDOM_FOREST:
@@ -81,22 +94,23 @@ public class ClassifierEvaluationFactory {
         }
     }
 
+
     private static AttributeSelection getFeatureSelection(ClassifierMeta eval) {
         FeatureSel selection = eval.getMethod().getFeatureSel();
 
-        switch (selection) {
-            case NO_FEATURE_SEL:
-                return null;
-            default:
-                featureSelection.setSearch(bestFirst.getBestFirst(selection));
-                return featureSelection;
+        if (selection.equals(FeatureSel.NO_FEATURE_SEL)) {
+            return null;
+        } else {
+            featureSelection.setSearch(bestFirst.getBestFirst(selection));
+            return featureSelection;
         }
     }
 
-    private static Filter getSampler(ClassifierMeta eval, int falseNumber, int trueNumber) {
-        Sampling sampling = eval.getMethod().getSampling();
 
-        switch (sampling) {
+    private static Filter getSampler(ClassifierMeta eval, int falseNumber, int trueNumber) {
+        Sampling samplingMethod = eval.getMethod().getSampling();
+
+        switch (samplingMethod) {
             case NO_SAMPLING:
                 return null;
             case OVER_SAMPLING:
@@ -104,24 +118,48 @@ public class ClassifierEvaluationFactory {
                 double percentStandardOversampling =
                     (100.0 * falseNumber) / (falseNumber + trueNumber);
 
-                resample.setSampleSizePercent(2 * percentStandardOversampling);
-                return resample;
+                sampling.setSampleSizePercent(percentStandardOversampling);
+                return sampling.getResample();
 
             case UNDER_SAMPLING:
-                return spreadSubsample;
+                return sampling.getSpreadSubsample();
+
+            case SMOTE:
+                double smotePercentage = 0;
+                if (trueNumber > 0)
+                    smotePercentage = ((falseNumber - trueNumber) / ((double) trueNumber)) * 100;
+
+                sampling.setSmotePercentage(smotePercentage);
+                return sampling.getSmote();
+
             default:
                 throw new IllegalArgumentException("Sampling not supported");
         }
     }
 
 
-    private static void buildSampling() {
-        spreadSubsample = new SpreadSubsample();
-        spreadSubsample.setDistributionSpread(1.0);
+    private static CostSensitiveClassifier getCostSensitiveClassifier(ClassifierMeta eval) {
+        CostSensitive costSensitive = eval.getMethod().getCostSensitive();
+        if (costSensitive.equals(CostSensitive.COST_SENSITIVE))
+            return costSensitiveClassifier;
 
-        resample = new Resample();
-        resample.setNoReplacement(false);
-        resample.setBiasToUniformClass(1.0);
+        return null;
+    }
+
+
+    private static CostSensitiveClassifier buildCostSensitiveClassifier() {
+        CostSensitiveClassifier costSensitive = new CostSensitiveClassifier();
+        costSensitive.setMinimizeExpectedCost(true);
+
+        CostMatrix costMatrix = new CostMatrix(2);
+        costMatrix.setCell(0, 0, 0.0);
+        costMatrix.setCell(1, 1, 0.0);
+        costMatrix.setCell(0, 1, 10.0);
+        costMatrix.setCell(1, 0, 1.0);
+
+        costSensitive.setCostMatrix(costMatrix);
+
+        return costSensitive;
     }
 
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniroma2.enums.ClassifierName;
+import it.uniroma2.enums.CostSensitive;
 import it.uniroma2.enums.FeatureSel;
 import it.uniroma2.enums.Sampling;
 import it.uniroma2.model.GenericPair;
@@ -22,9 +23,16 @@ public class ClassifierUtils {
         List<ClassifierMethod> classifierMethods = new ArrayList<>();
         for (ClassifierName classifier : ClassifierName.values()) {
             for (FeatureSel featureSel : FeatureSel.values()) {
-                for (Sampling sampling : Sampling.values()) {
-                    classifierMethods.add(new ClassifierMethod(classifier, featureSel, sampling));
+                for (CostSensitive costSensitive : CostSensitive.values()) {
+                    for (Sampling sampling : Sampling.values()) {
+                        if (costSensitive.equals(CostSensitive.NO_COST_SENSITIVE) ||
+                            sampling.equals(Sampling.NO_SAMPLING)) {
+                            classifierMethods.add(new ClassifierMethod(classifier, featureSel, sampling, costSensitive));
+                        }
+
+                    }
                 }
+
             }
         }
         return classifierMethods;
