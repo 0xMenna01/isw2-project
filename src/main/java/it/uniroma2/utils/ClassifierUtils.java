@@ -25,17 +25,21 @@ public class ClassifierUtils {
             for (FeatureSel featureSel : FeatureSel.values()) {
                 for (CostSensitive costSensitive : CostSensitive.values()) {
                     for (Sampling sampling : Sampling.values()) {
-                        if (costSensitive.equals(CostSensitive.NO_COST_SENSITIVE) ||
-                            sampling.equals(Sampling.NO_SAMPLING)) {
-                            classifierMethods.add(new ClassifierMethod(classifier, featureSel, sampling, costSensitive));
-                        }
-
+                        addIfValid(classifier, featureSel, costSensitive, sampling, classifierMethods);
                     }
                 }
-
             }
         }
         return classifierMethods;
+    }
+
+
+    private static void addIfValid(ClassifierName classifier, FeatureSel featureSel, CostSensitive costSensitive, Sampling sampling,
+                                   List<ClassifierMethod> classifierMethods) {
+        if (costSensitive.equals(CostSensitive.NO_COST_SENSITIVE) ||
+            sampling.equals(Sampling.NO_SAMPLING)) {
+            classifierMethods.add(new ClassifierMethod(classifier, featureSel, sampling, costSensitive));
+        }
     }
 
     private static GenericPair<Instances, Instances> getTrainingAndTesting(String proj, int i) throws Exception {
@@ -62,24 +66,6 @@ public class ClassifierUtils {
     public static Instances getTestSet(String proj, int i) throws Exception {
         return getTrainingAndTesting(proj, i).getSecond();
 
-    }
-
-    private static int getMajorityClassSize(Instances training) {
-
-        return training.numInstances() - getMinorityClassSize(training);
-    }
-
-    private static int getMinorityClassSize(Instances training) {
-
-        int size = 0;
-        for (int i = 0; i < training.numInstances(); i++) {
-
-            boolean isBuggy = training.instance(i).value(training.attribute("IS_BUGGY")) == 0;
-            if (isBuggy) {
-                size++;
-            }
-        }
-        return size;
     }
 
 

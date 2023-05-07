@@ -19,42 +19,46 @@ public class WalkForward {
         throw new IllegalStateException("Class with static methods only");
     }
 
-    public static void execute(Releases rels, List<TicketIssue> issues, String projName)
-            throws TicketException, IOException {
+    public static void execute(Releases releases, List<TicketIssue> issues, String projName)
+        throws TicketException, IOException {
         Releases dataSet = new Releases();
         DatasetWriter writer = new DatasetWriter(projName);
 
-        int lastReleaseIndex = rels.getReleases().size() - 1;
-        int halfIndex = rels.getReleases().size() / 2;
-        for (int i = 0; i < rels.getReleases().size(); i++) {
-            resetBugginess(dataSet);
+        int lastReleaseIndex = releases.getReleases().size() - 1;
+        int halfIndex = releases.getReleases().size() / 2;
+        for (int i = 0; i < releases.getReleases().size(); i++) {
+            resetBug(dataSet);
 
-            dataSet.add(rels.get(i));
+            dataSet.add(releases.get(i));
 
             if (i < halfIndex || i == lastReleaseIndex) {
 
-                for (int j = 0; j < issues.size() && !issues.get(j).getFv().isAfter(rels.get(i)); j++) {
-                    List<FixCommit> fixCommits = GitUtils.getTicketCommitsReleases(dataSet, issues.get(j));
+                computeBug(issues, releases.get(i), releases, dataSet);
 
-                    for (FixCommit fixCommit : fixCommits) {
-                        GitUtils.setBugginess(fixCommit, rels, issues.get(j));
-                    }
-                }
-                
                 if (i == lastReleaseIndex) {
-                    int lastTrainingIndex = (int) Math.ceil((double)lastReleaseIndex / 2);
-                    writer.writeSet(i + 1, new Releases(dataSet.getReleases().subList(1,  lastTrainingIndex + 1)),
-                            CsvType.TESTING);
+                    int lastTrainingIndex = (int) Math.ceil((double) lastReleaseIndex / 2);
+                    writer.writeSet(i + 1, new Releases(dataSet.getReleases().subList(1, lastTrainingIndex + 1)),
+                        CsvType.TESTING);
                 } else
                     writer.writeSet(i + 1, dataSet, CsvType.TRAINING);
             }
         }
     }
 
-    private static void resetBugginess(Releases rels) {
-        for (Release rel : rels.getReleases()) {
+    private static void resetBug(Releases releases) {
+        for (Release rel : releases.getReleases()) {
             for (JavaClass javaClass : rel.getClasses()) {
                 javaClass.setBuggy(false);
+            }
+        }
+    }
+
+    private static void computeBug(List<TicketIssue> issues, Release rel, Releases releases, Releases dataSet) throws TicketException {
+        for (int j = 0; j < issues.size() && !issues.get(j).getFv().isAfter(rel); j++) {
+            List<FixCommit> fixCommits = GitUtils.getTicketCommitsReleases(dataSet, issues.get(j));
+
+            for (FixCommit fixCommit : fixCommits) {
+                GitUtils.setBugginess(fixCommit, releases, issues.get(j));
             }
         }
     }

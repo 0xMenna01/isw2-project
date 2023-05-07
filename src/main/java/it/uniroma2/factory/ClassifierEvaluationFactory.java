@@ -16,6 +16,12 @@ import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 
 public class ClassifierEvaluationFactory {
+
+    private ClassifierEvaluationFactory() {
+        throw new IllegalStateException("Class with static methods only");
+    }
+
+
     private static WekaClassifiers classifiers;
 
     // Feature selection based on different Best first strategies

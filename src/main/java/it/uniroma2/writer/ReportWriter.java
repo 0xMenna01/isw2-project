@@ -28,16 +28,11 @@ public class ReportWriter {
         Path issuesPath = PathBuilder.buildReportIssuesPath(projName);
         Path proportionPath = PathBuilder.buildReportProportionPath(projName);
         Path gitPath = PathBuilder.buildReportGitPath(projName);
-
-        File relFile = new File(relPath.toString());
-        File issuesFile = new File(issuesPath.toString());
-        File proportionFile = new File(proportionPath.toString());
-        File gitFile = new File(gitPath.toString());
-
-        this.relFile = new FileWriter(relFile);
-        this.issuesFile = new FileWriter(issuesFile);
-        this.proportionFile = new FileWriter(proportionFile);
-        this.gitFile = new FileWriter(gitFile);
+        
+        this.relFile = new FileWriter(new File(relPath.toString()));
+        this.issuesFile = new FileWriter(new File(issuesPath.toString()));
+        this.proportionFile = new FileWriter(new File(proportionPath.toString()));
+        this.gitFile = new FileWriter(new File(gitPath.toString()));
     }
 
     public static void writeln(String message, FileWriter writer) {

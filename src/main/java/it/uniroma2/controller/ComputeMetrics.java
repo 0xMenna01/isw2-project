@@ -60,11 +60,7 @@ public class ComputeMetrics {
                 clazz.setSize(computeSize(clazz));
                 clazz.setnFix(computeNFixAndFixChurn(clazz, rel).getFirst());
                 clazz.setnAuthors(computeNAuthors(clazz, rel));
-
-                clazz.setAvgLocAdded(
-                    (double) computeLocAddedAndDel(clazz, rel).getFirst()
-                        / mapRelClassForContent.get(rel).get(clazz).size());
-
+                clazz.setAvgLocAdded(computeAvgLocAdded(clazz, rel));
                 clazz.setChurn(computeChurn(clazz, rel));
                 clazz.setAvgChurn(computeAvgChurn(clazz, rel));
                 clazz.setAge(computeReleaseAge(rel));
@@ -121,8 +117,7 @@ public class ComputeMetrics {
         return authors.size();
     }
 
-    private GenericPair<Integer, Integer> computeLocAddedAndDel(JavaClass clazz, Release rel)
-        throws GitException {
+    private GenericPair<Integer, Integer> computeLocAddedAndDel(JavaClass clazz, Release rel) {
         int i = 0;
         Integer locAdded = 0;
         Integer delLoc = 0;
@@ -175,10 +170,16 @@ public class ComputeMetrics {
     }
 
     private double computeAvgChurn(JavaClass clazz, Release rel) throws GitException {
-        if (mapRelClassForContent.get(rel).get(clazz).size() == 0) {
+        if (mapRelClassForContent.get(rel).get(clazz).isEmpty()) {
             return 0;
         }
 
         return (double) computeChurn(clazz, rel) / mapRelClassForContent.get(rel).get(clazz).size();
+    }
+
+    private double computeAvgLocAdded(JavaClass clazz, Release rel) {
+        int size = mapRelClassForContent.get(rel).get(clazz).size();
+        return size > 0 ? (double) computeLocAddedAndDel(clazz, rel).getFirst() / size : size;
+
     }
 }

@@ -45,6 +45,41 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/outputs/SYNCOPE/dataset/training_set/SYNCOPE1.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/outputs/SYNCOPE/dataset/training_set/SYNCOPE3.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/outputs/SYNCOPE/dataset/training_set/SYNCOPE7.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/outputs/SYNCOPE/dataset/training_set/SYNCOPE9.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/outputs/SYNCOPE/weka/evaluation.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

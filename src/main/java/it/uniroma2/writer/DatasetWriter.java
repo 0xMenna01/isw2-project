@@ -12,7 +12,6 @@ import it.uniroma2.model.javaclass.JavaClass;
 import it.uniroma2.model.releases.Release;
 import it.uniroma2.model.releases.Releases;
 import it.uniroma2.utils.CsvUtils;
-import weka.core.Attribute;
 import weka.core.Instances;
 import weka.core.converters.ArffLoader;
 import weka.core.converters.ArffSaver;
@@ -140,10 +139,7 @@ public class DatasetWriter {
 
         // Load changes
         loadArfFile(arf, dataSet);
-
-        // Be sure to set the attribute IS_BUGGY to {true, false}
-        Attribute isBuggyAttribute = dataSet.attribute("IS_BUGGY");
-
+        
         adjustAttributeOfInterest(arf.getPath());
 
 

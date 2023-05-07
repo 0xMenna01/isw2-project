@@ -12,20 +12,20 @@ import it.uniroma2.utils.CsvUtils;
 
 public class EvaluationWriter {
 
-    private static final String[] HEADER = new String[] {
-            "TRAINING_RELEASES", "TRAINING_PERCENT", "CLASSIFIER",
-            "PRECISION", "RECALL",
-            "AUC", "KAPPA", "TRUE_POSITIVES", "FALSE_POSITIVES",
-            "TRUE_NEGATIVES", "FALSE_NEGATIVES" };
+    private static final String[] HEADER = new String[]{
+        "TRAINING_RELEASES", "TRAINING_PERCENT", "CLASSIFIER",
+        "PRECISION", "RECALL",
+        "AUC", "KAPPA", "TRUE_POSITIVES", "FALSE_POSITIVES",
+        "TRUE_NEGATIVES", "FALSE_NEGATIVES"};
 
     private String projName;
 
-    public EvaluationWriter(String projName) throws IOException {
+    public EvaluationWriter(String projName) {
         this.projName = projName;
     }
 
     public void writeClassifiersEvaluation(List<WekaClassifier> wekaEvaluationList)
-            throws IOException {
+        throws IOException {
         Path outputPath = PathBuilder.buildWekaEvaluationPath(projName);
 
         File csvFile = new File(outputPath.toString());
@@ -39,27 +39,27 @@ public class EvaluationWriter {
 
     private void writeEvaluationInfo(Writer writer, WekaClassifier wekaClassifier) throws IOException {
         String evaluationString = wekaClassifier.getWalkForwardIterationIndex() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getTrainingPercent() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getMethod().toString() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getEvalMetrics().getPrecision() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getEvalMetrics().getRecall() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getEvalMetrics().getAuc() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getEvalMetrics().getKappa() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getResults().getTp() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getResults().getFp() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getResults().getTn() +
-                CsvUtils.SEPARATOR +
-                wekaClassifier.getResults().getFn() +
-                CsvUtils.NEW_LINE;
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getTrainingPercent() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getMethod().toString() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getEvalMetrics().getPrecision() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getEvalMetrics().getRecall() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getEvalMetrics().getAuc() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getEvalMetrics().getKappa() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getResults().getTp() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getResults().getFp() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getResults().getTn() +
+            CsvUtils.SEPARATOR +
+            wekaClassifier.getResults().getFn() +
+            CsvUtils.NEW_LINE;
 
         writer.append(evaluationString);
     }
