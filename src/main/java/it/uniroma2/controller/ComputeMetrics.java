@@ -140,7 +140,7 @@ public class ComputeMetrics {
         return new GenericPair<>(locAdded, delLoc);
     }
 
-    private Integer computeChurn(JavaClass clazz, Release rel) throws GitException {
+    private Integer computeChurn(JavaClass clazz, Release rel) {
         GenericPair<Integer, Integer> locAddedAndDel = computeLocAddedAndDel(clazz, rel);
         return locAddedAndDel.getFirst() + locAddedAndDel.getSecond();
 

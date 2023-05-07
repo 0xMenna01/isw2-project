@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 import it.uniroma2.enums.CsvType;
 import it.uniroma2.model.javaclass.JavaClass;
@@ -139,7 +140,7 @@ public class DatasetWriter {
 
         // Load changes
         loadArfFile(arf, dataSet);
-        
+
         adjustAttributeOfInterest(arf.getPath());
 
 
@@ -156,9 +157,12 @@ public class DatasetWriter {
     private void adjustAttributeOfInterest(String filePath) throws IOException {
 
         Path path = Paths.get(filePath);
-        String newContent = Files.lines(path)
-            .map(line -> line.replaceAll("\\{(false|false,true)\\}", "{true,false}"))
-            .reduce("", (acc, line) -> acc + line + System.lineSeparator());
+        String newContent = "";
+        try (Stream<String> lines = Files.lines(path)) {
+            newContent = lines
+                .map(line -> line.replaceAll("\\{(false|false,true)\\}", "{true,false}"))
+                .reduce("", (acc, line) -> acc + line + System.lineSeparator());
+        }
         Files.write(path, newContent.getBytes());
     }
 }
