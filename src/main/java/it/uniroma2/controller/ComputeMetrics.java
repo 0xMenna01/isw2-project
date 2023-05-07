@@ -169,7 +169,7 @@ public class ComputeMetrics {
         return fixPair.getFirst() == 0 ? 0 : (double) fixPair.getSecond() / fixPair.getFirst();
     }
 
-    private double computeAvgChurn(JavaClass clazz, Release rel) throws GitException {
+    private double computeAvgChurn(JavaClass clazz, Release rel) {
         if (mapRelClassForContent.get(rel).get(clazz).isEmpty()) {
             return 0;
         }
