@@ -18,6 +18,7 @@ public class Proportion {
     private ReleaseMeta ov;
     private ReleaseMeta fv;
     private Double prop = null;
+    private boolean isColdStart = false;
 
     private Proportion() {
     }
@@ -44,14 +45,17 @@ public class Proportion {
     // computes the proportion of one project
     public void compute(ReportWriter reportWriter, List<TicketIssue> prevIssues)
         throws InterruptedException, ExecutionException, EnumException, TicketException {
-        if ((this.prop = ProportionUtils.computeProportion(prevIssues)) == -1) {
+        List<TicketIssue> validPreviousTickets = ProportionUtils.getValidTicketsForIncremental(prevIssues);
+        if ((this.prop = ProportionUtils.computeProportion(validPreviousTickets)) == -1) {
             // if method returns -1 it means there are not enough tickets,
             // so apply cold start
             ParallelColdStartFactory.getInstance().initConcurrency();
             this.prop = ParallelColdStartFactory.getInstance().getProportion();
-        }
-        // Print the proportion (Remove later on)
-        reportWriter.writeProportion(prop, prevIssues);
+            this.isColdStart = true;
+        } else
+            this.isColdStart = false;
+
+        reportWriter.writeProportion(prop, validPreviousTickets);
     }
 
     public int getIdIV() throws PropException {
@@ -67,4 +71,7 @@ public class Proportion {
         return id;
     }
 
+    public boolean isColdStart() {
+        return isColdStart;
+    }
 }

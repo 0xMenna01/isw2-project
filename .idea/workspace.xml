@@ -6,7 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="3247880c-9c36-4b1f-8ec6-ddcd232140f6" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/ComputeMetrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/ComputeMetrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/WalkForward.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/WalkForward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/CollectIssues.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/CollectIssues.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/Proportion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/Proportion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/TicketIssue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/TicketIssue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/ProportionUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/ProportionUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +117,8 @@
       <workItem from="1683464636401" duration="5106000" />
       <workItem from="1683470963753" duration="433000" />
       <workItem from="1683471487186" duration="71000" />
-      <workItem from="1683471778647" duration="58000" />
+      <workItem from="1683471778647" duration="119000" />
+      <workItem from="1683473541952" duration="6943000" />
     </task>
     <servers />
   </component>

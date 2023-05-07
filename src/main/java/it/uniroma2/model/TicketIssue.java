@@ -11,12 +11,22 @@ public class TicketIssue {
     private final ReleaseMeta ov;
     private final ReleaseMeta fv;
     private final List<ReleaseMeta> av; // could be empty if no affected versions in jira
+    private boolean isColdStart;
 
     public TicketIssue(String key, ReleaseMeta ov, ReleaseMeta fv, List<ReleaseMeta> av) {
         this.key = key;
         this.ov = ov;
         this.fv = fv;
         this.av = av;
+        this.isColdStart = false;
+    }
+
+    public TicketIssue(String key, ReleaseMeta ov, ReleaseMeta fv, List<ReleaseMeta> av, boolean isColdStart) {
+        this.key = key;
+        this.ov = ov;
+        this.fv = fv;
+        this.av = av;
+        this.isColdStart = isColdStart;
     }
 
     public String getKey() {
@@ -35,13 +45,13 @@ public class TicketIssue {
     }
 
     public boolean hasValidIV() throws TicketException {
-        if(ov == null || fv == null){
+        if (ov == null || fv == null) {
             throw new TicketException("Must be a valid ticket to check injected version");
         }
         return !av.isEmpty() && av.get(0).isBefore(ov);
     }
 
-    public ReleaseMeta getIV() throws TicketException{
+    public ReleaseMeta getIV() throws TicketException {
         if (!hasValidIV()) {
             throw new TicketException("Must have a valid IV to compute");
         }
@@ -56,4 +66,7 @@ public class TicketIssue {
         return fv;
     }
 
+    public boolean isColdStart() {
+        return isColdStart;
+    }
 }

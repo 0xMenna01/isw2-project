@@ -1,13 +1,13 @@
 package it.uniroma2.controller.issues;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import it.uniroma2.enums.ColdStartState;
 import it.uniroma2.enums.ProjectKey;
@@ -42,8 +42,8 @@ public class CollectIssues {
     }
 
     public void retrieveIssues(ProjectKey key, List<ReleaseMeta> releasesList)
-            throws JSONException, IOException, ParseException, InterruptedException, ExecutionException, EnumException,
-            TicketException, ReleaseException, PropException {
+        throws JSONException, IOException, ParseException, InterruptedException, ExecutionException, EnumException,
+        TicketException, ReleaseException, PropException {
 
         this.state = key.getColdStartState();
 
@@ -56,7 +56,7 @@ public class CollectIssues {
             tempMaxTickets = computedTickets + 500;
 
             GenericPair<JSONArray, Integer> res = JiraUtils.queryTickets(key.toString(), computedTickets,
-                    tempMaxTickets);
+                tempMaxTickets);
 
             totalTickets = res.getSecond();
             JiraUtils.orderTicketsByFixDate(res.getFirst());
@@ -66,6 +66,9 @@ public class CollectIssues {
                 TicketIssue tmpTicket = IssuesFactory.getInstance().createIssue(i, res.getFirst(), releasesList);
 
                 ReleaseMeta iv = null;
+
+                // The following variable represents weather the ticket has been computed through cold start
+                boolean isColdStartTicket = false;
                 if (tmpTicket.isValid(releasesList.get(0))) {
 
                     if (tmpTicket.hasValidIV())
@@ -76,13 +79,14 @@ public class CollectIssues {
                         Proportion.getInstance(tmpTicket.getOv(), tmpTicket.getFv()).compute(reportWriter, issues);
                         // Retrieving the id of the iv
                         iv = ReleasesUtils.getReleaseById(Proportion.getInstance().getIdIV(),
-                                releasesList);
+                            releasesList);
+                        isColdStartTicket = Proportion.getInstance().isColdStart();
                     }
                 }
                 if (iv != null)
                     this.issues.add(new TicketIssue(
-                            tmpTicket.getKey(), tmpTicket.getOv(), tmpTicket.getFv(),
-                            ReleasesUtils.getAVs(iv, tmpTicket.getFv(), releasesList)));
+                        tmpTicket.getKey(), tmpTicket.getOv(), tmpTicket.getFv(),
+                        ReleasesUtils.getAVs(iv, tmpTicket.getFv(), releasesList), isColdStartTicket));
 
                 computedTickets++;
             }

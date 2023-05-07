@@ -1,5 +1,6 @@
 package it.uniroma2.utils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,9 +17,11 @@ public class ProportionUtils {
 
     // compute the average of [ (fv - iv) / (fv - ov) ] based on issues
     public static double computeProportion(List<TicketIssue> prevIssues) throws TicketException {
-        // Cheks if number of issues for the proportion computation are at least a given
+        // Checks if number of issues for the proportion computation are at least a given
         // threshold
-        // The method returns -1 if there are not enough tickets
+        // The method returns -1 if there are not enough tickets based on previous VALID issues
+        // Previous issues are valid if they've not been computed through cold start
+
         int numTickets = prevIssues.size();
         if (numTickets < threshold)
             return -1;
@@ -32,6 +35,16 @@ public class ProportionUtils {
         }
 
         return proportion / numTickets;
+    }
+
+    public static List<TicketIssue> getValidTicketsForIncremental(List<TicketIssue> issues) {
+        List<TicketIssue> validIssues = new ArrayList<>();
+        for (TicketIssue issue : issues) {
+            if (!issue.isColdStart())
+                validIssues.add(issue);
+        }
+
+        return validIssues;
     }
 
     public static double computeMedian(List<Double> values) {

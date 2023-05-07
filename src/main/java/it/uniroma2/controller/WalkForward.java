@@ -33,7 +33,7 @@ public class WalkForward {
 
             if (i < halfIndex || i == lastReleaseIndex) {
 
-                computeBug(issues, releases.get(i), releases, dataSet);
+                computeBug(issues, releases.get(i), dataSet);
 
                 if (i == lastReleaseIndex) {
                     int lastTrainingIndex = (int) Math.ceil((double) lastReleaseIndex / 2);
@@ -53,12 +53,12 @@ public class WalkForward {
         }
     }
 
-    private static void computeBug(List<TicketIssue> issues, Release rel, Releases releases, Releases dataSet) throws TicketException {
+    private static void computeBug(List<TicketIssue> issues, Release rel, Releases dataSet) throws TicketException {
         for (int j = 0; j < issues.size() && !issues.get(j).getFv().isAfter(rel); j++) {
             List<FixCommit> fixCommits = GitUtils.getTicketCommitsReleases(dataSet, issues.get(j));
-
+            
             for (FixCommit fixCommit : fixCommits) {
-                GitUtils.setBugginess(fixCommit, releases, issues.get(j));
+                GitUtils.setBugginess(fixCommit, dataSet, issues.get(j));
             }
         }
     }
