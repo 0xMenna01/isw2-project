@@ -1,5 +1,6 @@
 package it.uniroma2.model.weka;
 
+import it.uniroma2.exception.SmoteNumPositiveException;
 import weka.filters.supervised.instance.Resample;
 import weka.filters.supervised.instance.SMOTE;
 import weka.filters.supervised.instance.SpreadSubsample;
@@ -43,5 +44,12 @@ public class WekaSampling {
 
     public void setSmotePercentage(double percent) {
         smote.setPercentage(percent);
+    }
+
+    public void setNearestNeighbors(int numPositives) throws SmoteNumPositiveException {
+        if (numPositives <= 5) {
+            throw new SmoteNumPositiveException("The positive instances must be at least 6");
+        }
+        smote.setNearestNeighbors(5);
     }
 }

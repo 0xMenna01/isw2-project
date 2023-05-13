@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.uniroma2.enums.ProjectKey;
+import it.uniroma2.exception.SmoteNumPositiveException;
 import it.uniroma2.factory.ClassifierEvaluationFactory;
 import it.uniroma2.model.weka.ClassifierMeta;
 import it.uniroma2.model.weka.ClassifierMethod;
@@ -36,7 +37,7 @@ public class CollectWeka {
             Instances training = ClassifierUtils.getTrainSet(proj.toString(), i);
             Instances testing = ClassifierUtils.getTestSet(proj.toString(), i);
 
-            double tempTrainingPercent = 100.0 * training.numInstances()
+            double tempTrainingPercent = (100.0 * training.numInstances())
                 / (training.numInstances() + testing.numInstances());
 
             int trueNumber = training.attributeStats(training.numAttributes() - 1).nominalCounts[0];
@@ -48,16 +49,20 @@ public class CollectWeka {
             for (ClassifierMethod method : methods) {
                 ClassifierMeta classEval = new ClassifierMeta(proj, i, tempTrainingPercent, method);
 
-                WekaClassifier wekaClassifier = ClassifierEvaluationFactory.buildClassifier(classEval, falseNumber, trueNumber);
-                Classifier classifier = wekaClassifier.getClassifier();
-                classifier.buildClassifier(training);
+                try {
+                    WekaClassifier wekaClassifier = ClassifierEvaluationFactory.buildClassifier(classEval, falseNumber, trueNumber);
+                    Classifier classifier = wekaClassifier.getClassifier();
+                    classifier.buildClassifier(training);
+                    
+                    eval.evaluateModel(wekaClassifier.getClassifier(), testing);
+                    wekaClassifier.setEvaluation(eval);
 
-                eval.evaluateModel(wekaClassifier.getClassifier(), testing);
-                wekaClassifier.setEvaluation(eval);
+                    this.evals.add(wekaClassifier);
+                } catch (SmoteNumPositiveException e) {
+                    // Skip because SMOTE cannot be applied (too low number of positive instances)
+                }
 
-                this.evals.add(wekaClassifier);
             }
-
         }
 
         evalWriter.writeClassifiersEvaluation(evals);

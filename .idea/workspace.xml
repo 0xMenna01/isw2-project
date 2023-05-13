@@ -5,13 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3247880c-9c36-4b1f-8ec6-ddcd232140f6" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/exception/SmoteNumPositiveException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/WalkForward.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/WalkForward.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectWeka.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectWeka.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/CollectIssues.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/CollectIssues.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/Proportion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/Proportion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/TicketIssue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/TicketIssue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/ProportionUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/ProportionUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvaluationFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvaluationFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/weka/WekaSampling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/weka/WekaSampling.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/JiraUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/JiraUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/writer/ReportWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/writer/ReportWriter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +24,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -63,6 +66,7 @@
     &quot;Notification.DoNotAsk-Download Shared Index Log&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;last_opened_file_path&quot;: &quot;/Users/emanuvalza/dev/isw2/isw2-project&quot;,
@@ -118,7 +122,10 @@
       <workItem from="1683470963753" duration="433000" />
       <workItem from="1683471487186" duration="71000" />
       <workItem from="1683471778647" duration="119000" />
-      <workItem from="1683473541952" duration="6943000" />
+      <workItem from="1683473541952" duration="7014000" />
+      <workItem from="1683485912455" duration="5002000" />
+      <workItem from="1683904578297" duration="13738000" />
+      <workItem from="1683977819958" duration="11049000" />
     </task>
     <servers />
   </component>
@@ -142,6 +149,10 @@
         <breakpoint enabled="true" type="java-exception">
           <properties class="it.uniroma2.exception.GitException" package="it.uniroma2.exception" />
           <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="2" />
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -28,7 +28,7 @@ public class ReportWriter {
         Path issuesPath = PathBuilder.buildReportIssuesPath(projName);
         Path proportionPath = PathBuilder.buildReportProportionPath(projName);
         Path gitPath = PathBuilder.buildReportGitPath(projName);
-        
+
         this.relFile = new FileWriter(new File(relPath.toString()));
         this.issuesFile = new FileWriter(new File(issuesPath.toString()));
         this.proportionFile = new FileWriter(new File(proportionPath.toString()));

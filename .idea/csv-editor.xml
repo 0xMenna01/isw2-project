@@ -3,41 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="/outputs/BOOKKEEPER/dataset/testing_set/BOOKKEEPER1.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/outputs/BOOKKEEPER/dataset/testing_set/BOOKKEEPER2.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/outputs/BOOKKEEPER/dataset/training_set/BOOKKEEPER1.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/outputs/BOOKKEEPER/dataset/training_set/BOOKKEEPER2.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/outputs/BOOKKEEPER/dataset/training_set/BOOKKEEPER6.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="/outputs/BOOKKEEPER/weka/evaluation.csv">
           <value>
             <Attribute>
@@ -52,21 +17,7 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="/outputs/SYNCOPE/dataset/training_set/SYNCOPE3.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/outputs/SYNCOPE/dataset/training_set/SYNCOPE7.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="/outputs/SYNCOPE/dataset/training_set/SYNCOPE9.csv">
+        <entry key="/outputs/SYNCOPE/dataset/training_set/SYNCOPE2.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

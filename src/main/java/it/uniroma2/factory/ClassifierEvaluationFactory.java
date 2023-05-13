@@ -3,6 +3,7 @@ package it.uniroma2.factory;
 import it.uniroma2.enums.CostSensitive;
 import it.uniroma2.enums.FeatureSel;
 import it.uniroma2.enums.Sampling;
+import it.uniroma2.exception.SmoteNumPositiveException;
 import it.uniroma2.model.weka.ClassifierMeta;
 import it.uniroma2.model.weka.WekaBestFirst;
 import it.uniroma2.model.weka.WekaClassifier;
@@ -43,7 +44,7 @@ public class ClassifierEvaluationFactory {
         costSensitiveClassifier = buildCostSensitiveClassifier();
     }
 
-    public static WekaClassifier buildClassifier(ClassifierMeta eval, int falseNumber, int trueNumber) {
+    public static WekaClassifier buildClassifier(ClassifierMeta eval, int falseNumber, int trueNumber) throws SmoteNumPositiveException {
 
         Classifier classifier = getClassifier(eval);
 
@@ -113,7 +114,7 @@ public class ClassifierEvaluationFactory {
     }
 
 
-    private static Filter getSampler(ClassifierMeta eval, int falseNumber, int trueNumber) {
+    private static Filter getSampler(ClassifierMeta eval, int falseNumber, int trueNumber) throws SmoteNumPositiveException {
         Sampling samplingMethod = eval.getMethod().getSampling();
 
         switch (samplingMethod) {
@@ -133,9 +134,10 @@ public class ClassifierEvaluationFactory {
             case SMOTE:
                 double smotePercentage = 0;
                 if (trueNumber > 0)
-                    smotePercentage = ((falseNumber - trueNumber) / ((double) trueNumber)) * 100;
+                    smotePercentage = (100.0 * (falseNumber - trueNumber)) / trueNumber;
 
                 sampling.setSmotePercentage(smotePercentage);
+                sampling.setNearestNeighbors(trueNumber);
                 return sampling.getSmote();
 
             default:
@@ -155,6 +157,8 @@ public class ClassifierEvaluationFactory {
 
     private static CostSensitiveClassifier buildCostSensitiveClassifier() {
         CostSensitiveClassifier costSensitive = new CostSensitiveClassifier();
+        // Sensitive Learning
+
         costSensitive.setMinimizeExpectedCost(true);
 
         CostMatrix costMatrix = new CostMatrix(2);

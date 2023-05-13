@@ -51,47 +51,58 @@ public class CollectIssues {
         Integer tempMaxTickets = 0;
         Integer totalTickets = 0;
 
+        JSONArray jsonIssues = new JSONArray();
+
         // Only gets a maximum of 500 tickets at a time => multiple times if bugs > 500
         do {
-            tempMaxTickets = computedTickets + 500;
+
+            tempMaxTickets = computedTickets + 1000;
 
             GenericPair<JSONArray, Integer> res = JiraUtils.queryTickets(key.toString(), computedTickets,
                 tempMaxTickets);
 
             totalTickets = res.getSecond();
-            JiraUtils.orderTicketsByFixDate(res.getFirst());
 
             while (computedTickets < totalTickets && computedTickets < tempMaxTickets) {
-                int i = computedTickets % 500; // index of the issue in the json array
-                TicketIssue tmpTicket = IssuesFactory.getInstance().createIssue(i, res.getFirst(), releasesList);
-
-                ReleaseMeta iv = null;
-
-                // The following variable represents weather the ticket has been computed through cold start
-                boolean isColdStartTicket = false;
-                if (tmpTicket.isValid(releasesList.get(0))) {
-
-                    if (tmpTicket.hasValidIV())
-                        iv = tmpTicket.getIV();
-
-                    else if (this.state != ColdStartState.EXECUTING) {
-                        // Enters Proportion
-                        Proportion.getInstance(tmpTicket.getOv(), tmpTicket.getFv()).compute(reportWriter, issues);
-                        // Retrieving the id of the iv
-                        iv = ReleasesUtils.getReleaseById(Proportion.getInstance().getIdIV(),
-                            releasesList);
-                        isColdStartTicket = Proportion.getInstance().isColdStart();
-                    }
-                }
-                if (iv != null)
-                    this.issues.add(new TicketIssue(
-                        tmpTicket.getKey(), tmpTicket.getOv(), tmpTicket.getFv(),
-                        ReleasesUtils.getAVs(iv, tmpTicket.getFv(), releasesList), isColdStartTicket));
+                int i = computedTickets % 1000; // index of the issue in the json
+                Object elem = res.getFirst().get(i);
+                jsonIssues.put(elem);
 
                 computedTickets++;
             }
 
         } while (computedTickets < totalTickets);
+
+        JiraUtils.orderTicketsByFixDate(jsonIssues);
+
+        for (int j = 0; j < jsonIssues.length(); j++) {
+
+            TicketIssue tmpTicket = IssuesFactory.getInstance().createIssue(j, jsonIssues, releasesList);
+
+            ReleaseMeta iv = null;
+
+            // The following variable represents weather the ticket has been computed through cold start
+            boolean isColdStartTicket = false;
+            if (tmpTicket.isValid(releasesList.get(0))) {
+
+                if (tmpTicket.hasValidIV())
+                    iv = tmpTicket.getIV();
+
+                else if (this.state != ColdStartState.EXECUTING) {
+                    // Enters Proportion
+                    Proportion.getInstance(tmpTicket.getOv(), tmpTicket.getFv()).compute(reportWriter, issues);
+                    // Retrieving the id of the iv
+                    iv = ReleasesUtils.getReleaseById(Proportion.getInstance().getIdIV(),
+                        releasesList);
+                    isColdStartTicket = Proportion.getInstance().isColdStart();
+                }
+            }
+            if (iv != null)
+                this.issues.add(new TicketIssue(
+                    tmpTicket.getKey(), tmpTicket.getOv(), tmpTicket.getFv(),
+                    ReleasesUtils.getAVs(iv, tmpTicket.getFv(), releasesList), isColdStartTicket));
+        }
+
 
     }
 
