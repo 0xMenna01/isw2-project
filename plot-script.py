@@ -1,7 +1,10 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+projects = ["BOOKKEEPER", "SYNCOPE"]
 
+output_path = 'outputs/'
+evaluation_path = '/weka/evaluation.csv'
 
 
 def read_data(filename):
@@ -9,24 +12,11 @@ def read_data(filename):
     return pd.read_csv(filename)
 
 
-def get_classifier_names(df):
-    """Returns a list of unique classifier names in the DataFrame"""
-    return df['CLASSIFIER'].str.split('&').str[0].unique().tolist()
-
-
-def get_feature_selection_types(df):
-    """Returns a list of unique feature selection types in the DataFrame"""
-    return df['CLASSIFIER'].str.split('&').str[1].unique().tolist()
-
-
-def get_sampling_types(df):
-    """Returns a list of unique sampling types in the DataFrame"""
-    return df['CLASSIFIER'].str.split('&').str[2].unique().tolist()
-
-
-def get_cost_sensitive_types(df):
-    """Returns a list of unique cost sensitive types in the DataFrame"""
-    return df['CLASSIFIER'].str.split('&').str[3].unique().tolist()
+def get_classifier_info(df, info):
+    """Returns a list of unique classifier infos in the DataFrame"""
+    metrics_mapping = {'CLASSIFIER': 0, 'FEATURE_SELECTION': 1,
+                       'SAMPLING': 2, 'COST_SENSITIVE': 3}
+    return df['CLASSIFIER'].str.split('&').str[metrics_mapping[info]].unique().tolist()
 
 
 def filter_data(df, fs_type, s_type, cs_type):
@@ -41,12 +31,15 @@ def plot_metrics(df, classifier_names, fs_type, s_type, cs_type):
         plt.figure()
         plt.title('{}, {}, {}, {}'.format(fs_type, s_type, cs_type, metric))
         for i, classifier_name in enumerate(classifier_names):
-            classifier_df = df[df['CLASSIFIER'].str.startswith(classifier_name)]
-            plt.plot(classifier_df['TRAINING_RELEASES'], classifier_df[metric], label=classifier_name, color='C{}'.format(i))
+            classifier_df = df[df['CLASSIFIER'].str.startswith(
+                classifier_name)]
+            plt.plot(classifier_df['TRAINING_RELEASES'], classifier_df[metric],
+                     label=classifier_name, color='C{}'.format(i))
         plt.legend()
         plt.xlabel('TRAINING_RELEASES')
         plt.ylabel(metric)
-        plt.savefig('plots/{}_{}_{}_{}.png'.format(fs_type, s_type, cs_type, metric))
+        plt.savefig('outputs/plots/{}_{}_{}_{}.png'.format(fs_type,
+                    s_type, cs_type, metric))
 
 
 def plot_boxplots(df, classifier_names, metric):
@@ -59,32 +52,40 @@ def plot_boxplots(df, classifier_names, metric):
         data.append(classifier_df[metric])
     plt.boxplot(data, labels=classifier_names)
     plt.ylabel(metric)
-    plt.savefig('plots/{}_boxplot.png'.format(metric))
+    plt.savefig('outputs/plots/{}_boxplot.png'.format(metric))
 
 
-def main():
+def compute(file_name, project_name):
     # read data from CSV file
-    df = read_data('data.csv')
+
+    df = read_data(file_name)
 
     # create plots directory if it doesn't exist
     import os
-    if not os.path.exists('plots'):
-        os.makedirs('plots')
+    if not os.path.exists('outputs/plots/' + project_name + '/'):
+        os.makedirs('outputs/plots/' + project_name + '/')
 
     # get unique classifier names, feature selection types, sampling types, and cost sensitive types
-    classifier_names = get_classifier_names(df)
-    feature_selection_types = get_feature_selection_types(df)
-    sampling_types = get_sampling_types(df)
-    cost_sensitive_types = get_cost_sensitive_types(df)
+    classifier_names = get_classifier_info(df, 'CLASSIFIER')
+    feature_selection_types = get_classifier_info(df, 'FEATURE_SELECTION')
+    sampling_types = get_classifier_info(df, 'SAMPLING')
+    cost_sensitive_types = get_classifier_info(df, 'COST_SENSITIVE')
 
     # plot metrics and box plots for each combination of feature selection, sampling, and cost sensitive types
     for fs_type in feature_selection_types:
         for s_type in sampling_types:
             for cs_type in cost_sensitive_types:
                 filtered_df = filter_data(df, fs_type, s_type, cs_type)
-                plot_metrics(filtered_df, classifier_names, fs_type, s_type, cs_type)
+                plot_metrics(filtered_df, classifier_names,
+                             fs_type, s_type, cs_type)
     for metric in ['PRECISION', 'RECALL', 'AUC', 'KAPPA']:
         plot_boxplots(df, classifier_names, metric)
+
+
+def main():
+    for project in projects:
+        file_name = output_path + project + evaluation_path
+        compute(file_name, project)
 
 
 if __name__ == '__main__':
