@@ -9,7 +9,8 @@ public enum ProjectKey {
     AVRO("AVRO"),
     FALCON("FALCON"),
     OPENJPA("OPENJPA"),
-    ZOOKEEPER("ZOOKEEPER");
+    ZOOKEEPER("ZOOKEEPER"),
+    STORM("STORM");
 
     private final String projKey;
 

@@ -32,7 +32,7 @@ public class ParallelColdStartFactory {
     private ParallelColdStartFactory() {
 
         this.keys = new ProjectKey[]{ProjectKey.AVRO, ProjectKey.FALCON,
-            ProjectKey.OPENJPA, ProjectKey.ZOOKEEPER};
+            ProjectKey.STORM, ProjectKey.ZOOKEEPER, ProjectKey.OPENJPA};
 
         this.state = ExecutorState.NOT_READY;
         this.prop = null;

@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3247880c-9c36-4b1f-8ec6-ddcd232140f6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/exception/SmoteNumPositiveException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/csv-editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/csv-editor.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectWeka.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/CollectWeka.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/CollectIssues.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/controller/issues/CollectIssues.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvaluationFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/factory/ClassifierEvaluationFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/weka/WekaSampling.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/model/weka/WekaSampling.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/JiraUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/utils/JiraUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/it/uniroma2/writer/ReportWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/uniroma2/writer/ReportWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plot-script.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot-script.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,6 +117,7 @@
       <workItem from="1683485912455" duration="5002000" />
       <workItem from="1683904578297" duration="13738000" />
       <workItem from="1683977819958" duration="11049000" />
+      <workItem from="1684066537973" duration="5000" />
     </task>
     <servers />
   </component>

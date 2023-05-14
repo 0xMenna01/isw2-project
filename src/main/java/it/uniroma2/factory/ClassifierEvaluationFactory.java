@@ -5,14 +5,15 @@ import it.uniroma2.enums.FeatureSel;
 import it.uniroma2.enums.Sampling;
 import it.uniroma2.exception.SmoteNumPositiveException;
 import it.uniroma2.model.weka.ClassifierMeta;
-import it.uniroma2.model.weka.WekaBestFirst;
 import it.uniroma2.model.weka.WekaClassifier;
 import it.uniroma2.model.weka.WekaClassifiers;
 import it.uniroma2.model.weka.WekaSampling;
+import weka.attributeSelection.BestFirst;
 import weka.classifiers.Classifier;
 import weka.classifiers.CostMatrix;
 import weka.classifiers.meta.CostSensitiveClassifier;
 import weka.classifiers.meta.FilteredClassifier;
+import weka.core.SelectedTag;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 
@@ -27,7 +28,7 @@ public class ClassifierEvaluationFactory {
 
     // Feature selection based on different Best first strategies
     private static AttributeSelection featureSelection;
-    private static WekaBestFirst bestFirst;
+    private static BestFirst bestFirst;
 
     // Contains all the sampling methods
     private static WekaSampling sampling;
@@ -37,7 +38,9 @@ public class ClassifierEvaluationFactory {
         classifiers = new WekaClassifiers();
         // Setup feature selection
         featureSelection = new AttributeSelection();
-        bestFirst = new WekaBestFirst();
+        // Setup Best First BI-DIRECTIONAL
+        bestFirst = new BestFirst();
+        bestFirst.setDirection(new SelectedTag(2, bestFirst.getDirection().getTags()));
         // Setup Sampling
         sampling = new WekaSampling();
 
@@ -108,7 +111,7 @@ public class ClassifierEvaluationFactory {
         if (selection.equals(FeatureSel.NO_FEATURE_SEL)) {
             return null;
         } else {
-            featureSelection.setSearch(bestFirst.getBestFirst(selection));
+            featureSelection.setSearch(bestFirst);
             return featureSelection;
         }
     }
