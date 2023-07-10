@@ -31,7 +31,7 @@ public class ExecuteDataCollection {
             this.projKey.toString());
         gitControl.computeRelClassesCommits(reportWriter);
 
-        // Printing releases
+        // Writing releases
         reportWriter.writeReleases(gitControl.getReleases().getMeta());
 
         // Collecting issues
@@ -39,15 +39,14 @@ public class ExecuteDataCollection {
 
         issuesControl.retrieveIssues(this.projKey, gitControl.getReleases().getMeta());
 
-        // Printing issues
-
+        // Writing issues
         reportWriter.writeIssues(issuesControl.getIssues());
 
         // Compute measurement of classes metrics
         new ComputeMetrics(gitControl.getReleases(), issuesControl.getIssues(), gitControl.getRepo()).compute();
 
         // For labeling classes depends on weather we are considering training or testing set
-        // As dataset validation we are using the walkforward approach
+        // As dataset validation we are using the walk forward approach
         // First we label the training set and then the testing set
         WalkForward.execute(gitControl.getReleases(), issuesControl.getIssues(), projKey.toString());
 
